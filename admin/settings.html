@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>聯絡資訊 — Psalm Eustoma 後台</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="../images/Favicon.svg" type="image/svg+xml">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="../js/firebase-init.js"></script>
+</head>
+<body>
+<div class="admin-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <strong>Psalm Eustoma</strong>
+      <span>後台管理</span>
+    </div>
+    <div class="sidebar-top-action">
+      <a class="btn-view-site" href="../index.html" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        前往前台
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        首頁編輯
+      </a>
+      <a href="projects.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        作品列表
+      </a>
+      <a href="categories.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+        分類管理
+      </a>
+      <a href="about.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        About 頁
+      </a>
+      <a href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        聯絡資訊
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="logoutBtn">登出</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <h1 class="page-title">聯絡資訊</h1>
+    </div>
+
+    <div class="form-wrap">
+      <div class="form-group">
+        <label class="form-label">社群連結</label>
+        <p class="form-hint" style="margin-bottom:14px;">依序顯示於前台 Footer，可自由新增或刪除</p>
+        <div id="socialList"></div>
+        <button class="btn" id="addSocialBtn" style="margin-top:10px;">＋ 新增連結</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">預約連結（Calendly 或其他）</label>
+        <input class="form-input" type="url" id="bookingUrl" placeholder="https://calendly.com/your-username">
+        <p class="form-hint">套用至前台所有「Book a Session」按鈕</p>
+      </div>
+
+      <div class="form-group" style="border-top:1px solid var(--border); padding-top:24px; margin-top:24px;">
+        <label class="form-label" style="font-size:13px; text-transform:none; letter-spacing:0; color:var(--text); margin-bottom:4px;">SEO 與分享預覽</label>
+        <p class="form-hint" style="margin-bottom:12px;">影響 Google 搜尋結果與貼到 LINE / FB / Twitter 時顯示的標題、描述、預覽圖</p>
+        <p class="form-hint" style="margin-bottom:18px; padding:12px 14px; background:#fafaf6; border-left:3px solid var(--text-mid); color:var(--text); line-height:1.6;">
+          💡 <strong>關鍵字怎麼填</strong>：想被 Google 搜尋到的詞（例如「巴黎婚禮攝影」「Paris wedding photographer」）直接寫進下方<strong>標題與描述</strong>即可，不需要單獨欄位。<br>
+          這份設定<strong>整站共用一份</strong>，填一次就套用所有頁面。
+        </p>
+
+        <label class="form-label">網站標題</label>
+        <input class="form-input" type="text" id="seoTitle" placeholder="例：Psalm Eustoma – Paris-based Travel Photographer" maxlength="60">
+        <p class="form-hint">建議 30-60 字元，顯示在瀏覽器分頁、Google 結果和分享預覽</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">網站描述</label>
+        <textarea class="form-textarea" id="seoDescription" placeholder="例：France-based studio for cinematic portraits, weddings, and elopements." maxlength="160" rows="3"></textarea>
+        <p class="form-hint">建議 80-160 字元，顯示在 Google 搜尋結果摘要</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">分享預覽圖（OG Image）</label>
+        <div class="img-row">
+          <input class="form-input" type="url" id="seoOgImage" placeholder="https://...">
+          <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('seoOgImage'),this)">↑ 上傳</button>
+        </div>
+        <p class="form-hint">建議 1200 × 630 px（橫式 1.91:1）；貼網址到 LINE / FB 時顯示的縮圖</p>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" id="saveBtn">儲存</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/admin.js"></script>
+<script>
+  function makeSocialRow(name, url) {
+    const div = document.createElement('div');
+    div.className = 'social-row';
+    div.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px;';
+    div.innerHTML = `
+      <input class="form-input social-name" type="text" placeholder="名稱（如 INSTAGRAM）" value="${name}" style="width:180px;flex-shrink:0;">
+      <input class="form-input social-url" type="url" placeholder="https://..." value="${url}" style="flex:1;">
+      <button type="button" style="padding:0 10px;height:36px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;cursor:pointer;color:#9ca3af;font-size:16px;flex-shrink:0;" onclick="this.closest('.social-row').remove()">✕</button>
+    `;
+    return div;
+  }
+
+  function loadSettings() {
+    const s = getSettings();
+    const list = document.getElementById('socialList');
+    list.innerHTML = '';
+    (s.socialLinks || []).forEach(l => list.appendChild(makeSocialRow(l.name || '', l.url || '')));
+    document.getElementById('bookingUrl').value      = s.bookingUrl           || '';
+    document.getElementById('seoTitle').value        = (s.seo && s.seo.title)       || '';
+    document.getElementById('seoDescription').value  = (s.seo && s.seo.description) || '';
+    document.getElementById('seoOgImage').value      = (s.seo && s.seo.ogImage)     || '';
+    refreshImgPreviews();
+  }
+
+  document.getElementById('addSocialBtn').addEventListener('click', () => {
+    document.getElementById('socialList').appendChild(makeSocialRow('', ''));
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const socialLinks = Array.from(document.querySelectorAll('.social-row')).map(row => ({
+      name: row.querySelector('.social-name').value.trim().toUpperCase(),
+      url:  row.querySelector('.social-url').value.trim()
+    })).filter(l => l.name || l.url);
+
+    saveSettings({
+      bookingUrl:  document.getElementById('bookingUrl').value.trim(),
+      socialLinks,
+      seo: {
+        title:       document.getElementById('seoTitle').value.trim(),
+        description: document.getElementById('seoDescription').value.trim(),
+        ogImage:     document.getElementById('seoOgImage').value.trim()
+      }
+    });
+    showSaveToast();
+  });
+
+  window.dataReady.then(loadSettings);
+</script>
+</body>
+</html>

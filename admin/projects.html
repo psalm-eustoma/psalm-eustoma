@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作品列表 — Psalm Eustoma 後台</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    .drag-handle { cursor: grab !important; color: #bbb !important; font-size: 16px; user-select: none; }
+    .drag-handle:active { cursor: grabbing !important; }
+    .status-pill { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:400; letter-spacing:0.03em; white-space:nowrap; }
+    .status-pill::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; flex-shrink:0; }
+    .status-visible { background:#ecfdf5; color:#166534; border:1px solid #bbf7d0; }
+    .status-hidden  { background:#f3f4f6; color:#9ca3af; border:1px solid #e5e7eb; }
+  </style>
+  <link rel="icon" href="../images/Favicon.svg" type="image/svg+xml">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="../js/firebase-init.js"></script>
+</head>
+<body>
+<div class="admin-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <strong>Psalm Eustoma</strong>
+      <span>後台管理</span>
+    </div>
+    <div class="sidebar-top-action">
+      <a class="btn-view-site" href="../index.html" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        前往前台
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        首頁編輯
+      </a>
+      <a href="projects.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        作品列表
+      </a>
+      <a href="categories.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+        分類管理
+      </a>
+      <a href="about.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        About 頁
+      </a>
+      <a href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        聯絡資訊
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="logoutBtn">登出</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <h1 class="page-title">作品列表</h1>
+      <a class="btn btn-primary" href="project-edit.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        新增作品
+      </a>
+    </div>
+
+    <div class="filter-bar">
+      <select class="form-select" id="filterCat" style="width:auto;padding:7px 12px;font-size:13px;">
+        <option value="">全部分類</option>
+      </select>
+      <select class="form-select" id="filterStatus" style="width:auto;padding:7px 12px;font-size:13px;">
+        <option value="">全部狀態</option>
+        <option value="visible">顯示中</option>
+        <option value="hidden">已隱藏</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:32px"></th>
+            <th style="width:60px">封面</th>
+            <th>作品名稱</th>
+            <th>分類</th>
+            <th>標籤</th>
+            <th style="width:80px">狀態</th>
+            <th style="width:120px"></th>
+          </tr>
+        </thead>
+        <tbody id="projBody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="js/admin.js"></script>
+<script>
+  function buildCatFilter() {
+    const sel = document.getElementById('filterCat');
+    sel.innerHTML = '<option value="">全部分類</option>';
+    getCategories().forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.id;
+      opt.textContent = getL10n(cat.name);
+      sel.appendChild(opt);
+    });
+  }
+
+  function renderProjects(catId) {
+    let projs = getProjects(catId || '');
+    const status = document.getElementById('filterStatus').value;
+    if (status === 'visible') projs = projs.filter(p => !p.isHidden);
+    if (status === 'hidden')  projs = projs.filter(p => !!p.isHidden);
+    const tbody = document.getElementById('projBody');
+    if (projs.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty">尚無作品</div></td></tr>';
+      renderUncategorizedBanner();
+      return;
+    }
+    const validCatIds = new Set(getCategories().map(c => c.id));
+    tbody.innerHTML = projs.map(p => {
+      const thumb = p.images && p.images[0]
+        ? `<img src="${p.images[0]}" style="width:48px;height:36px;object-fit:cover;border-radius:3px;display:block;">`
+        : `<div style="width:48px;height:36px;background:#f0f0ee;border-radius:3px;"></div>`;
+      const tags = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+      const uncategorized = !p.categoryId || !validCatIds.has(p.categoryId);
+      const catCell = uncategorized
+        ? `<span style="display:inline-flex;align-items:center;gap:5px;color:#b85c00;font-size:12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:4px;padding:2px 8px;">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+             未歸類
+           </span>`
+        : `<span class="cat-pill">${getCategoryName(p.categoryId)}</span>`;
+      return `
+        <tr draggable="true" data-id="${p.id}"${uncategorized ? ' style="background:#fffbf5;"' : ''}>
+          <td class="drag-handle">⋮⋮</td>
+          <td>${thumb}</td>
+          <td style="font-weight:400;">${getL10n(p.title) || '（未命名）'}</td>
+          <td>${catCell}</td>
+          <td>${tags || '<span style="color:#ccc">—</span>'}</td>
+          <td><span class="status-pill ${p.isHidden ? 'status-hidden' : 'status-visible'}">${p.isHidden ? '已隱藏' : '顯示中'}</span></td>
+          <td>
+            <div class="actions">
+              <a class="btn btn-icon" href="project-edit.html?id=${p.id}" title="編輯">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </a>
+              <button class="btn btn-danger-soft" onclick="removeProj('${p.id}')">刪除</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+    renderUncategorizedBanner();
+  }
+
+  function renderUncategorizedBanner() {
+    const validCatIds = new Set(getCategories().map(c => c.id));
+    const count = getProjects('').filter(p => !p.categoryId || !validCatIds.has(p.categoryId)).length;
+    const existing = document.getElementById('uncategorizedBanner');
+    if (existing) existing.remove();
+    if (count === 0) return;
+    const banner = document.createElement('div');
+    banner.id = 'uncategorizedBanner';
+    banner.style.cssText = 'display:flex;align-items:center;gap:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#92400e;';
+    banner.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      有 <strong style="margin:0 3px;">${count}</strong> 件作品尚未歸類，請點擊編輯並選擇所屬分類。
+    `;
+    document.querySelector('.page-header').insertAdjacentElement('afterend', banner);
+  }
+
+  function removeProj(id) {
+    if (!confirmDelete('確定要刪除這個作品嗎？')) return;
+    deleteProject(id);
+    renderProjects(document.getElementById('filterCat').value);
+  }
+
+  window.dataReady.then(() => {
+    document.getElementById('filterCat').addEventListener('change', function() {
+      renderProjects(this.value);
+    });
+
+    document.getElementById('filterStatus').addEventListener('change', function() {
+      renderProjects(document.getElementById('filterCat').value);
+    });
+
+    buildCatFilter();
+    renderProjects('');
+
+    enableRowDrag(document.getElementById('projBody'), reorderProjects);
+  });
+</script>
+</body>
+</html>

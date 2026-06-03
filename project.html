@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumière Douce – Psalm Eustoma</title>
+  <meta name="description" content="Paris-based studio for cinematic portraits, weddings, and elopements.">
+  <meta property="og:title" content="Psalm Eustoma – Paris-based Travel Photographer">
+  <meta property="og:description" content="Paris-based studio for cinematic portraits, weddings, and elopements.">
+  <meta property="og:image" content="">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Psalm Eustoma">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@200;300;400&family=Noto+Sans+TC:wght@200;300;400&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="images/Favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="images/Favicon.svg">
+  <meta name="theme-color" content="#000000">
+  <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase-init.js"></script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="fade-down nav-light">
+    <a href="index.html" class="nav-logo">Psalm Eustoma</a>
+    <div class="nav-links">
+      <a href="services.html">SERVICES</a>
+      <a href="about.html">ABOUT STUDIO</a>
+      <a href="#" class="contact-link">CONTACT</a>
+      <a href="#" id="langBtn">LANGUAGE</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Open Menu">
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- PROJECT DETAIL -->
+  <main class="project-wrap">
+
+    <!-- Photo column (rendered by cms.js) -->
+    <div class="project-photos" id="projectPhotos"></div>
+
+    <!-- Sticky sidebar -->
+    <aside class="project-sidebar">
+      <div class="project-sidebar-inner">
+
+        <!-- Prev / Next project arrows -->
+        <div class="project-nav-arrows">
+          <button class="project-nav-arrow" id="prevBtn" aria-label="Previous project">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15,18 9,12 15,6"/>
+            </svg>
+          </button>
+          <button class="project-nav-arrow" id="nextBtn" aria-label="Next project">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9,6 15,12 9,18"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Info block -->
+        <div class="project-info-block">
+          <div class="project-breadcrumb" id="projectBreadcrumb">
+            <a href="index.html">HOME</a>
+            <span class="project-breadcrumb-dot"></span>
+            <a href="#" id="projectCatLink"></a>
+          </div>
+          <div class="project-divider"></div>
+          <div class="project-info">
+            <div class="project-title-row">
+              <p class="project-title" id="projectTitle"></p>
+              <p class="project-tags" id="projectTags"></p>
+            </div>
+            <p class="project-desc" id="projectDesc"></p>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Floating booking button -->
+  <a href="https://calendly.com/YOUR_USERNAME" target="_blank" class="project-booking-btn" aria-label="Book a session">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2"/>
+      <line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+  </a>
+
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-main fade-up">
+        <div class="footer-nav">
+          <a href="services.html">SERVICES,</a>
+          <a href="about.html">ABOUT,</a>
+          <a href="#" class="contact-link">CONTACT,</a>
+        </div>
+        <div class="footer-social">
+          <span class="footer-social-label">Follow</span>
+        </div>
+      </div>
+      <div class="footer-copy-wrapper fade-up delay-1">
+        <div class="footer-copy-line"></div>
+        <p class="footer-copy">©2026 ALL RIGHTS RESERVED</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MOBILE MENU OVERLAY -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="mobile-menu-logo">Psalm Eustoma</a>
+    <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close Menu">
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-menu-body" style="margin-top: 60px;">
+      <a href="services.html" class="mobile-menu-label">SERVICES</a>
+      <div id="mobileMenuCats"></div>
+      <div class="mobile-menu-divider"></div>
+      <a href="about.html" class="mobile-menu-secondary">About</a>
+      <a href="#" class="mobile-menu-secondary" id="langBtnMobile">Language</a>
+    </div>
+    <div class="mobile-menu-footer">
+      <p class="mobile-menu-cta-label">Check Availability</p>
+      <a href="#" class="mobile-menu-btn">
+        <img src="https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-384x384_webp_868be3ba-5c76-485a-ad30-1199e1d44395.webp" width="24" height="24" alt="" style="display:block;">
+        Book a Session
+      </a>
+    </div>
+  </div>
+
+  <!-- LANGUAGE MODAL -->
+  <div class="lang-overlay" id="langOverlay">
+    <div class="lang-modal">
+      <p class="lang-title">Select Language</p>
+      <div class="lang-options">
+        <button class="lang-option">English ( EN )</button>
+        <button class="lang-option">Français ( FR )</button>
+        <button class="lang-option"><span class="lang-zh">中文</span>&nbsp;( ZH )</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/cms.js"></script>
+  <script>
+  window.dataReady.then(() => {
+    const params  = new URLSearchParams(location.search);
+    const id      = params.get('id');
+    const allProj = getCmsAllProjects();
+    const proj    = id ? getCmsProject(id) : (allProj[0] || null);
+
+    if (!proj) return;
+
+    const catName = getCmsCategoryName(proj.categoryId);
+
+    // <title>
+    document.title = `${getL10n(proj.title)} – Psalm Eustoma`;
+
+    // Photos + Quote
+    const photosEl = document.getElementById('projectPhotos');
+    if (photosEl) {
+      const photosHtml = (proj.images || []).map(url => {
+        const isVid = url && (url.includes('/video/upload/') || /\.(mp4|webm|mov)(\?|$)/i.test(url));
+        const media = isVid
+          ? `<video src="${url}" autoplay muted loop playsinline></video>`
+          : `<img src="${url}" alt="${getL10n(proj.title)}">`;
+        return `<div class="project-photo">${media}</div>`;
+      }).join('');
+      const quoteHtml = (!proj.isQuoteHidden && proj.quote) ? `
+        <div class="project-quote">
+          <p class="project-quote-label">Quote</p>
+          <div class="project-quote-card">
+            <p class="project-quote-text">${getL10n(proj.quote)}</p>
+            <div class="project-quote-attribution">
+              <p class="project-quote-for">for</p>
+              <p class="project-quote-author">${getL10n(proj.quoteAuthor) || ''}</p>
+            </div>
+          </div>
+        </div>` : '';
+      photosEl.innerHTML = photosHtml + quoteHtml;
+    }
+
+    // Breadcrumb
+    const catLink = document.getElementById('projectCatLink');
+    if (catLink) {
+      catLink.textContent = catName.toUpperCase();
+      catLink.href = `services.html?cat=${proj.categoryId}`;
+    }
+
+    // Mobile menu: SERVICES → this project's category
+    const mobileServicesLink = document.querySelector('.mobile-menu-label');
+    if (mobileServicesLink) mobileServicesLink.href = `services.html?cat=${proj.categoryId}`;
+
+    // Title, tags, description
+    const titleEl = document.getElementById('projectTitle');
+    if (titleEl) titleEl.textContent = getL10n(proj.title) || '';
+
+    const tagsEl = document.getElementById('projectTags');
+    if (tagsEl) tagsEl.innerHTML = (proj.tags || []).join('<br>');
+
+    const descEl = document.getElementById('projectDesc');
+    if (descEl) descEl.textContent = getL10n(proj.description) || '';
+
+    // Prev / Next — same category, looping
+    const catProjs = allProj.filter(p => p.categoryId === proj.categoryId);
+    const idx = catProjs.findIndex(p => p.id === proj.id);
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        const i = (idx - 1 + catProjs.length) % catProjs.length;
+        sessionStorage.setItem('skipNavFade', '1');
+        location.href = `project.html?id=${catProjs[i].id}`;
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        const i = (idx + 1) % catProjs.length;
+        sessionStorage.setItem('skipNavFade', '1');
+        location.href = `project.html?id=${catProjs[i].id}`;
+      });
+    }
+  });
+  </script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

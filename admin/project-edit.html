@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>編輯作品 — Psalm Eustoma 後台</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400&family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    .pv-body { padding:16px 16px 40px; }
+    .pv-breadcrumb { font-family:'DM Sans',sans-serif; font-size:8px; font-weight:300; color:#888; letter-spacing:.08em; padding:12px 0 8px; display:flex; align-items:center; gap:5px; }
+    .pv-breadcrumb-dot { width:3px; height:3px; border-radius:50%; background:#888; flex-shrink:0; }
+    .pv-divider { height:1px; background:#e5e5e5; margin-bottom:16px; }
+    .pv-title { font-family:'DM Sans',sans-serif; font-size:14px; font-weight:200; color:#111; line-height:1.2; margin-bottom:12px; }
+    .pv-title-placeholder { color:#ccc; }
+    .pv-tags { font-family:'DM Sans',sans-serif; font-size:7px; font-weight:300; color:#888; letter-spacing:.08em; line-height:1.8; text-align:left; margin-bottom:12px; }
+    .pv-desc { font-family:'DM Sans',sans-serif; font-size:9px; font-weight:300; color:#555; line-height:1.7; margin-bottom:16px; }
+    .pv-desc-placeholder { color:#ccc; }
+    .pv-photo { width:100%; aspect-ratio:4/5; object-fit:cover; display:block; margin-bottom:4px; background:#f0f0ee; }
+    .pv-photo-placeholder { width:100%; aspect-ratio:4/5; background:#f0f0ee; display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
+    .pv-photo-placeholder span { font-size:8px; color:#ccc; font-family:'DM Sans',sans-serif; }
+    .pv-quote-section { background-image:url('../images/background pic.webp'); background-size:cover; background-position:center; padding:32px 16px; display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:4px; }
+    .pv-quote-label { font-family:'DM Sans',sans-serif; font-size:8px; font-weight:400; color:#282828; letter-spacing:.08px; }
+    .pv-quote-text { font-family:'Cormorant Garamond','Noto Serif TC',serif; font-size:13px; font-weight:700; color:#333; line-height:1.3; text-align:center; }
+    .pv-quote-text::before { content:'" '; }
+    .pv-quote-text::after  { content:' "'; }
+    .pv-quote-for { font-family:'DM Sans',sans-serif; font-size:8px; color:#888; text-align:center; }
+    .pv-quote-author { font-family:'DM Sans',sans-serif; font-size:8px; color:#282828; text-align:center; text-decoration:underline; }
+    .pv-quote-placeholder { font-family:'DM Sans',sans-serif; font-size:8px; color:#ccc; text-align:center; }
+
+    /* ── Visibility toggle ── */
+    .vis-row { display:flex; align-items:center; gap:12px; padding:14px 16px; background:#fafaf8; border:1px solid var(--border); border-radius:6px; margin-bottom:22px; }
+    .vis-toggle { display:inline-flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
+    .vis-toggle input { position:absolute; opacity:0; width:0; height:0; }
+    .vis-slider { position:relative; width:36px; height:20px; background:#22c55e; border-radius:10px; transition:background 0.2s; flex-shrink:0; }
+    .vis-slider::after { content:''; position:absolute; left:2px; top:2px; width:16px; height:16px; background:#fff; border-radius:50%; transition:transform 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
+    .vis-toggle input:checked ~ .vis-slider { background:#9ca3af; }
+    .vis-toggle input:checked ~ .vis-slider::after { transform:translateX(16px); }
+    .vis-toggle.inverted .vis-slider { background:#9ca3af; }
+    .vis-toggle.inverted input:checked ~ .vis-slider { background:#22c55e; }
+    .vis-label { font-size:13px; font-weight:300; }
+    .vis-label.visible { color:#166534; }
+    .vis-label.hidden  { color:#6b7280; }
+  </style>
+  <link rel="icon" href="../images/Favicon.svg" type="image/svg+xml">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="../js/firebase-init.js"></script>
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><strong>Psalm Eustoma</strong><span>後台管理</span></div>
+    <div class="sidebar-top-action">
+      <a class="btn-view-site" href="../index.html" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        前往前台
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>首頁編輯</a>
+      <a href="projects.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>作品列表</a>
+      <a href="categories.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>分類管理</a>
+      <a href="about.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>About 頁</a>
+      <a href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>聯絡資訊</a>
+    </nav>
+    <div class="sidebar-footer"><button class="btn-logout" id="logoutBtn">登出</button></div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <h1 class="page-title" id="pageTitle">新增作品</h1>
+      <a class="btn btn-ghost" href="projects.html">← 返回列表</a>
+    </div>
+
+    <div class="edit-layout">
+      <!-- ── Left: Form ── -->
+      <div class="edit-form-col">
+        <div class="form-wrap" style="max-width:none;">
+          <input type="hidden" id="projId">
+
+          <div class="vis-row">
+            <label class="vis-toggle">
+              <input type="checkbox" id="projHidden">
+              <span class="vis-slider"></span>
+            </label>
+            <span class="vis-label visible" id="visLabel">顯示中</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">作品名稱 <span style="color:#c03">*</span></label>
+              <div id="projTitleField"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">所屬分類 <span style="color:#c03">*</span>（共用）</label>
+              <select class="form-select" id="projCat"></select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">標籤（最多 3 個，共用）</label>
+            <div class="tags-wrap" id="tagsWrap">
+              <input class="tags-input" id="tagsInput" type="text" placeholder="輸入標籤後按 Enter" maxlength="16">
+            </div>
+            <p class="form-hint">例：LE MARAIS、PHOTOGRAPHY、VIDEO &nbsp;·&nbsp; <span id="tagsCount">0</span> / 3，每個標籤最多 16 字元</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">作品描述</label>
+            <div id="projDescField"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">作品圖片連結（共用）</label>
+            <div class="img-list" id="imgList"></div>
+            <button class="btn btn-ghost" type="button" id="addImgBtn" style="margin-top:8px;font-size:12px;padding:6px 12px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              新增圖片連結
+            </button>
+            <p class="form-hint">圖片建議 1440 × 1800 px（直式 4:5）；影片建議 1080p、MP4 格式、壓縮至 20 MB 以下，上限 100 MB</p>
+          </div>
+
+          <div style="border-top:1px solid var(--border);padding-top:22px;margin-top:4px;">
+            <div class="vis-row" style="margin-bottom:18px;">
+              <label class="vis-toggle inverted">
+                <input type="checkbox" id="projQuoteHidden">
+                <span class="vis-slider"></span>
+              </label>
+              <span class="vis-label hidden" id="quoteVisLabel">客戶評價 · 已關閉</span>
+            </div>
+            <div id="quoteFields" style="display:none;">
+              <div class="form-group">
+                <label class="form-label">評價內容</label>
+                <div id="projQuoteField"></div>
+                <p class="form-hint">最多 200 字元</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">客戶姓名 / 地點</label>
+                <div id="projQuoteAuthorField"></div>
+                <p class="form-hint">最多 40 字元，例：Clémence & Adrien, Paris</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveBtn">儲存作品</button>
+            <a class="btn btn-ghost" href="projects.html">取消</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Right: Phone preview (shows EN version) ── -->
+      <div class="edit-preview-col">
+        <div class="preview-label">手機預覽</div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="pv-nav">
+              <span class="pv-logo">Psalm Eustoma</span>
+              <div class="pv-hamburger"><span></span><span></span></div>
+            </div>
+            <div class="pv-body">
+              <div class="pv-breadcrumb">HOME <span class="pv-breadcrumb-dot"></span> <span id="pvCatName">—</span></div>
+              <div class="pv-divider"></div>
+              <div class="pv-title pv-title-placeholder" id="pvTitle">作品名稱</div>
+              <div class="pv-tags" id="pvTags"></div>
+              <div class="pv-desc pv-desc-placeholder" id="pvDesc">作品描述將顯示於此…</div>
+              <div id="pvPhotos"></div>
+            </div>
+            <div class="pv-quote-section">
+              <div class="pv-quote-label">Quote</div>
+              <div class="pv-quote-placeholder" id="pvQuoteText">客戶評價將顯示於此</div>
+              <div class="pv-quote-for" id="pvQuoteFor" style="display:none;">for</div>
+              <div class="pv-quote-author" id="pvQuoteAuthor"></div>
+            </div>
+          </div>
+        </div>
+        <p class="preview-note">預覽顯示 EN 語言版本</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/admin.js"></script>
+<script>
+  // ── Visibility toggle ──
+  const projHiddenEl = document.getElementById('projHidden');
+  const visLabel     = document.getElementById('visLabel');
+
+  function updateVisLabel() {
+    const hidden = projHiddenEl.checked;
+    visLabel.textContent = hidden ? '已隱藏' : '顯示中';
+    visLabel.className   = hidden ? 'vis-label hidden' : 'vis-label visible';
+  }
+
+  projHiddenEl.addEventListener('change', () => { updateVisLabel(); markDirty(); });
+
+  // ── Quote visibility toggle ──
+  const projQuoteHiddenEl = document.getElementById('projQuoteHidden');
+  const quoteVisLabel     = document.getElementById('quoteVisLabel');
+
+  function updateQuoteVisLabel() {
+    const enabled = projQuoteHiddenEl.checked;
+    quoteVisLabel.textContent = enabled ? '客戶評價 · 顯示中' : '客戶評價 · 已關閉';
+    quoteVisLabel.className   = enabled ? 'vis-label visible' : 'vis-label hidden';
+    const qf = document.getElementById('quoteFields');
+    if (qf) qf.style.display = enabled ? '' : 'none';
+  }
+
+  projQuoteHiddenEl.addEventListener('change', () => { updateQuoteVisLabel(); updatePreview(); markDirty(); });
+
+  // ── Tags ──
+  let tags = [];
+
+  function renderTags() {
+    const wrap     = document.getElementById('tagsWrap');
+    const input    = document.getElementById('tagsInput');
+    const countEl  = document.getElementById('tagsCount');
+    wrap.querySelectorAll('.tag-chip').forEach(el => el.remove());
+    tags.forEach((t, i) => {
+      const chip = document.createElement('span');
+      chip.className = 'tag-chip';
+      chip.innerHTML = `${t}<button type="button" onclick="removeTag(${i})">×</button>`;
+      wrap.insertBefore(chip, input);
+    });
+    if (countEl) countEl.textContent = tags.length;
+    const atMax = tags.length >= 3;
+    input.disabled = atMax;
+    input.placeholder = atMax ? '已達上限（最多 3 個）' : '輸入標籤後按 Enter';
+    updatePreview();
+  }
+
+  function addTag(val) {
+    const v = val.trim().toUpperCase();
+    if (!v || tags.includes(v) || tags.length >= 3) return;
+    tags.push(v); markDirty(); renderTags();
+  }
+
+  function removeTag(i) { tags.splice(i, 1); markDirty(); renderTags(); }
+
+  document.getElementById('tagsWrap').addEventListener('click', () => document.getElementById('tagsInput').focus());
+  document.getElementById('tagsInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTag(this.value); this.value = ''; }
+    if (e.key === 'Backspace' && !this.value && tags.length) removeTag(tags.length - 1);
+  });
+
+  // ── Images ──
+  let images = [];
+
+  function renderImages() {
+    document.getElementById('imgList').innerHTML = images.map((url, i) => {
+      const esc = url.replace(/"/g, '&quot;');
+      const isVid = isVideoUrl(url);
+      const thumbSrc = isVid ? cloudinaryVideoThumb(url) : esc;
+      return `
+        <div class="img-item" draggable="true" data-idx="${i}">
+          <span class="drag-handle">⋮⋮</span>
+          <div class="img-thumb-wrap">
+            ${url ? `<img class="img-thumb" src="${thumbSrc}">` : `<div class="img-thumb-empty"></div>`}
+            ${url && isVid ? `<span class="img-video-badge">▶</span>` : ''}
+            ${i === 0 ? `<span class="img-cover-badge">封面</span>` : ''}
+          </div>
+          <div class="img-row" style="flex:1;margin:0;">
+            <input class="form-input" type="url" id="projImg_${i}" value="${esc}" placeholder="https://..."
+              oninput="images[${i}]=this.value;markDirty();updatePreview();updateThumb(${i})">
+            <button type="button" class="btn-upload-img" id="projUpBtn_${i}"
+              onclick="triggerImgUpload(document.getElementById('projImg_${i}'),this,'image/*,video/*')">↑ 上傳</button>
+            <button class="btn btn-danger-soft" type="button" onclick="removeImg(${i})">✕</button>
+          </div>
+        </div>`;
+    }).join('');
+    updatePreview();
+  }
+
+  function updateThumb(i) {
+    const item = document.querySelector(`.img-item[data-idx="${i}"]`);
+    if (!item) return;
+    const input = item.querySelector('input[type="url"]');
+    const url = input ? input.value.trim() : '';
+    const wrap = item.querySelector('.img-thumb-wrap');
+    let thumb = wrap.querySelector('.img-thumb');
+    let empty = wrap.querySelector('.img-thumb-empty');
+    let vidBadge = wrap.querySelector('.img-video-badge');
+    if (url && url.startsWith('http')) {
+      const isVid = isVideoUrl(url);
+      const src = isVid ? cloudinaryVideoThumb(url) : url;
+      if (!thumb) {
+        thumb = document.createElement('img');
+        thumb.className = 'img-thumb';
+        if (empty) empty.replaceWith(thumb); else wrap.prepend(thumb);
+      }
+      thumb.src = src;
+      if (isVid && !vidBadge) {
+        vidBadge = document.createElement('span');
+        vidBadge.className = 'img-video-badge';
+        vidBadge.textContent = '▶';
+        wrap.appendChild(vidBadge);
+      } else if (!isVid && vidBadge) {
+        vidBadge.remove();
+      }
+    } else {
+      if (!empty) {
+        empty = document.createElement('div');
+        empty.className = 'img-thumb-empty';
+        if (thumb) thumb.replaceWith(empty); else wrap.prepend(empty);
+      }
+      if (vidBadge) vidBadge.remove();
+    }
+  }
+
+  // Read current URL values from DOM before any re-render to avoid stale array
+  function syncImagesFromDOM() {
+    document.querySelectorAll('#imgList input[type="url"]').forEach((input, i) => {
+      images[i] = input.value.trim();
+    });
+  }
+
+  function addImg() {
+    syncImagesFromDOM();
+    images.push(''); markDirty(); renderImages();
+    const inputs = document.querySelectorAll('#imgList .form-input');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  }
+
+  function removeImg(i) { syncImagesFromDOM(); images.splice(i, 1); markDirty(); renderImages(); }
+  document.getElementById('addImgBtn').addEventListener('click', addImg);
+
+  // ── Image drag-and-drop reorder ──
+  let _imgDragSrc = null;
+  const imgListEl = document.getElementById('imgList');
+
+  imgListEl.addEventListener('dragstart', e => {
+    const item = e.target.closest('.img-item');
+    if (!item) return;
+    _imgDragSrc = parseInt(item.dataset.idx);
+    e.dataTransfer.effectAllowed = 'move';
+    requestAnimationFrame(() => item.classList.add('dragging'));
+  });
+  imgListEl.addEventListener('dragend', () => {
+    imgListEl.querySelectorAll('.img-item').forEach(el => el.classList.remove('dragging', 'drag-over'));
+    _imgDragSrc = null;
+  });
+  imgListEl.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const item = e.target.closest('.img-item');
+    imgListEl.querySelectorAll('.img-item').forEach(el => el.classList.remove('drag-over'));
+    if (item && parseInt(item.dataset.idx) !== _imgDragSrc) item.classList.add('drag-over');
+  });
+  imgListEl.addEventListener('drop', e => {
+    e.preventDefault();
+    const item = e.target.closest('.img-item');
+    imgListEl.querySelectorAll('.img-item').forEach(el => el.classList.remove('drag-over', 'dragging'));
+    if (!item || _imgDragSrc === null) return;
+    const tgtIdx = parseInt(item.dataset.idx);
+    if (tgtIdx === _imgDragSrc) return;
+    syncImagesFromDOM();
+    const [moved] = images.splice(_imgDragSrc, 1);
+    images.splice(tgtIdx, 0, moved);
+    _imgDragSrc = null;
+    markDirty();
+    renderImages();
+  });
+
+  // ── Category dropdown ──
+  function buildCatSelect(selectedId) {
+    const sel = document.getElementById('projCat');
+    sel.innerHTML = '<option value="">請選擇分類</option>';
+    getCategories().forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.id;
+      opt.textContent = getL10n(cat.name);
+      if (cat.id === selectedId) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  // ── Live preview (shows EN values) ──
+  function getEN(id) {
+    const el = document.getElementById(`${id}-en`);
+    return el ? el.value.trim() : '';
+  }
+
+  function updatePreview() {
+    const title  = getEN('projTitle');
+    const desc   = getEN('projDesc');
+    const quote  = getEN('projQuote');
+    const author = getEN('projQuoteAuthor');
+    const catId  = document.getElementById('projCat').value;
+    const catName = catId ? getCategoryName(catId) : '—';
+    const imgUrls = [...document.querySelectorAll('#imgList .form-input')].map(i => i.value.trim()).filter(Boolean);
+
+    const pvTitle = document.getElementById('pvTitle');
+    pvTitle.textContent = title || '作品名稱';
+    pvTitle.classList.toggle('pv-title-placeholder', !title);
+    document.getElementById('pvCatName').textContent = catName;
+    document.getElementById('pvTags').innerHTML = tags.length ? tags.map(t => `<div>${t}</div>`).join('') : '';
+
+    const pvDesc = document.getElementById('pvDesc');
+    pvDesc.textContent = desc || '作品描述將顯示於此…';
+    pvDesc.classList.toggle('pv-desc-placeholder', !desc);
+
+    const pvPhotos = document.getElementById('pvPhotos');
+    pvPhotos.innerHTML = imgUrls.length && imgUrls[0]
+      ? `<img class="pv-photo" src="${imgUrls[0]}" alt="" onerror="this.style.display='none'">`
+      : `<div class="pv-photo-placeholder"><span>圖片預覽</span></div>`;
+
+    const pvQuoteSection = document.querySelector('.pv-quote-section');
+    const pvQuoteText   = document.getElementById('pvQuoteText');
+    const pvQuoteFor    = document.getElementById('pvQuoteFor');
+    const pvQuoteAuthor = document.getElementById('pvQuoteAuthor');
+    const quoteOff = projQuoteHiddenEl && projQuoteHiddenEl.checked;
+    if (pvQuoteSection) pvQuoteSection.style.display = quoteOff ? 'none' : '';
+    if (quote) { pvQuoteText.textContent = quote; pvQuoteText.className = 'pv-quote-text'; }
+    else       { pvQuoteText.textContent = '客戶評價將顯示於此'; pvQuoteText.className = 'pv-quote-placeholder'; }
+    pvQuoteFor.style.display = author ? 'block' : 'none';
+    pvQuoteAuthor.textContent = author || '';
+  }
+
+  // Attach preview listeners to EN inputs once fields are rendered
+  function attachPreviewListeners() {
+    ['projTitle-en', 'projDesc-en', 'projQuote-en', 'projQuoteAuthor-en'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', updatePreview);
+    });
+    document.getElementById('projCat').addEventListener('change', updatePreview);
+  }
+
+  // ── Render all ml-fields ──
+  function renderFields(proj) {
+    document.getElementById('projTitleField').innerHTML       = mlFieldHTML('projTitle',       proj ? proj.title       : null, { placeholder: 'e.g. Lumière Douce' });
+    document.getElementById('projDescField').innerHTML        = mlFieldHTML('projDesc',        proj ? proj.description : null, { textarea: true, rows: 4, placeholder: '描述這個作品的故事、風格、拍攝地點…', maxlength: 300 });
+    document.getElementById('projQuoteField').innerHTML       = mlFieldHTML('projQuote',       proj ? proj.quote       : null, { textarea: true, rows: 3, placeholder: '客戶說的話…', maxlength: 200 });
+    document.getElementById('projQuoteAuthorField').innerHTML = mlFieldHTML('projQuoteAuthor', proj ? proj.quoteAuthor : null, { placeholder: 'e.g. Clémence & Adrien, Paris', maxlength: 40 });
+    attachPreviewListeners();
+    updatePreview();
+  }
+
+  // ── Boot once cloud data is loaded ──
+  window.dataReady.then(() => {
+    const params = new URLSearchParams(location.search);
+    const editId = params.get('id');
+
+    if (editId) {
+      document.getElementById('pageTitle').textContent = '編輯作品';
+      const proj = getProject(editId);
+      if (proj) {
+        document.getElementById('projId').value = proj.id;
+        tags   = [...(proj.tags   || [])];
+        images = [...(proj.images || [])];
+        projHiddenEl.checked = !!proj.isHidden;
+        updateVisLabel();
+        projQuoteHiddenEl.checked = !!proj.isQuoteHidden;
+        updateQuoteVisLabel();
+        buildCatSelect(proj.categoryId);
+        renderFields(proj);
+        renderTags();
+        renderImages();
+      }
+    } else {
+      buildCatSelect('');
+      renderFields(null);
+      renderImages();
+      updateQuoteVisLabel();
+    }
+
+    document.querySelector('.edit-form-col').addEventListener('input', markDirty);
+    document.getElementById('projCat').addEventListener('change', markDirty);
+    initDirtyGuard();
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      const title       = validateML('projTitle', true);
+      const description = validateML('projDesc',  false);
+      if (!title || !description) return;
+
+      // Quote fields are only validated when the customer-review toggle is ON.
+      // When OFF, keep whatever values are in the DOM so toggling back on
+      // doesn't lose the user's previous text.
+      let quote, quoteAuthor;
+      if (projQuoteHiddenEl.checked) {
+        quote       = validateML('projQuote',       false);
+        quoteAuthor = validateML('projQuoteAuthor', false);
+        if (!quote || !quoteAuthor) return;
+        const enQuote  = document.getElementById('projQuote-en')?.value.trim();
+        const enAuthor = document.getElementById('projQuoteAuthor-en')?.value.trim();
+        if (!enQuote)  { document.getElementById('projQuote-row-en')?.classList.add('warn'); return; }
+        if (!enAuthor) { document.getElementById('projQuoteAuthor-row-en')?.classList.add('warn'); return; }
+      } else {
+        quote       = getML('projQuote');
+        quoteAuthor = getML('projQuoteAuthor');
+      }
+
+      const catId = document.getElementById('projCat').value;
+      if (!catId) { alert('請選擇所屬分類'); return; }
+
+      const imgUrls  = [...document.querySelectorAll('#imgList .form-input')].map(i => i.value.trim()).filter(Boolean);
+      const existing = editId ? getProject(editId) : null;
+      saveProject({
+        id:          editId || genId(),
+        categoryId:  catId,
+        title,
+        tags:        [...tags],
+        description,
+        quote,
+        quoteAuthor,
+        images:      imgUrls,
+        isHidden:      projHiddenEl.checked,
+        isQuoteHidden: !projQuoteHiddenEl.checked,
+        order:       existing ? existing.order : (getProjects('').length + 1)
+      });
+      markClean();
+      location.href = 'projects.html';
+    });
+  });
+</script>
+</body>
+</html>

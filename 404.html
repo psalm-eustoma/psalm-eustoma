@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 – Psalm Eustoma</title>
+  <meta name="description" content="Paris-based studio for cinematic portraits, weddings, and elopements.">
+  <meta property="og:title" content="Psalm Eustoma – Paris-based Travel Photographer">
+  <meta property="og:description" content="Paris-based studio for cinematic portraits, weddings, and elopements.">
+  <meta property="og:image" content="">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Psalm Eustoma">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@200;300;400&family=Noto+Sans+TC:wght@200;300;400&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="images/Favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="images/Favicon.svg">
+  <meta name="theme-color" content="#000000">
+  <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase-init.js"></script>
+</head>
+<body class="error-page">
+
+  <!-- NAV -->
+  <nav class="fade-down">
+    <a href="index.html" class="nav-logo">Psalm Eustoma</a>
+    <div class="nav-links">
+      <a href="services.html">SERVICES</a>
+      <a href="about.html">ABOUT</a>
+      <a href="#" class="contact-link">CONTACT</a>
+      <a href="#" id="langBtn">LANGUAGE</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Open Menu">
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="error-hero" id="errorHero">
+    <div class="error-content">
+      <div class="error-left fade-up">
+        <h1 class="error-label">404</h1>
+        <p class="error-heading">This page isn't here.<br>Let's go back to where<br>the journey continues.</p>
+      </div>
+      <div class="error-right fade-up delay-1">
+        <p class="error-desc">The page you're looking for may have moved or no longer exists.</p>
+        <a href="index.html" class="error-back">Return Home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOBILE MENU OVERLAY -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="mobile-menu-logo">Psalm Eustoma</a>
+    <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close Menu">
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-menu-body" style="margin-top: 60px;">
+      <a href="services.html" class="mobile-menu-label">SERVICES</a>
+      <div id="mobileMenuCats"></div>
+      <div class="mobile-menu-divider"></div>
+      <a href="about.html" class="mobile-menu-secondary">About</a>
+      <a href="#" class="mobile-menu-secondary" id="langBtnMobile">Language</a>
+    </div>
+    <div class="mobile-menu-footer">
+      <p class="mobile-menu-cta-label">Check Availability</p>
+      <a href="#" class="mobile-menu-btn">
+        <img src="https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-384x384_webp_868be3ba-5c76-485a-ad30-1199e1d44395.webp" width="24" height="24" alt="" style="display:block;">
+        Book a Session
+      </a>
+    </div>
+  </div>
+
+  <!-- LANGUAGE MODAL -->
+  <div class="lang-overlay" id="langOverlay">
+    <div class="lang-modal">
+      <p class="lang-title">Select Language</p>
+      <div class="lang-options">
+        <button class="lang-option">English ( EN )</button>
+        <button class="lang-option">Français ( FR )</button>
+        <button class="lang-option"><span class="lang-zh">中文</span>&nbsp;( ZH )</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/cms.js"></script>
+  <script>
+    (function () {
+      const hero = document.getElementById('errorHero');
+      if (hero) hero.style.backgroundImage = `url('images/404bg.jpg')`;
+    })();
+
+    (function () {
+      const backEl = document.querySelector('.error-back');
+      let seconds = 5;
+      function tick() {
+        if (backEl) backEl.textContent = `Returning home in ${seconds}…`;
+        if (seconds <= 0) { location.href = 'index.html'; return; }
+        seconds--;
+        setTimeout(tick, 1000);
+      }
+      tick();
+    })();
+  </script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

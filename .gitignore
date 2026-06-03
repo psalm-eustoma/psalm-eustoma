@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Node (if added later)
+node_modules/
+
+# Env files (never commit secrets)
+.env
+.env.*
+
+# Playwright / test artifacts
+.playwright-mcp/
+test-*.png
+
+# Logs
+*.log
+
+# Vercel local
+.vercel/

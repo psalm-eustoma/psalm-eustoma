@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登入 — Psalm Eustoma 後台</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="../images/Favicon.svg" type="image/svg+xml">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="../js/firebase-init.js"></script>
+</head>
+<body>
+<div class="login-page">
+  <div class="login-box">
+    <p class="login-logo">Psalm Eustoma</p>
+    <p class="login-sub">後台管理</p>
+    <div class="login-error" id="loginError">帳號或密碼錯誤</div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="username" autocomplete="username" placeholder="your@email.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">密碼</label>
+        <input class="form-input" type="password" id="password" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <button class="btn btn-primary" type="submit" id="loginBtn" style="width:100%;justify-content:center;margin-top:8px;">登入</button>
+    </form>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+<script>
+  const errorEl = document.getElementById('loginError');
+  const btnEl   = document.getElementById('loginBtn');
+
+  // If session is already restored, jump straight to the dashboard
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) location.href = 'projects.html';
+  });
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.style.display = 'none';
+    btnEl.disabled = true;
+    btnEl.textContent = '登入中…';
+    const email = document.getElementById('username').value.trim();
+    const pass  = document.getElementById('password').value;
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, pass);
+      location.href = 'projects.html';
+    } catch (err) {
+      // v8 SDK wraps the real error inside err.message as JSON when
+      // Email-enumeration-protection is on, so err.code is always "auth/internal-error".
+      let inner = '';
+      try { inner = JSON.parse(err.message)?.error?.message || ''; } catch {}
+
+      const codeMap = {
+        'auth/invalid-email':             'Email 格式不正確',
+        'auth/missing-email':             '請輸入 Email',
+        'auth/missing-password':          '請輸入密碼',
+        'auth/user-not-found':            '帳號或密碼錯誤',
+        'auth/wrong-password':            '帳號或密碼錯誤',
+        'auth/invalid-credential':        '帳號或密碼錯誤',
+        'auth/invalid-login-credentials': '帳號或密碼錯誤',
+        'auth/user-disabled':             '此帳號已被停用',
+        'auth/too-many-requests':         '嘗試次數過多，請稍後再試',
+        'auth/network-request-failed':    '網路連線失敗，請檢查網路後重試'
+      };
+      const innerMap = {
+        'INVALID_LOGIN_CREDENTIALS':    '帳號或密碼錯誤',
+        'EMAIL_NOT_FOUND':              '帳號或密碼錯誤',
+        'INVALID_PASSWORD':             '帳號或密碼錯誤',
+        'USER_DISABLED':                '此帳號已被停用',
+        'TOO_MANY_ATTEMPTS_TRY_LATER':  '嘗試次數過多，請稍後再試',
+        'INVALID_EMAIL':                'Email 格式不正確',
+        'MISSING_PASSWORD':             '請輸入密碼'
+      };
+      const msg = codeMap[err.code]
+               || innerMap[inner]
+               || '登入失敗，請稍後再試';
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+      btnEl.disabled = false;
+      btnEl.textContent = '登入';
+    }
+  });
+</script>
+</body>
+</html>

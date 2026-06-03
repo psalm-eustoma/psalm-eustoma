@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>分類管理 — Psalm Eustoma 後台</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    /* ── Drag-and-drop (categories-specific overrides) ── */
+    tr[draggable]:last-child.drag-over-below td { border-bottom: 2px solid var(--accent); }
+    .drag-handle { cursor: grab !important; color: #bbb !important; font-size: 16px; user-select: none; }
+    .drag-handle:active { cursor: grabbing !important; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.38);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: 10px;
+      width: 520px;
+      max-width: calc(100vw - 48px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.16);
+      transform: translateY(8px);
+      transition: transform 0.18s;
+    }
+    .modal-overlay.open .modal-box {
+      transform: translateY(0);
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 28px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h2 { font-size: 15px; font-weight: 300; }
+    .modal-close {
+      background: none; border: none;
+      color: var(--text-mid); cursor: pointer;
+      font-size: 18px; line-height: 1; padding: 2px 4px;
+      transition: color 0.15s;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-body { padding: 24px 28px 8px; }
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      padding: 16px 28px 22px;
+    }
+  </style>
+  <link rel="icon" href="../images/Favicon.svg" type="image/svg+xml">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="../js/firebase-init.js"></script>
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <strong>Psalm Eustoma</strong>
+      <span>後台管理</span>
+    </div>
+    <div class="sidebar-top-action">
+      <a class="btn-view-site" href="../index.html" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        前往前台
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        首頁編輯
+      </a>
+      <a href="projects.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        作品列表
+      </a>
+      <a href="categories.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+        分類管理
+      </a>
+      <a href="about.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        About 頁
+      </a>
+      <a href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        聯絡資訊
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="logoutBtn">登出</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="page-header">
+      <h1 class="page-title">分類管理</h1>
+      <button class="btn btn-primary" id="addBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          新增分類
+        </button>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40px"></th>
+            <th style="width:56px">封面</th>
+            <th>分類名稱</th>
+            <th>副標題</th>
+            <th>作品數</th>
+            <th style="width:120px"></th>
+          </tr>
+        </thead>
+        <tbody id="catBody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- ── Modal ── -->
+<div class="modal-overlay" id="catModal">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-header">
+      <h2 id="formTitle">新增分類</h2>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-group">
+        <label class="form-label">分類名稱 <span style="color:#c03">*</span></label>
+        <div id="catNameField"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">副標題</label>
+        <div id="catSubtitleField"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">首頁縮圖（Archive 懸停小圖）</label>
+        <div class="img-row">
+          <input class="form-input" type="url" id="catImage" placeholder="https://...">
+          <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('catImage'),this)">↑ 上傳</button>
+        </div>
+        <p class="form-hint">建議 800 × 800 px（正方形），用於 Archive 懸停預覽</p>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">分類頁 Hero 大圖</label>
+        <div class="img-row">
+          <input class="form-input" type="url" id="catHeroImage" placeholder="https://...">
+          <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('catHeroImage'),this)">↑ 上傳</button>
+        </div>
+        <p class="form-hint">建議 1920 × 900 px（橫式），分類頁頂部 Hero 背景</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="saveBtn">儲存</button>
+      <button class="btn btn-ghost" id="cancelBtn">取消</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+<script>
+  function countProjects(catId) {
+    return getData().projects.filter(p => p.categoryId === catId).length;
+  }
+
+  function renderTable() {
+    const cats  = getCategories();
+    const tbody = document.getElementById('catBody');
+    if (cats.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty">尚無分類，請新增</div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = cats.map(cat => {
+      const name     = getL10n(cat.name)     || '（未命名）';
+      const subtitle = getL10n(cat.subtitle) || '—';
+      return `
+        <tr draggable="true" data-id="${cat.id}">
+          <td class="drag-handle">⋮⋮</td>
+          <td>
+            ${cat.image
+              ? `<img src="${cat.image}" style="width:48px;height:36px;object-fit:cover;border-radius:3px;display:block;">`
+              : `<div style="width:48px;height:36px;background:#f0f0ee;border-radius:3px;"></div>`}
+          </td>
+          <td style="font-weight:400;">${name}</td>
+          <td style="color:#888;">${subtitle}</td>
+          <td>${countProjects(cat.id)} 個作品</td>
+          <td>
+            <div class="actions">
+              <button class="btn btn-icon" onclick="openEdit('${cat.id}')" title="編輯">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="btn btn-danger-soft" onclick="removeCat('${cat.id}')">刪除</button>
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  // ── Modal open / close ──
+  function openModal(isEdit, cat) {
+    document.getElementById('formTitle').textContent = isEdit ? '編輯分類' : '新增分類';
+    document.getElementById('editId').value   = cat ? cat.id : '';
+    document.getElementById('catImage').value     = cat ? (cat.image     || '') : '';
+    document.getElementById('catHeroImage').value = cat ? (cat.heroImage || '') : '';
+    // Render ml-fields with current data
+    document.getElementById('catNameField').innerHTML     = mlFieldHTML('catName',     cat ? cat.name     : null, { placeholder: 'e.g. Paris Lifestyle & Travel' });
+    document.getElementById('catSubtitleField').innerHTML = mlFieldHTML('catSubtitle', cat ? cat.subtitle : null, { placeholder: 'e.g. Creating images that feel natural and sincere.' });
+    document.getElementById('catModal').classList.add('open');
+    setTimeout(() => {
+      refreshImgPreviews(document.getElementById('catModal'));
+      const el = document.getElementById('catName-en'); if (el) el.focus();
+    }, 80);
+  }
+
+  function closeModal() {
+    document.getElementById('catModal').classList.remove('open');
+    document.getElementById('editId').value       = '';
+    document.getElementById('catImage').value     = '';
+    document.getElementById('catHeroImage').value = '';
+    refreshImgPreviews(document.getElementById('catModal'));
+    document.getElementById('catNameField').innerHTML     = '';
+    document.getElementById('catSubtitleField').innerHTML = '';
+  }
+
+  // Close on backdrop click (but not box click)
+  document.getElementById('catModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('cancelBtn').addEventListener('click', closeModal);
+
+  // ── Edit ──
+  function openEdit(id) {
+    const cat = getCategories().find(c => c.id === id);
+    if (!cat) return;
+    openModal(true, cat);
+  }
+
+  // ── Delete ──
+  function removeCat(id) {
+    const count = countProjects(id);
+    const msg = count > 0
+      ? `此分類有 ${count} 個作品，刪除後作品也會一併移除。確定要刪除嗎？`
+      : '確定要刪除這個分類嗎？';
+    if (!confirmDelete(msg)) return;
+    deleteCategory(id);
+    renderTable();
+  }
+
+  // ── Add button ──
+  document.getElementById('addBtn').addEventListener('click', () => openModal(false, null));
+
+  // ── Save ──
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const nameML     = validateML('catName',     true);   // required: EN must be filled
+    const subtitleML = validateML('catSubtitle', false);  // optional: all-empty OK
+    if (!nameML || !subtitleML) return; // highlighted rows tell the user what's missing
+
+    const id   = document.getElementById('editId').value || genId();
+    const cats = getCategories();
+    const existing = cats.find(c => c.id === id);
+
+    saveCategory({
+      id,
+      name:     nameML,
+      subtitle: subtitleML,
+      image:     document.getElementById('catImage').value.trim(),
+      heroImage: document.getElementById('catHeroImage').value.trim(),
+      order:    existing ? existing.order : (cats.length + 1)
+    });
+    closeModal();
+    renderTable();
+    showSaveToast();
+  });
+
+  window.dataReady.then(() => {
+    renderTable();
+    enableRowDrag(document.getElementById('catBody'), reorderCategories);
+  });
+</script>
+</body>
+</html>

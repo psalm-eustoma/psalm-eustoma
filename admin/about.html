@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About 頁 — Psalm Eustoma 後台</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400&family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    /* Hero: mobile = image on top, black section below */
+    .pv-hero { display:flex; flex-direction:column; }
+    .pv-hero-img-block { width:100%; height:160px; background:#d8d5d0 no-repeat center/cover; flex-shrink:0; }
+    .pv-hero-content { width:100%; background:#111; padding:20px 16px 24px; display:flex; flex-direction:column; justify-content:flex-end; gap:10px; min-height:160px; }
+    .pv-eyebrow { font-family:'DM Sans',sans-serif; font-size:7.5px; font-weight:300; color:#9ca3af; line-height:1.5; }
+    .pv-headline { font-family:'DM Sans',sans-serif; font-size:9px; font-weight:300; color:#fff; line-height:1.65; }
+    .pv-portrait { width:52px; height:52px; border-radius:50%; background:#444 no-repeat center/cover; margin-top:6px; }
+    .pv-placeholder { color:#555 !important; }
+
+    /* Invitation: background image treatment */
+    .pv-invitation { min-height:220px; padding:32px 16px 36px; background:#d8d4c8; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .pv-inv-label { font-family:'DM Sans',sans-serif; font-size:7px; font-weight:300; letter-spacing:0.08em; color:#686868; margin-bottom:14px; }
+    .pv-inv-quote { font-family:Georgia,serif; font-size:11px; font-weight:700; color:#111; line-height:1.6; margin-bottom:10px; max-width:220px; }
+    .pv-inv-note { font-family:'DM Sans',sans-serif; font-size:7.5px; font-weight:300; color:#555; }
+  </style>
+  <link rel="icon" href="../images/Favicon.svg" type="image/svg+xml">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="../js/firebase-init.js"></script>
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><strong>Psalm Eustoma</strong><span>後台管理</span></div>
+    <div class="sidebar-top-action">
+      <a class="btn-view-site" href="../index.html" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        前往前台
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>首頁編輯</a>
+      <a href="projects.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>作品列表</a>
+      <a href="categories.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>分類管理</a>
+      <a href="about.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>About 頁</a>
+      <a href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>聯絡資訊</a>
+    </nav>
+    <div class="sidebar-footer"><button class="btn-logout" id="logoutBtn">登出</button></div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <h1 class="page-title">About 頁</h1>
+    </div>
+
+    <div class="edit-layout">
+
+      <!-- ── Left: Form ── -->
+      <div class="edit-form-col">
+        <div class="tab-container">
+          <div class="tab-bar">
+            <button class="tab-btn active" data-tab="hero">Hero</button>
+            <button class="tab-btn" data-tab="invitation">Invitation</button>
+          </div>
+          <div class="tab-body">
+
+            <!-- Hero -->
+            <div class="tab-panel active" id="tab-hero">
+              <div class="form-group">
+                <label class="form-label">左側背景圖連結（共用）</label>
+                <div class="img-row">
+                  <input class="form-input" type="url" id="heroImage" placeholder="https://...">
+                  <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('heroImage'),this)">↑ 上傳</button>
+                </div>
+                <p class="form-hint">建議 1440 × 1800 px（直式 4:5）</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">上方小字</label>
+                <div id="eyebrowField"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">主標題</label>
+                <div id="headlineField"></div>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">肖像圖連結（圓形，共用）</label>
+                <div class="img-row">
+                  <input class="form-input" type="url" id="portrait" placeholder="https://...">
+                  <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('portrait'),this)">↑ 上傳</button>
+                </div>
+                <p class="form-hint">建議 1080 × 1080 px（正方形 1:1）</p>
+              </div>
+            </div>
+
+            <!-- Invitation -->
+            <div class="tab-panel" id="tab-invitation">
+              <div class="form-group">
+                <label class="form-label">引言文字</label>
+                <div id="invitationQuoteField"></div>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">下方小字</label>
+                <div id="invitationNoteField"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="save-bar">
+          <button class="btn btn-primary" id="saveBtn">儲存所有變更</button>
+        </div>
+      </div>
+
+      <!-- ── Right: Phone preview ── -->
+      <div class="edit-preview-col">
+        <div class="preview-label">手機預覽</div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="pv-nav">
+              <span class="pv-logo">Psalm Eustoma</span>
+              <div class="pv-hamburger"><span></span><span></span></div>
+            </div>
+            <!-- Hero: mobile = image on top, black section below -->
+            <div class="pv-hero">
+              <div class="pv-hero-img-block" id="pvHeroBg"></div>
+              <div class="pv-hero-content">
+                <div class="pv-eyebrow pv-placeholder" id="pvEyebrow">Eyebrow text</div>
+                <div class="pv-headline pv-placeholder" id="pvHeadline">主標題文字…</div>
+                <div class="pv-portrait" id="pvPortrait"></div>
+              </div>
+            </div>
+            <div class="pv-invitation">
+              <div class="pv-inv-label">INVITATION</div>
+              <div class="pv-inv-quote pv-placeholder" id="pvInvQuote">引言文字將顯示於此…</div>
+              <div class="pv-inv-note pv-placeholder" id="pvInvNote">下方小字</div>
+            </div>
+          </div>
+        </div>
+        <p class="preview-note">預覽顯示 EN 語言版本</p>
+      </div>
+
+    </div><!-- .edit-layout -->
+  </main>
+</div>
+
+<script src="js/admin.js"></script>
+<script>
+  // ── Tab switching ──
+  const TAB_FIELDS = {
+    hero:       ['eyebrow', 'headline'],
+    invitation: ['invitationQuote', 'invitationNote']
+  };
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  // ── Live preview (EN only) ──
+  function getEN(id) {
+    const el = document.getElementById(`${id}-en`);
+    return el ? el.value.trim() : '';
+  }
+
+  function updatePreview() {
+    const heroImg   = document.getElementById('heroImage').value.trim();
+    const portraitUrl = document.getElementById('portrait').value.trim();
+    const eyebrow   = getEN('eyebrow');
+    const headline  = getEN('headline');
+    const invQuote  = getEN('invitationQuote');
+    const invNote   = getEN('invitationNote');
+
+    document.getElementById('pvHeroBg').style.backgroundImage = heroImg ? `url('${heroImg}')` : '';
+    document.getElementById('pvPortrait').style.backgroundImage = portraitUrl ? `url('${portraitUrl}')` : '';
+
+    const pvEyebrow = document.getElementById('pvEyebrow');
+    pvEyebrow.textContent = eyebrow || 'Eyebrow text';
+    pvEyebrow.classList.toggle('pv-placeholder', !eyebrow);
+
+    const pvHeadline = document.getElementById('pvHeadline');
+    pvHeadline.textContent = headline || '主標題文字…';
+    pvHeadline.classList.toggle('pv-placeholder', !headline);
+
+    const pvInvQuote = document.getElementById('pvInvQuote');
+    pvInvQuote.textContent = invQuote || '引言文字將顯示於此…';
+    pvInvQuote.classList.toggle('pv-placeholder', !invQuote);
+
+    const pvInvNote = document.getElementById('pvInvNote');
+    pvInvNote.textContent = invNote || '下方小字';
+    pvInvNote.classList.toggle('pv-placeholder', !invNote);
+  }
+
+  function attachPreviewListeners() {
+    ['eyebrow-en', 'headline-en', 'invitationQuote-en', 'invitationNote-en'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', updatePreview);
+    });
+    document.getElementById('heroImage').addEventListener('input', updatePreview);
+    document.getElementById('portrait').addEventListener('input', updatePreview);
+    document.querySelector('.edit-form-col').addEventListener('input', markDirty);
+  }
+
+  // ── Load ──
+  function load() {
+    const a = getAbout();
+    document.getElementById('heroImage').value = a.heroImage || '';
+    document.getElementById('portrait').value  = a.portrait  || '';
+    refreshImgPreviews();
+    document.getElementById('eyebrowField').innerHTML         = mlFieldHTML('eyebrow',         a.eyebrow,         { placeholder: 'French photographer based in Paris.' });
+    document.getElementById('headlineField').innerHTML        = mlFieldHTML('headline',        a.headline,        { textarea: true, rows: 3, placeholder: 'Psalm Eustoma focuses on guided portraits...' });
+    document.getElementById('invitationQuoteField').innerHTML = mlFieldHTML('invitationQuote', a.invitationQuote, { textarea: true, rows: 3, placeholder: 'Every collaboration begins...' });
+    document.getElementById('invitationNoteField').innerHTML  = mlFieldHTML('invitationNote',  a.invitationNote,  { placeholder: 'Every story begins with trust.' });
+    attachPreviewListeners();
+    updatePreview();
+    initDirtyGuard();
+  }
+
+  // ── Validate all tabs ──
+  function collectAndValidate() {
+    let valid = true;
+    let firstFailTab = null;
+    const results = {};
+    Object.entries(TAB_FIELDS).forEach(([tab, fields]) => {
+      fields.forEach(id => {
+        const val = validateML(id, false);
+        if (val === false) { valid = false; if (!firstFailTab) firstFailTab = tab; }
+        else results[id] = val;
+      });
+    });
+    if (!valid) { switchTab(firstFailTab); return null; }
+    return results;
+  }
+
+  // ── Save ──
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const r = collectAndValidate();
+    if (!r) return;
+
+    saveAbout({
+      heroImage:       document.getElementById('heroImage').value.trim(),
+      eyebrow:         r.eyebrow,
+      headline:        r.headline,
+      portrait:        document.getElementById('portrait').value.trim(),
+      invitationQuote: r.invitationQuote,
+      invitationNote:  r.invitationNote
+    });
+
+    markClean();
+    showSaveToast();
+  });
+
+  window.dataReady.then(() => load());
+</script>
+</body>
+</html>
