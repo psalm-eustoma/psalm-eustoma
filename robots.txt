@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /admin/
 
-Sitemap: https://REPLACE_WITH_DOMAIN/sitemap.xml
+Sitemap: https://psalm-eustoma.pages.dev/sitemap.xml

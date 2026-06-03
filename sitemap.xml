@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://REPLACE_WITH_DOMAIN/</loc>
+    <loc>https://psalm-eustoma.pages.dev/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://REPLACE_WITH_DOMAIN/services</loc>
+    <loc>https://psalm-eustoma.pages.dev/services</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://REPLACE_WITH_DOMAIN/about</loc>
+    <loc>https://psalm-eustoma.pages.dev/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
