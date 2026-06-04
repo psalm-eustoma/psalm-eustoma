@@ -552,8 +552,8 @@ footer {
 .fade-down {
   opacity: 0;
   transform: translateY(-48px);
-  transition: opacity 2.5s var(--ease),
-              transform 2.5s var(--ease);
+  transition: opacity 0.8s var(--ease),
+              transform 0.8s var(--ease);
 }
 .fade-down.visible { opacity: 1; transform: translateY(0); }
 
