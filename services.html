@@ -14,6 +14,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://firestore.googleapis.com">
+  <link rel="preconnect" href="https://res.cloudinary.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@200;300;400&family=Noto+Sans+TC:wght@200;300;400&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="images/Favicon.svg" type="image/svg+xml">
@@ -163,7 +166,7 @@
         grid.innerHTML = filtered.map((p, i) => {
           const thumb = p.images && p.images[0] ? p.images[0] : '';
           const imgHtml = thumb
-            ? `<img src="${thumb}" alt="${getL10n(p.title)}">`
+            ? `<img src="${thumb}" alt="${getL10n(p.title)}" loading="lazy">`
             : `<div style="width:100%;height:100%;background:#f0f0ee;"></div>`;
           return `<a href="project.html?id=${p.id}" class="services-card fade-up${delays[i] || ''}">
             <div class="services-card-photo">
