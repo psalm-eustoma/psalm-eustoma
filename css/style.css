@@ -1296,7 +1296,7 @@ footer {
   .project-quote { padding: 100px 24px; min-height: 500px; }
   .project-quote-card { width: 100%; }
   .project-quote-text { font-size: 21px; }
-  .project-booking-btn { right: 20px; bottom: 28px; }
+  .project-booking-btn { right: 20px; bottom: 20px; }
   .footer-project .footer-nav a { font-size: 28px; }
 }
 
