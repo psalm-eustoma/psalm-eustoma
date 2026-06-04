@@ -66,6 +66,17 @@ function getL10n(field) {
   return field[lang] || field.en || '';
 }
 
+// ── Responsive images (Cloudinary transformations) ───────
+// Inject w_<width> after /upload/. Falls through unchanged for non-Cloudinary URLs.
+function cmsImgFit(url, width) {
+  if (!url || !url.includes('res.cloudinary.com/') || !url.includes('/upload/')) return url || '';
+  return url.replace('/upload/', `/upload/w_${width},q_auto,f_auto/`);
+}
+function cmsImgSrcset(url, widths) {
+  if (!url || !url.includes('res.cloudinary.com/') || !url.includes('/upload/')) return '';
+  return widths.map(w => `${cmsImgFit(url, w)} ${w}w`).join(', ');
+}
+
 // ── Data access ───────────────────────────────────────────
 // Cache, filled once from Firestore on page load. All synchronous getters read from here.
 let _cmsCache = null;
@@ -128,7 +139,8 @@ function getCmsData() {
 // ── Render helpers ────────────────────────────────────────
 function renderImgCards(cards) {
   return cards.map(card => {
-    const bg = card.mediaUrl ? ` style="--card-bg:url('${card.mediaUrl}')"` : '';
+    const url = cmsImgFit(card.mediaUrl, 800);
+    const bg = url ? ` style="--card-bg:url('${url}')"` : '';
     return `<div class="media-card"${bg}><span class="card-label">${getL10n(card.label) || ''}</span></div>`;
   }).join('');
 }
@@ -144,7 +156,8 @@ function renderMixedCards(cards) {
         <span class="card-label">${getL10n(card.label) || ''}</span>
       </div>`;
     }
-    const bg = card.mediaUrl ? ` style="--card-bg:url('${card.mediaUrl}')"` : '';
+    const url = cmsImgFit(card.mediaUrl, 800);
+    const bg = url ? ` style="--card-bg:url('${url}')"` : '';
     return `<div class="media-card"${bg}><span class="card-label">${getL10n(card.label) || ''}</span></div>`;
   }).join('');
 }
@@ -153,7 +166,8 @@ function renderArchive(cats) {
   const delays = ['', ' delay-1', ' delay-2', ' delay-3'];
   return cats.map((cat, i) => {
     const letter  = String.fromCharCode(97 + i);
-    const preview = cat.image ? ` style="background-image:url('${cat.image}')"` : '';
+    const previewUrl = cmsImgFit(cat.image, 400);
+    const preview = previewUrl ? ` style="background-image:url('${previewUrl}')"` : '';
     return `<a class="archive-item fade-up${delays[i] || ''}" href="services.html?cat=${cat.id}">
       <div class="archive-left">
         <span class="archive-letter">${letter}</span>
@@ -202,7 +216,7 @@ function initCms() {
   // Banner — hero image
   const heroImg = document.querySelector('.hero-right-image');
   if (heroImg && h.banner.heroImageUrl) {
-    heroImg.style.setProperty('--hero-img', `url('${h.banner.heroImageUrl}')`);
+    heroImg.style.setProperty('--hero-img', `url('${cmsImgFit(h.banner.heroImageUrl, 1200)}')`);
   }
   // Banner — tagline
   const tagline = document.querySelector('.hero-tagline');

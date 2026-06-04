@@ -148,9 +148,9 @@
     window.dataReady.then(() => {
       const a = getCmsAbout();
       const heroLeft = document.querySelector('.about-hero-left');
-      if (heroLeft && a.heroImage) heroLeft.style.setProperty('--about-hero-img', `url('${a.heroImage}')`);
+      if (heroLeft && a.heroImage) heroLeft.style.setProperty('--about-hero-img', `url('${cmsImgFit(a.heroImage, 1200)}')`);
       const portrait = document.querySelector('.about-portrait');
-      if (portrait && a.portrait) portrait.style.setProperty('--about-portrait-img', `url('${a.portrait}')`);
+      if (portrait && a.portrait) portrait.style.setProperty('--about-portrait-img', `url('${cmsImgFit(a.portrait, 300)}')`);
       const setTxt = (sel, val) => { const el = document.querySelector(sel); if (el && val) el.textContent = val; };
       setTxt('.about-eyebrow',   getL10n(a.eyebrow));
       setTxt('.about-headline',  getL10n(a.headline));
