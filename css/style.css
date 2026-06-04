@@ -20,7 +20,7 @@ html[lang="zh"] {
   --quote: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; background-color: var(--black); }
 body {
   font-family: var(--sans);
   font-weight: 300;
