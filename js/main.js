@@ -132,7 +132,7 @@ document.addEventListener('dragstart', (e) => {
 // Scroll-triggered white nav (index / services / about pages)
 (function () {
   const nav  = document.querySelector('nav');
-  const hero = document.querySelector('#banner, .services-hero, .about-hero');
+  const hero = document.querySelector('.hero-left, .services-hero, .about-hero');
   if (!nav || !hero || nav.classList.contains('nav-light')) return;
   const update = () => nav.classList.toggle('nav-light', hero.getBoundingClientRect().bottom <= 0);
   window.addEventListener('scroll', update, { passive: true });
