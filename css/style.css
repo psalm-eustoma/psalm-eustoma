@@ -1227,7 +1227,7 @@ footer {
   .lang-title { font-size: 16px; }
 
   #banner { flex-direction: column; height: auto; margin-top: calc(0px - env(safe-area-inset-top)); }
-  .hero-left { flex: none; width: 100%; height: 100vh; height: calc(100lvh + env(safe-area-inset-top) + env(safe-area-inset-bottom)); overflow: hidden; }
+  .hero-left { flex: none; width: 100%; height: 110vh; height: 110lvh; overflow: hidden; }
   .hero-right { flex: none; width: 100%; height: 800px; justify-content: center; padding-top: 0; }
   .hero-right-inner { max-width: 78%; margin-top: 0; height: 100%; justify-content: center; }
   .hero-right-image { height: calc(64% - 24px); margin: 0 0 24px; max-width: 100%; }
