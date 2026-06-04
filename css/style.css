@@ -1226,7 +1226,7 @@ footer {
   .mobile-menu-close { right: 20px; }
   .lang-title { font-size: 16px; }
 
-  #banner { flex-direction: column; height: auto; }
+  #banner { flex-direction: column; height: auto; margin-top: calc(0px - env(safe-area-inset-top)); }
   .hero-left { flex: none; width: 100%; height: 100vh; height: 100lvh; overflow: hidden; }
   .hero-right { flex: none; width: 100%; height: 800px; justify-content: center; padding-top: 0; }
   .hero-right-inner { max-width: 78%; margin-top: 0; height: 100%; justify-content: center; }
