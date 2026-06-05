@@ -1100,7 +1100,7 @@ footer {
 
 .services-card-title {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--text);
   line-height: 1.3;
@@ -1300,7 +1300,7 @@ footer {
   .services-card-photo { height: auto; aspect-ratio: 2 / 3; }
   .services-card-overlay { display: none; }
   .services-card-info { padding-top: 12px; gap: 16px; }
-  .services-card-title { font-size: 16px; }
+  .services-card-title { font-size: 13px; }
   .services-card-tags { font-size: 13px; }
 
   .project-wrap { padding: 80px 20px 0; gap: 24px; }
