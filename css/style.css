@@ -12,6 +12,10 @@
   --serif: 'Fraunces', Georgia, serif;
   --quote: 'Fraunces', Georgia, serif;
   --ease: cubic-bezier(0.4, 0.4, 0, 1);
+  /* Editorial transition durations */
+  --dur-fast: 0.25s;
+  --dur-mid: 0.5s;
+  --dur-slow: 0.7s;
 }
 
 /* ZH override: Inter for body sans, Fraunces+Noto Serif TC for serif/quote */
@@ -538,25 +542,23 @@ footer {
 .text-appear {
   opacity: 0;
   transform: translateY(-20px);
-  transition: opacity 1.8s var(--ease),
-              transform 1.8s var(--ease);
+  transition: opacity var(--dur-slow) var(--ease),
+              transform var(--dur-slow) var(--ease);
 }
 .text-appear.visible { opacity: 1; transform: translateY(0); }
 .fade-up {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 1.6s var(--ease),
-              transform 1.6s var(--ease);
+  transition: opacity var(--dur-slow) var(--ease),
+              transform var(--dur-slow) var(--ease);
 }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.text-appear.delay-1, .fade-up.delay-1 { transition-delay: 0.12s; }
-.text-appear.delay-2, .fade-up.delay-2 { transition-delay: 0.24s; }
-.text-appear.delay-3, .fade-up.delay-3 { transition-delay: 0.36s; }
+/* stagger delays removed: all elements enter together (editorial pacing) */
 .fade-down {
   opacity: 0;
   transform: translateY(-48px);
-  transition: opacity 0.8s var(--ease),
-              transform 0.8s var(--ease);
+  transition: opacity var(--dur-mid) var(--ease),
+              transform var(--dur-mid) var(--ease);
 }
 .fade-down.visible { opacity: 1; transform: translateY(0); }
 
