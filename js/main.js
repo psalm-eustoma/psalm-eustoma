@@ -18,10 +18,23 @@ const observer = new IntersectionObserver((entries) => {
 const observeFadeEls = () =>
   document.querySelectorAll('.fade-up, .fade-down, .text-appear').forEach(el => observer.observe(el));
 
+// Footer reveal: clip-path animation when footer enters viewport
+const footerObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-revealed');
+      footerObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.05 });
+const observeFooter = () =>
+  document.querySelectorAll('footer').forEach(f => footerObserver.observe(f));
+
 if (window.dataReady && typeof window.dataReady.then === 'function') {
-  window.dataReady.then(observeFadeEls);
+  window.dataReady.then(() => { observeFadeEls(); observeFooter(); });
 } else {
   observeFadeEls();
+  observeFooter();
 }
 
 // Mobile menu toggle
