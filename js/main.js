@@ -18,17 +18,23 @@ const observer = new IntersectionObserver((entries) => {
 const observeFadeEls = () =>
   document.querySelectorAll('.fade-up, .fade-down, .text-appear').forEach(el => observer.observe(el));
 
-// Footer reveal: clip-path animation when footer enters viewport
-const footerObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('is-revealed');
-      footerObserver.unobserve(entry.target);
+// Footer reveal: observe element BEFORE footer as sentinel (footer is clip-path 0 so won't trigger directly)
+const observeFooter = () => {
+  document.querySelectorAll('footer').forEach(footer => {
+    const sentinel = footer.previousElementSibling;
+    if (!sentinel) {
+      footer.classList.add('is-revealed');
+      return;
     }
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        footer.classList.add('is-revealed');
+        obs.unobserve(sentinel);
+      }
+    }, { rootMargin: '0px 0px -30% 0px' });
+    obs.observe(sentinel);
   });
-}, { threshold: 0.05 });
-const observeFooter = () =>
-  document.querySelectorAll('footer').forEach(f => footerObserver.observe(f));
+};
 
 if (window.dataReady && typeof window.dataReady.then === 'function') {
   window.dataReady.then(() => { observeFadeEls(); observeFooter(); });
