@@ -8,9 +8,9 @@
   --black: #000000;
   --border: rgb(104, 104, 104);
   --border-dark: rgb(51, 51, 51);
-  --sans: 'Inter', sans-serif;
-  --serif: 'Playfair Display', Georgia, serif;
-  --quote: 'Playfair Display', Georgia, serif;
+  --sans: 'TeX Gyre Heros', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --quote: 'Cormorant Garamond', Georgia, serif;
   --ease: cubic-bezier(0.4, 0.4, 0, 1);
   /* Editorial transition durations */
   --dur-fast: 0.25s;
@@ -20,8 +20,8 @@
 
 /* ZH override: Inter for body sans, Fraunces+Noto Serif TC for serif/quote */
 html[lang="zh"] {
-  --sans:  'Inter', 'Noto Sans TC', sans-serif;
-  --quote: 'Playfair Display', 'Noto Serif TC', Georgia, serif;
+  --sans:  'TeX Gyre Heros', 'Helvetica Neue', 'Noto Sans TC', Arial, sans-serif;
+  --quote: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
 }
 
 html { scroll-behavior: smooth; background-color: var(--black); }
