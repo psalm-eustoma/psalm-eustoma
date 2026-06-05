@@ -18,10 +18,61 @@ const observer = new IntersectionObserver((entries) => {
 const observeFadeEls = () =>
   document.querySelectorAll('.fade-up, .fade-down, .text-appear').forEach(el => observer.observe(el));
 
+// Mega menu: SERVICES hover → category grid
+function initMegaMenu() {
+  const links = document.querySelectorAll('a[href="services.html"]');
+  const servicesNavLinks = [...links].filter(a => a.closest('.nav-links'));
+  if (!servicesNavLinks.length) return;
+  if (typeof getCmsData !== 'function') return;
+  const cats = (getCmsData().categories || []).slice().sort((a, b) => a.order - b.order);
+  if (!cats.length) return;
+
+  const dim = document.createElement('div');
+  dim.className = 'page-dim';
+  document.body.appendChild(dim);
+
+  const menu = document.createElement('div');
+  menu.className = 'mega-menu';
+  menu.innerHTML = `<div class="mega-menu-grid">${cats.map(cat => {
+    const imgUrl = typeof cmsImgFit === 'function' ? cmsImgFit(cat.image, 500) : cat.image;
+    const bg = imgUrl ? `style="background-image:url('${imgUrl}')"` : '';
+    return `<a class="mega-menu-item" href="services.html?cat=${cat.id}">
+      <div class="mega-menu-item-img" ${bg}></div>
+      <div class="mega-menu-item-label">${getL10n(cat.name)}</div>
+    </a>`;
+  }).join('')}</div>`;
+  document.body.appendChild(menu);
+
+  let closeTimer;
+  const open = () => {
+    clearTimeout(closeTimer);
+    menu.classList.add('is-open');
+    dim.classList.add('is-open');
+  };
+  const close = () => {
+    closeTimer = setTimeout(() => {
+      menu.classList.remove('is-open');
+      dim.classList.remove('is-open');
+    }, 250);
+  };
+  servicesNavLinks.forEach(l => {
+    l.addEventListener('mouseenter', open);
+    l.addEventListener('mouseleave', close);
+  });
+  menu.addEventListener('mouseenter', open);
+  menu.addEventListener('mouseleave', close);
+  dim.addEventListener('click', () => {
+    clearTimeout(closeTimer);
+    menu.classList.remove('is-open');
+    dim.classList.remove('is-open');
+  });
+}
+
 if (window.dataReady && typeof window.dataReady.then === 'function') {
-  window.dataReady.then(observeFadeEls);
+  window.dataReady.then(() => { observeFadeEls(); initMegaMenu(); });
 } else {
   observeFadeEls();
+  initMegaMenu();
 }
 
 // Mobile menu toggle
