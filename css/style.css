@@ -9,15 +9,15 @@
   --border: rgb(104, 104, 104);
   --border-dark: rgb(51, 51, 51);
   --sans: 'Inter', sans-serif;
-  --serif: 'Inter', sans-serif;
-  --quote: 'Inter', sans-serif;
+  --serif: 'Fraunces', Georgia, serif;
+  --quote: 'Fraunces', Georgia, serif;
   --ease: cubic-bezier(0.4, 0.4, 0, 1);
 }
 
-/* ZH override: Inter + Noto Sans TC */
+/* ZH override: Inter for body sans, Fraunces+Noto Serif TC for serif/quote */
 html[lang="zh"] {
   --sans:  'Inter', 'Noto Sans TC', sans-serif;
-  --quote: 'Inter', 'Noto Sans TC', sans-serif;
+  --quote: 'Fraunces', 'Noto Serif TC', Georgia, serif;
 }
 
 html { scroll-behavior: smooth; background-color: var(--black); }
