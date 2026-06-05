@@ -15,7 +15,7 @@
   /* Editorial transition durations */
   --dur-fast: 0.25s;
   --dur-mid: 0.5s;
-  --dur-slow: 0.7s;
+  --dur-slow: 1s;
 }
 
 /* ZH override: Inter for body sans, Fraunces+Noto Serif TC for serif/quote */
@@ -557,8 +557,8 @@ footer {
 .fade-down {
   opacity: 0;
   transform: translateY(-48px);
-  transition: opacity var(--dur-mid) var(--ease),
-              transform var(--dur-mid) var(--ease);
+  transition: opacity var(--dur-slow) var(--ease),
+              transform var(--dur-slow) var(--ease);
 }
 .fade-down.visible { opacity: 1; transform: translateY(0); }
 
