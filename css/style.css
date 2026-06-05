@@ -1041,7 +1041,7 @@ footer {
   width: calc(50% - 16px);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   overflow: hidden;
 }
 
@@ -1094,7 +1094,6 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding-top: 18px;
   gap: 24px;
 }
 
@@ -1299,7 +1298,7 @@ footer {
   .services-card { width: 100%; }
   .services-card-photo { height: auto; aspect-ratio: 2 / 3; }
   .services-card-overlay { display: none; }
-  .services-card-info { padding-top: 12px; gap: 16px; }
+  .services-card-info { gap: 16px; }
   .services-card-title { font-size: 13px; }
   .services-card-tags { font-size: 13px; }
 
