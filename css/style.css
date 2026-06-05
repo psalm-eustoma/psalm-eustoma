@@ -217,9 +217,10 @@ nav.nav-light .hamburger span { background: var(--black); }
   max-width: 100%;
 }
 .media-title-area h2 {
+  font-family: var(--serif);
   font-size: 42px;
-  font-weight: 200;
-  letter-spacing: 0.08em;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   color: var(--black);
   line-height: 1.28;
 }
@@ -314,8 +315,10 @@ nav.nav-light .hamburger span { background: var(--black); }
 }
 .archive-item:hover .archive-letter { color: var(--border); }
 .archive-name {
+  font-family: var(--serif);
   font-size: 32px;
-  font-weight: 200;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   color: var(--black);
   line-height: 1.3;
   transition: color 0.3s;
