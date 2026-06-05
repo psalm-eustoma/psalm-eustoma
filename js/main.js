@@ -18,29 +18,10 @@ const observer = new IntersectionObserver((entries) => {
 const observeFadeEls = () =>
   document.querySelectorAll('.fade-up, .fade-down, .text-appear').forEach(el => observer.observe(el));
 
-// Footer reveal: observe element BEFORE footer as sentinel (footer is clip-path 0 so won't trigger directly)
-const observeFooter = () => {
-  document.querySelectorAll('footer').forEach(footer => {
-    const sentinel = footer.previousElementSibling;
-    if (!sentinel) {
-      footer.classList.add('is-revealed');
-      return;
-    }
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        footer.classList.add('is-revealed');
-        obs.unobserve(sentinel);
-      }
-    }, { rootMargin: '0px 0px -30% 0px' });
-    obs.observe(sentinel);
-  });
-};
-
 if (window.dataReady && typeof window.dataReady.then === 'function') {
-  window.dataReady.then(() => { observeFadeEls(); observeFooter(); });
+  window.dataReady.then(observeFadeEls);
 } else {
   observeFadeEls();
-  observeFooter();
 }
 
 // Mobile menu toggle
