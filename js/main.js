@@ -66,6 +66,15 @@ function initMegaMenu() {
   navLinksEl?.addEventListener('mouseleave', close);
   // SERVICES specifically → also open mega menu
   servicesNavLinks.forEach(l => l.addEventListener('mouseenter', () => open(true)));
+  // Other nav links (ABOUT / CONTACT / EN) → close mega menu but keep nav white
+  [...navLinksEl?.querySelectorAll('a') || []]
+    .filter(a => !servicesNavLinks.includes(a))
+    .forEach(a => a.addEventListener('mouseenter', () => {
+      clearTimeout(closeTimer);
+      menu.classList.remove('is-open');
+      dim.classList.remove('is-open');
+      navEl?.classList.add('is-mega-open');
+    }));
   // Keep open while inside mega menu
   menu.addEventListener('mouseenter', () => open(true));
   menu.addEventListener('mouseleave', close);
