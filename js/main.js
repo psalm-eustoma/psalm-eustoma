@@ -45,30 +45,34 @@ function initMegaMenu() {
 
   const navEl = document.querySelector('nav');
   let closeTimer;
-  const open = () => {
+  const open = (withMega) => {
     clearTimeout(closeTimer);
-    menu.classList.add('is-open');
-    dim.classList.add('is-open');
     navEl?.classList.add('is-mega-open');
+    if (withMega) {
+      menu.classList.add('is-open');
+      dim.classList.add('is-open');
+    }
   };
   const close = () => {
     closeTimer = setTimeout(() => {
+      navEl?.classList.remove('is-mega-open');
       menu.classList.remove('is-open');
       dim.classList.remove('is-open');
-      navEl?.classList.remove('is-mega-open');
     }, 250);
   };
-  servicesNavLinks.forEach(l => {
-    l.addEventListener('mouseenter', open);
-    l.addEventListener('mouseleave', close);
-  });
-  menu.addEventListener('mouseenter', open);
+  // Whole nav hover → white bg only (no mega menu)
+  navEl?.addEventListener('mouseenter', () => open(false));
+  navEl?.addEventListener('mouseleave', close);
+  // SERVICES hover → open mega menu
+  servicesNavLinks.forEach(l => l.addEventListener('mouseenter', () => open(true)));
+  // Keep open while inside mega menu
+  menu.addEventListener('mouseenter', () => open(true));
   menu.addEventListener('mouseleave', close);
   dim.addEventListener('click', () => {
     clearTimeout(closeTimer);
+    navEl?.classList.remove('is-mega-open');
     menu.classList.remove('is-open');
     dim.classList.remove('is-open');
-    navEl?.classList.remove('is-mega-open');
   });
 }
 
