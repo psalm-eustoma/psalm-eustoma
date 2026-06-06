@@ -1183,8 +1183,9 @@ footer {
 
 .services-card-title {
   font-family: var(--serif);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 400;
+  letter-spacing: -0.02em;
   color: var(--text);
   line-height: 1.3;
 }
@@ -1217,7 +1218,7 @@ footer {
 }
 
 .services-sidebar-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 200;
   color: var(--text-mid);
 }
@@ -1235,8 +1236,10 @@ footer {
 }
 .services-category-name {
   position: relative;
-  font-size: 15px;
-  font-weight: 300;
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   color: var(--black);
 }
 .services-category-name::after {
@@ -1256,7 +1259,7 @@ footer {
 }
 
 .services-category-num {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 300;
   color: var(--text);
 }
