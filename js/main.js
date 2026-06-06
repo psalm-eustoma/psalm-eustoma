@@ -44,16 +44,20 @@ function initMegaMenu() {
   document.body.appendChild(menu);
 
   const navEl = document.querySelector('nav');
-  let closeTimer;
+  let closeTimer, megaDelayTimer;
   const open = (withMega) => {
     clearTimeout(closeTimer);
     navEl?.classList.add('is-mega-open');
     if (withMega) {
-      menu.classList.add('is-open');
-      dim.classList.add('is-open');
+      clearTimeout(megaDelayTimer);
+      megaDelayTimer = setTimeout(() => {
+        menu.classList.add('is-open');
+        dim.classList.add('is-open');
+      }, 300);
     }
   };
   const close = () => {
+    clearTimeout(megaDelayTimer);
     closeTimer = setTimeout(() => {
       navEl?.classList.remove('is-mega-open');
       menu.classList.remove('is-open');
@@ -71,6 +75,7 @@ function initMegaMenu() {
     .filter(a => !servicesNavLinks.includes(a))
     .forEach(a => a.addEventListener('mouseenter', () => {
       clearTimeout(closeTimer);
+      clearTimeout(megaDelayTimer);
       menu.classList.remove('is-open');
       dim.classList.remove('is-open');
       navEl?.classList.add('is-mega-open');
