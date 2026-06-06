@@ -43,16 +43,19 @@ function initMegaMenu() {
   }).join('')}</div>`;
   document.body.appendChild(menu);
 
+  const navEl = document.querySelector('nav');
   let closeTimer;
   const open = () => {
     clearTimeout(closeTimer);
     menu.classList.add('is-open');
     dim.classList.add('is-open');
+    navEl?.classList.add('is-mega-open');
   };
   const close = () => {
     closeTimer = setTimeout(() => {
       menu.classList.remove('is-open');
       dim.classList.remove('is-open');
+      navEl?.classList.remove('is-mega-open');
     }, 250);
   };
   servicesNavLinks.forEach(l => {
@@ -65,6 +68,7 @@ function initMegaMenu() {
     clearTimeout(closeTimer);
     menu.classList.remove('is-open');
     dim.classList.remove('is-open');
+    navEl?.classList.remove('is-mega-open');
   });
 }
 

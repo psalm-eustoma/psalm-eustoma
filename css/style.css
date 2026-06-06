@@ -96,15 +96,20 @@ nav {
 .nav-links a:hover::after { transform: scaleX(1); }
 
 /* Nav — white variant */
-nav.nav-light {
+nav.nav-light,
+nav.is-mega-open {
   background: white;
   border-bottom: 1px solid #E0E0E0;
   box-shadow: 0 -8px 0 0 white;
 }
-nav.nav-light .nav-logo { color: var(--black); }
-nav.nav-light .nav-links a { color: var(--black); }
-nav.nav-light .nav-links a::after { background: rgba(17, 17, 17, 0.5); }
-nav.nav-light .hamburger span { background: var(--black); }
+nav.nav-light .nav-logo,
+nav.is-mega-open .nav-logo { color: var(--black); }
+nav.nav-light .nav-links a,
+nav.is-mega-open .nav-links a { color: var(--black); }
+nav.nav-light .nav-links a::after,
+nav.is-mega-open .nav-links a::after { background: rgba(17, 17, 17, 0.5); }
+nav.nav-light .hamburger span,
+nav.is-mega-open .hamburger span { background: var(--black); }
 
 /* ── HERO ── */
 #banner {
