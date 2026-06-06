@@ -64,15 +64,15 @@ function initMegaMenu() {
       dim.classList.remove('is-open');
     }, 250);
   };
-  // Hover the nav-links cluster (SERVICES / ABOUT / CONTACT / EN) → white bg
+  // Each nav link (SERVICES / ABOUT / CONTACT / EN) → white bg
   const navLinksEl = document.querySelector('.nav-links');
-  navLinksEl?.addEventListener('mouseenter', () => open(false));
+  const allLinks = [...(navLinksEl?.querySelectorAll('a') || [])];
+  allLinks.forEach(a => a.addEventListener('mouseenter', () => open(false)));
   navLinksEl?.addEventListener('mouseleave', close);
   // SERVICES specifically → also open mega menu
   servicesNavLinks.forEach(l => l.addEventListener('mouseenter', () => open(true)));
   // Other nav links (ABOUT / CONTACT / EN) → close mega menu but keep nav white
-  [...navLinksEl?.querySelectorAll('a') || []]
-    .filter(a => !servicesNavLinks.includes(a))
+  allLinks.filter(a => !servicesNavLinks.includes(a))
     .forEach(a => a.addEventListener('mouseenter', () => {
       clearTimeout(closeTimer);
       clearTimeout(megaDelayTimer);
