@@ -60,10 +60,11 @@ function initMegaMenu() {
       dim.classList.remove('is-open');
     }, 250);
   };
-  // Whole nav hover → white bg only (no mega menu)
-  navEl?.addEventListener('mouseenter', () => open(false));
-  navEl?.addEventListener('mouseleave', close);
-  // SERVICES hover → open mega menu
+  // Hover the nav-links cluster (SERVICES / ABOUT / CONTACT / EN) → white bg
+  const navLinksEl = document.querySelector('.nav-links');
+  navLinksEl?.addEventListener('mouseenter', () => open(false));
+  navLinksEl?.addEventListener('mouseleave', close);
+  // SERVICES specifically → also open mega menu
   servicesNavLinks.forEach(l => l.addEventListener('mouseenter', () => open(true)));
   // Keep open while inside mega menu
   menu.addEventListener('mouseenter', () => open(true));
