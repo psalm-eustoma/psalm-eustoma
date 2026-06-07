@@ -57,7 +57,7 @@ nav {
   justify-content: space-between;
   align-items: center;
   z-index: 600;
-  transition: background-color 2s var(--ease), border-color 2s var(--ease), box-shadow 2s var(--ease);
+  transition: background-color 1.5s var(--ease), border-color 1.5s var(--ease), box-shadow 1.5s var(--ease);
 }
 .nav-logo {
   display: inline-block;
@@ -69,7 +69,7 @@ nav {
   color: var(--white);
   text-indent: -9999px;
   overflow: hidden;
-  transition: color 2s var(--ease), background-color 2s var(--ease);
+  transition: color 1.5s var(--ease), background-color 1.5s var(--ease);
 }
 .nav-links {
   display: flex;
@@ -82,7 +82,7 @@ nav {
   color: var(--white);
   cursor: pointer;
   position: relative;
-  transition: color 2s var(--ease);
+  transition: color 1.5s var(--ease);
 }
 .nav-links a::after {
   content: '';
@@ -105,10 +105,20 @@ nav.is-mega-open {
   border-bottom: 1px solid #E0E0E0;
   box-shadow: 0 -8px 0 0 white;
 }
-nav.nav-light .nav-logo,
-nav.is-mega-open .nav-logo { color: var(--black); }
-nav.nav-light .nav-links a,
-nav.is-mega-open .nav-links a { color: var(--black); }
+/* Open transition (fast, when class added) */
+nav.is-mega-open {
+  transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+nav.is-mega-open .nav-logo {
+  color: var(--black);
+  transition: color 0.5s var(--ease), background-color 0.5s var(--ease);
+}
+nav.is-mega-open .nav-links a {
+  color: var(--black);
+  transition: color 0.5s var(--ease);
+}
+nav.nav-light .nav-logo { color: var(--black); }
+nav.nav-light .nav-links a { color: var(--black); }
 nav.nav-light .nav-links a::after,
 nav.is-mega-open .nav-links a::after { background: rgba(17, 17, 17, 0.5); }
 nav.nav-light .hamburger span,
