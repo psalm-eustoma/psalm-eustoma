@@ -61,7 +61,7 @@ nav {
 /* Higher specificity than .fade-down so background-color transition isn't clobbered */
 nav,
 nav.fade-down {
-  transition: background-color 1.5s var(--ease), border-color 1.5s var(--ease), box-shadow 1.5s var(--ease), opacity 0.8s var(--ease), transform 0.8s var(--ease);
+  transition: background-color 1s var(--ease), border-color 1s var(--ease), box-shadow 1s var(--ease), opacity 0.8s var(--ease), transform 0.8s var(--ease);
 }
 .nav-logo {
   display: inline-block;
@@ -73,7 +73,7 @@ nav.fade-down {
   color: var(--white);
   text-indent: -9999px;
   overflow: hidden;
-  transition: color 1.5s var(--ease), background-color 1.5s var(--ease);
+  transition: color 1s var(--ease), background-color 1s var(--ease);
 }
 .nav-links {
   display: flex;
@@ -86,7 +86,7 @@ nav.fade-down {
   color: var(--white);
   cursor: pointer;
   position: relative;
-  transition: color 1.5s var(--ease);
+  transition: color 1s var(--ease);
 }
 .nav-links a::after {
   content: '';
