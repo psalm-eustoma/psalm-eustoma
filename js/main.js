@@ -43,49 +43,39 @@ function initMegaMenu() {
   }).join('')}</div>`;
   document.body.appendChild(menu);
 
-  const navEl = document.querySelector('nav');
   let closeTimer, megaDelayTimer;
-  const open = (withMega) => {
+  const openMega = () => {
     clearTimeout(closeTimer);
-    navEl?.classList.add('is-mega-open');
-    if (withMega) {
-      clearTimeout(megaDelayTimer);
-      megaDelayTimer = setTimeout(() => {
-        menu.classList.add('is-open');
-        dim.classList.add('is-open');
-      }, 300);
-    }
+    clearTimeout(megaDelayTimer);
+    megaDelayTimer = setTimeout(() => {
+      menu.classList.add('is-open');
+      dim.classList.add('is-open');
+    }, 300);
   };
-  const close = () => {
+  const closeMega = () => {
     clearTimeout(megaDelayTimer);
     closeTimer = setTimeout(() => {
-      navEl?.classList.remove('is-mega-open');
       menu.classList.remove('is-open');
       dim.classList.remove('is-open');
     }, 250);
   };
-  // Each nav link (SERVICES / ABOUT / CONTACT / EN) → white bg
   const navLinksEl = document.querySelector('.nav-links');
+  // SERVICES → open mega
+  servicesNavLinks.forEach(l => l.addEventListener('mouseenter', openMega));
+  // Other nav links → close mega
   const allLinks = [...(navLinksEl?.querySelectorAll('a') || [])];
-  allLinks.forEach(a => a.addEventListener('mouseenter', () => open(false)));
-  navLinksEl?.addEventListener('mouseleave', close);
-  // SERVICES specifically → also open mega menu
-  servicesNavLinks.forEach(l => l.addEventListener('mouseenter', () => open(true)));
-  // Other nav links (ABOUT / CONTACT / EN) → close mega menu but keep nav white
   allLinks.filter(a => !servicesNavLinks.includes(a))
     .forEach(a => a.addEventListener('mouseenter', () => {
-      clearTimeout(closeTimer);
       clearTimeout(megaDelayTimer);
       menu.classList.remove('is-open');
       dim.classList.remove('is-open');
-      navEl?.classList.add('is-mega-open');
     }));
+  navLinksEl?.addEventListener('mouseleave', closeMega);
   // Keep open while inside mega menu
-  menu.addEventListener('mouseenter', () => open(true));
-  menu.addEventListener('mouseleave', close);
+  menu.addEventListener('mouseenter', () => { clearTimeout(closeTimer); clearTimeout(megaDelayTimer); menu.classList.add('is-open'); dim.classList.add('is-open'); });
+  menu.addEventListener('mouseleave', closeMega);
   dim.addEventListener('click', () => {
     clearTimeout(closeTimer);
-    navEl?.classList.remove('is-mega-open');
     menu.classList.remove('is-open');
     dim.classList.remove('is-open');
   });

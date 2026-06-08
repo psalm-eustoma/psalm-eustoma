@@ -101,31 +101,15 @@ nav.fade-down {
 }
 .nav-links a:hover::after { transform: scaleX(1); }
 
-/* Nav — white variant */
+/* Nav — white variant (scroll-triggered only) */
 nav.nav-light {
   background: white;
   border-bottom: 1px solid #E0E0E0;
 }
-nav.is-mega-open {
-  background: white;
-  border-bottom: 1px solid #E0E0E0;
-  /* Open transition (fast) */
-  transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease), opacity 0.8s var(--ease), transform 0.8s var(--ease);
-}
-nav.is-mega-open .nav-logo {
-  color: var(--black);
-  transition: color 0.5s var(--ease), background-color 0.5s var(--ease);
-}
-nav.is-mega-open .nav-links a {
-  color: var(--black);
-  transition: color 0.5s var(--ease);
-}
 nav.nav-light .nav-logo { color: var(--black); }
 nav.nav-light .nav-links a { color: var(--black); }
-nav.nav-light .nav-links a::after,
-nav.is-mega-open .nav-links a::after { background: rgba(17, 17, 17, 0.5); }
-nav.nav-light .hamburger span,
-nav.is-mega-open .hamburger span { background: var(--black); }
+nav.nav-light .nav-links a::after { background: rgba(17, 17, 17, 0.5); }
+nav.nav-light .hamburger span { background: var(--black); }
 
 /* ── HERO ── */
 #banner {
