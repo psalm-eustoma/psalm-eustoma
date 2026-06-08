@@ -1104,7 +1104,7 @@ footer {
 
 /* ── SERVICES PAGE ── */
 .services-hero {
-  height: 500px;
+  height: 70vh;
   background-size: cover;
   background-position: center;
   display: flex;
