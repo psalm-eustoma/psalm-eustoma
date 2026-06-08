@@ -61,22 +61,7 @@ nav {
 /* Higher specificity than .fade-down so background-color transition isn't clobbered */
 nav,
 nav.fade-down {
-  transition: background-color 1s var(--ease), border-color 1s var(--ease), box-shadow 1s var(--ease), opacity 0.8s var(--ease), transform 0.8s var(--ease);
-}
-nav::before {
-  content: '';
-  position: absolute;
-  top: -8px;
-  left: 0;
-  right: 0;
-  height: 8px;
-  background-color: transparent;
-  transition: background-color 1s var(--ease);
-  pointer-events: none;
-}
-nav.is-mega-open::before {
-  background-color: white;
-  transition: background-color 0.5s var(--ease);
+  transition: background-color 1s var(--ease), border-color 1s var(--ease), box-shadow 1s var(--ease), top 1s var(--ease), opacity 0.8s var(--ease), transform 0.8s var(--ease);
 }
 .nav-logo {
   display: inline-block;
@@ -118,15 +103,17 @@ nav.is-mega-open::before {
 .nav-links a:hover::after { transform: scaleX(1); }
 
 /* Nav — white variant */
-nav.nav-light,
-nav.is-mega-open {
+nav.nav-light {
   background: white;
   border-bottom: 1px solid #E0E0E0;
   box-shadow: 0 -8px 0 0 white;
 }
-/* Open transition (fast, when class added) */
 nav.is-mega-open {
-  transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease), box-shadow 0.5s var(--ease);
+  background: white;
+  border-bottom: 1px solid #E0E0E0;
+  top: 0;
+  /* Open transition (fast) */
+  transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease), top 0.5s var(--ease), opacity 0.8s var(--ease), transform 0.8s var(--ease);
 }
 nav.is-mega-open .nav-logo {
   color: var(--black);
