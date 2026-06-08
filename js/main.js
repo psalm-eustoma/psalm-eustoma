@@ -43,8 +43,10 @@ function initMegaMenu() {
   }).join('')}</div>`;
   document.body.appendChild(menu);
 
+  const navEl = document.querySelector('nav');
   let closeTimer, megaDelayTimer;
   const openMega = () => {
+    if (!navEl?.classList.contains('nav-light')) return; // only in white nav state
     clearTimeout(closeTimer);
     clearTimeout(megaDelayTimer);
     megaDelayTimer = setTimeout(() => {

@@ -72,7 +72,7 @@ nav.fade-down {
   color: var(--white);
   text-indent: -9999px;
   overflow: hidden;
-  transition: color 1s var(--ease), background-color 1s var(--ease);
+  transition: color var(--dur-mid) var(--ease), background-color var(--dur-mid) var(--ease);
 }
 .nav-links {
   display: flex;
@@ -85,7 +85,7 @@ nav.fade-down {
   color: var(--white);
   cursor: pointer;
   position: relative;
-  transition: color 1s var(--ease);
+  transition: color var(--dur-mid) var(--ease);
 }
 .nav-links a::after {
   content: '';
@@ -101,10 +101,20 @@ nav.fade-down {
 }
 .nav-links a:hover::after { transform: scaleX(1); }
 
-/* Nav — white variant (scroll-triggered only) */
-nav.nav-light {
+/* Nav — white variant (scroll-triggered only, reveals top→bottom) */
+nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: white;
   border-bottom: 1px solid #E0E0E0;
+  z-index: -1;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path var(--dur-mid) var(--ease);
+  pointer-events: none;
+}
+nav.nav-light::before {
+  clip-path: inset(0);
 }
 nav.nav-light .nav-logo { color: var(--black); }
 nav.nav-light .nav-links a { color: var(--black); }
