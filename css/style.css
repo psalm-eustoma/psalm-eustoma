@@ -63,6 +63,21 @@ nav,
 nav.fade-down {
   transition: background-color 1s var(--ease), border-color 1s var(--ease), box-shadow 1s var(--ease), opacity 0.8s var(--ease), transform 0.8s var(--ease);
 }
+nav::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background-color: transparent;
+  transition: background-color 1s var(--ease);
+  pointer-events: none;
+}
+nav.is-mega-open::before {
+  background-color: white;
+  transition: background-color 0.5s var(--ease);
+}
 .nav-logo {
   display: inline-block;
   width: 175px;
