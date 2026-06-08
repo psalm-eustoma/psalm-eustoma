@@ -621,7 +621,7 @@ footer {
 
 .mega-menu-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 24px;
   max-width: 1280px;
   margin: 0 auto;
@@ -635,7 +635,7 @@ footer {
 
 .mega-menu-item-img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 2 / 3;
   background-color: #f0f0ee;
   overflow: hidden;
   position: relative;
