@@ -199,12 +199,21 @@ document.addEventListener('dragstart', (e) => {
   }
 });
 
-// Scroll-triggered white nav (index / services / about pages)
+// Scroll-triggered white nav
 (function () {
   const nav  = document.querySelector('nav');
-  const hero = document.querySelector('.hero-left, .services-hero, .about-hero');
-  if (!nav || !hero || nav.classList.contains('nav-light')) return;
-  const update = () => nav.classList.toggle('nav-light', hero.getBoundingClientRect().bottom <= 0);
-  window.addEventListener('scroll', update, { passive: true });
-  update();
+  if (!nav || nav.classList.contains('nav-light')) return;
+  const indexHero = document.querySelector('.hero-left');
+  const innerHero = document.querySelector('.services-hero, .about-hero');
+  if (indexHero) {
+    // Index: wait until full hero scrolls off
+    const update = () => nav.classList.toggle('nav-light', indexHero.closest('#banner, section, .hero-wrap, body')?.getBoundingClientRect().bottom <= 0 || indexHero.getBoundingClientRect().bottom <= 0);
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  } else if (innerHero) {
+    // Services / About: turn white immediately on any scroll
+    const update = () => nav.classList.toggle('nav-light', window.scrollY > 10);
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
 })();
