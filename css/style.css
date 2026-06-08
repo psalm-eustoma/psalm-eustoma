@@ -635,7 +635,7 @@ footer {
 
 .mega-menu-item-img {
   width: 100%;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 4 / 3;
   background-color: #f0f0ee;
   overflow: hidden;
   position: relative;
