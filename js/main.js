@@ -52,6 +52,7 @@ function initMegaMenu() {
     megaDelayTimer = setTimeout(() => {
       menu.classList.add('is-open');
       dim.classList.add('is-open');
+      lockScroll();
     }, 300);
   };
   const closeMega = () => {
@@ -59,6 +60,7 @@ function initMegaMenu() {
     closeTimer = setTimeout(() => {
       menu.classList.remove('is-open');
       dim.classList.remove('is-open');
+      unlockScroll();
     }, 250);
   };
   const navLinksEl = document.querySelector('.nav-links');
@@ -74,12 +76,14 @@ function initMegaMenu() {
     }));
   navLinksEl?.addEventListener('mouseleave', closeMega);
   // Keep open while inside mega menu
-  menu.addEventListener('mouseenter', () => { clearTimeout(closeTimer); clearTimeout(megaDelayTimer); menu.classList.add('is-open'); dim.classList.add('is-open'); });
+  menu.addEventListener('mouseenter', () => { clearTimeout(closeTimer); clearTimeout(megaDelayTimer); menu.classList.add('is-open'); dim.classList.add('is-open'); lockScroll(); });
   menu.addEventListener('mouseleave', closeMega);
   dim.addEventListener('click', () => {
     clearTimeout(closeTimer);
+    clearTimeout(megaDelayTimer);
     menu.classList.remove('is-open');
     dim.classList.remove('is-open');
+    unlockScroll();
   });
 }
 
