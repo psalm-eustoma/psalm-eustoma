@@ -32,102 +32,114 @@
 
   <!-- ── LOADER ── -->
   <div id="loader">
-    <div id="loaderLogo"></div>
-    <div id="loaderNotebook">
-      <div class="nb-binding"></div>
-      <div class="nb-pages">
-        <div class="nb-page nb-back"></div>
-        <div class="nb-page nb-front"></div>
+    <div id="loaderNavRow">
+      <div class="ld-overflow">
+        <div class="ld-logo"></div>
+      </div>
+      <div class="ld-overflow">
+        <div class="ld-links">
+          <span>SERVICES</span>
+          <span>ABOUT</span>
+          <span>CONTACT</span>
+          <span>EN</span>
+        </div>
+      </div>
+    </div>
+    <div id="loaderBook">
+      <div class="ld-book-page" id="leftPage">
+        <div class="bp-layer" id="leftA"></div>
+        <div class="bp-layer hidden" id="leftB"></div>
+      </div>
+      <div class="ld-book-spine"></div>
+      <div class="ld-book-page" id="rightPage">
+        <div class="bp-layer" id="rightA"></div>
+        <div class="bp-layer hidden" id="rightB"></div>
       </div>
     </div>
   </div>
 
   <style>
     #loader {
-      position: fixed;
-      inset: 0;
-      background: #000;
+      position: fixed; inset: 0;
+      background: #5a5a5a;
       z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       overflow: hidden;
-      transition: background-color 0.7s ease;
+      transition: background-color 0.8s ease;
     }
-    #loader.loader-exit { background: transparent; pointer-events: none; }
-    #loader.loader-done { display: none; }
+    #loader.exit { background: transparent; pointer-events: none; }
+    #loader.done { display: none; }
 
-    /* Loader logo — same mask as nav */
-    #loaderLogo {
-      position: fixed;
+    #loaderNavRow {
+      position: absolute;
+      left: 0; right: 0; height: 68px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 80px;
       top: 50%;
-      left: 50%;
-      width: 175px;
-      height: 20px;
+      transform: translateY(-50%);
+      transition: top 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+    }
+    #loaderNavRow.to-nav { top: 0; transform: translateY(0); }
+
+    .ld-overflow { overflow: hidden; }
+
+    .ld-logo {
+      width: 175px; height: 20px;
       background-color: #fff;
       -webkit-mask: url('images/logo.svg') no-repeat center / contain;
               mask: url('images/logo.svg') no-repeat center / contain;
-      transform: translate(-50%, -50%) scale(1.8);
-      opacity: 0;
-      z-index: 10001;
-      transition: opacity 0.5s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1), top 0.9s cubic-bezier(0.22,1,0.36,1), left 0.9s cubic-bezier(0.22,1,0.36,1);
+      transform: translateY(200%);
+      transition: transform 0.9s cubic-bezier(0.22,1,0.36,1);
     }
-    #loaderLogo.show  { opacity: 1; }
-    #loaderLogo.hide  { opacity: 0; transition: opacity 0.3s ease; }
-    #loaderLogo.to-nav {
-      top: 34px;
-      left: 167px;
-      transform: translate(-50%, -50%) scale(1);
-    }
+    .ld-logo.in { transform: translateY(0); }
 
-    /* Notebook */
-    #loaderNotebook {
-      display: flex;
-      align-items: center;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      z-index: 10000;
+    .ld-links {
+      display: flex; gap: 20px; align-items: center;
+      transform: translateY(200%);
+      transition: transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.1s;
     }
-    #loaderNotebook.show { opacity: 1; transform: translateY(0); }
-    #loaderNotebook.hide { opacity: 0; transform: translateY(-12px); }
-
-    .nb-binding {
-      width: 22px;
-      height: 280px;
-      background: url('images/binding.svg') repeat-y center / contain;
-      flex-shrink: 0;
-      z-index: 2;
-      position: relative;
+    .ld-links span {
+      font-size: 12px; font-weight: 300;
+      letter-spacing: 0.12em; color: #fff;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
     }
+    .ld-links.in { transform: translateY(0); }
 
-    .nb-pages {
-      perspective: 700px;
-      position: relative;
-      width: 210px;
-      height: 280px;
-      flex-shrink: 0;
-    }
-
-    .nb-page {
+    #loaderBook {
       position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      display: flex; align-items: stretch;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22,1,0.36,1);
     }
-    .nb-back {
-      z-index: 1;
-      background-image: url('https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-1440x960_c2457df0-009a-402f-86e7-5046e65ff44f.webp');
+    #loaderBook.in  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    #loaderBook.out { opacity: 0; transition: opacity 0.4s ease; }
+
+    .ld-book-page {
+      width: 160px; height: 200px;
+      flex-shrink: 0; position: relative; overflow: hidden;
     }
-    .nb-front {
-      z-index: 2;
-      transform-origin: left center;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transition: transform 1s cubic-bezier(0.4,0,0.2,1);
-      background-image: url('https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-2076x1482_6e387ec5-70aa-4bc0-bf84-154b868b65fe.webp');
+    .ld-book-spine {
+      width: 19px; height: 200px;
+      background: url('images/binding.svg') repeat-y center top / 19px auto;
+      flex-shrink: 0; position: relative; z-index: 2;
+      margin: 0 -6px;
+      filter: brightness(2);
     }
-    .nb-front.flip { transform: rotateY(-180deg); }
+    .bp-layer {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: opacity 0.6s ease;
+    }
+    .bp-layer.hidden { opacity: 0; }
+
+    @media (max-width: 690px) {
+      #loaderNavRow { display: none !important; }
+      .ld-book-page { width: 120px; height: 160px; }
+      .ld-book-spine { height: 160px; }
+    }
   </style>
 
   <!-- NAV -->
@@ -272,42 +284,54 @@
 
   <script>
   (function () {
-    // Skip loader if already seen this session
     if (sessionStorage.getItem('loaderShown')) {
-      document.getElementById('loader').classList.add('loader-done');
+      document.getElementById('loader').classList.add('done');
       return;
     }
     sessionStorage.setItem('loaderShown', '1');
 
-    const loader   = document.getElementById('loader');
-    const logo     = document.getElementById('loaderLogo');
-    const notebook = document.getElementById('loaderNotebook');
-    const front    = notebook.querySelector('.nb-front');
-    const navLogo  = document.querySelector('.nav-logo');
+    const loader  = document.getElementById('loader');
+    const navRow  = document.getElementById('loaderNavRow');
+    const logo    = loader.querySelector('.ld-logo');
+    const links   = loader.querySelector('.ld-links');
+    const book    = document.getElementById('loaderBook');
+    const lA = document.getElementById('leftA'),  lB = document.getElementById('leftB');
+    const rA = document.getElementById('rightA'), rB = document.getElementById('rightB');
+    const navLogo = document.querySelector('.nav-logo');
 
-    // Hide real nav logo while loader runs
     navLogo.style.opacity = '0';
     navLogo.style.transition = 'none';
 
-    const t = (ms, fn) => setTimeout(fn, ms);
+    const leftImgs  = ['images/loader/test_1.jpg','images/loader/test_12.jpg','images/loader/test_25.jpg'];
+    const rightImgs = ['images/loader/test_7.jpg','images/loader/test_19.jpg','images/loader/test_33.jpg'];
+    let useA = true;
 
-    t(200,  () => logo.classList.add('show'));                        // logo fades in
-    t(900,  () => logo.classList.add('hide'));                        // logo fades out
-    t(1150, () => notebook.classList.add('show'));                    // notebook slides in
-    t(1650, () => front.classList.add('flip'));                       // page flip starts
-    t(2700, () => notebook.classList.add('hide'));                    // notebook fades out
-    t(2900, () => {
-      logo.classList.remove('hide');
-      logo.classList.add('show');                                     // logo reappears
-    });
-    t(3100, () => {
-      logo.classList.add('to-nav');                                   // logo slides to nav
-      loader.classList.add('loader-exit');                            // bg fades
-    });
-    t(4000, () => {
-      loader.classList.add('loader-done');                            // remove loader
+    const swap = (i) => {
+      const [front, back]   = useA ? [lA, lB] : [lB, lA];
+      const [rfront, rback] = useA ? [rA, rB] : [rB, rA];
+      back.style.backgroundImage  = `url('${leftImgs[i]}')`;
+      rback.style.backgroundImage = `url('${rightImgs[i]}')`;
+      back.classList.remove('hidden');  rback.classList.remove('hidden');
+      front.classList.add('hidden');    rfront.classList.add('hidden');
+      useA = !useA;
+    };
+
+    lA.style.backgroundImage = `url('${leftImgs[0]}')`;
+    rA.style.backgroundImage = `url('${rightImgs[0]}')`;
+
+    const t = (ms, fn) => setTimeout(fn, ms);
+    const si = 500;
+
+    t(150,  () => { logo.classList.add('in'); links.classList.add('in'); });
+    t(900,  () => book.classList.add('in'));
+    t(1400, () => swap(1));
+    t(1400 + si,     () => swap(2));
+    t(1400 + si * 2, () => book.classList.add('out'));
+    t(1400 + si * 2 + 200, () => { navRow.classList.add('to-nav'); loader.classList.add('exit'); });
+    t(1400 + si * 2 + 1200, () => {
+      loader.classList.add('done');
       navLogo.style.transition = '';
-      navLogo.style.opacity = '1';                                    // real nav logo appears
+      navLogo.style.opacity = '1';
     });
   })();
   </script>
