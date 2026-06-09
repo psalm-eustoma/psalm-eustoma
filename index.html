@@ -30,6 +30,106 @@
 </head>
 <body>
 
+  <!-- ── LOADER ── -->
+  <div id="loader">
+    <div id="loaderLogo"></div>
+    <div id="loaderNotebook">
+      <div class="nb-binding"></div>
+      <div class="nb-pages">
+        <div class="nb-page nb-back"></div>
+        <div class="nb-page nb-front"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background-color 0.7s ease;
+    }
+    #loader.loader-exit { background: transparent; pointer-events: none; }
+    #loader.loader-done { display: none; }
+
+    /* Loader logo — same mask as nav */
+    #loaderLogo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 175px;
+      height: 20px;
+      background-color: #fff;
+      -webkit-mask: url('images/logo.svg') no-repeat center / contain;
+              mask: url('images/logo.svg') no-repeat center / contain;
+      transform: translate(-50%, -50%) scale(1.8);
+      opacity: 0;
+      z-index: 10001;
+      transition: opacity 0.5s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1), top 0.9s cubic-bezier(0.22,1,0.36,1), left 0.9s cubic-bezier(0.22,1,0.36,1);
+    }
+    #loaderLogo.show  { opacity: 1; }
+    #loaderLogo.hide  { opacity: 0; transition: opacity 0.3s ease; }
+    #loaderLogo.to-nav {
+      top: 34px;
+      left: 167px;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Notebook */
+    #loaderNotebook {
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      z-index: 10000;
+    }
+    #loaderNotebook.show { opacity: 1; transform: translateY(0); }
+    #loaderNotebook.hide { opacity: 0; transform: translateY(-12px); }
+
+    .nb-binding {
+      width: 22px;
+      height: 280px;
+      background: url('images/binding.svg') repeat-y center / contain;
+      flex-shrink: 0;
+      z-index: 2;
+      position: relative;
+    }
+
+    .nb-pages {
+      perspective: 700px;
+      position: relative;
+      width: 210px;
+      height: 280px;
+      flex-shrink: 0;
+    }
+
+    .nb-page {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .nb-back {
+      z-index: 1;
+      background-image: url('https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-1440x960_c2457df0-009a-402f-86e7-5046e65ff44f.webp');
+    }
+    .nb-front {
+      z-index: 2;
+      transform-origin: left center;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transition: transform 1s cubic-bezier(0.4,0,0.2,1);
+      background-image: url('https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-2076x1482_6e387ec5-70aa-4bc0-bf84-154b868b65fe.webp');
+    }
+    .nb-front.flip { transform: rotateY(-180deg); }
+  </style>
+
   <!-- NAV -->
   <nav class="fade-down">
     <a href="#" class="nav-logo">Psalm Eustoma</a>
@@ -169,6 +269,48 @@
 
   <script src="js/cms.js"></script>
   <script src="js/main.js"></script>
+
+  <script>
+  (function () {
+    // Skip loader if already seen this session
+    if (sessionStorage.getItem('loaderShown')) {
+      document.getElementById('loader').classList.add('loader-done');
+      return;
+    }
+    sessionStorage.setItem('loaderShown', '1');
+
+    const loader   = document.getElementById('loader');
+    const logo     = document.getElementById('loaderLogo');
+    const notebook = document.getElementById('loaderNotebook');
+    const front    = notebook.querySelector('.nb-front');
+    const navLogo  = document.querySelector('.nav-logo');
+
+    // Hide real nav logo while loader runs
+    navLogo.style.opacity = '0';
+    navLogo.style.transition = 'none';
+
+    const t = (ms, fn) => setTimeout(fn, ms);
+
+    t(200,  () => logo.classList.add('show'));                        // logo fades in
+    t(900,  () => logo.classList.add('hide'));                        // logo fades out
+    t(1150, () => notebook.classList.add('show'));                    // notebook slides in
+    t(1650, () => front.classList.add('flip'));                       // page flip starts
+    t(2700, () => notebook.classList.add('hide'));                    // notebook fades out
+    t(2900, () => {
+      logo.classList.remove('hide');
+      logo.classList.add('show');                                     // logo reappears
+    });
+    t(3100, () => {
+      logo.classList.add('to-nav');                                   // logo slides to nav
+      loader.classList.add('loader-exit');                            // bg fades
+    });
+    t(4000, () => {
+      loader.classList.add('loader-done');                            // remove loader
+      navLogo.style.transition = '';
+      navLogo.style.opacity = '1';                                    // real nav logo appears
+    });
+  })();
+  </script>
 
 </body>
 </html>
