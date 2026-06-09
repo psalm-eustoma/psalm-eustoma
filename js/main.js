@@ -42,6 +42,7 @@ function initMegaMenu() {
     </a>`;
   }).join('')}</div>`;
   document.body.appendChild(menu);
+  menu.style.setProperty('--mega-cols', cats.length);
 
   const navEl = document.querySelector('nav');
   let closeTimer, megaDelayTimer;

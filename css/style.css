@@ -611,7 +611,7 @@ footer {
 
 .mega-menu-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(var(--mega-cols, 4), 1fr);
   gap: 24px;
   max-width: 1280px;
   margin: 0 auto;
