@@ -72,12 +72,16 @@ nav.fade-down {
   color: var(--white);
   text-indent: -9999px;
   overflow: hidden;
+  position: relative;
+  z-index: 1;
   transition: color var(--dur-mid) var(--ease), background-color var(--dur-mid) var(--ease);
 }
 .nav-links {
   display: flex;
   gap: 20px;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 .nav-links a {
   font-size: 12px;
@@ -108,7 +112,7 @@ nav::before {
   inset: 0;
   background: white;
   border-bottom: 1px solid #E0E0E0;
-  z-index: -1;
+  z-index: 0;
   clip-path: inset(0 0 100% 0);
   transition: clip-path var(--dur-mid) var(--ease);
   pointer-events: none;
@@ -678,6 +682,8 @@ footer {
   background: none;
   border: none;
   cursor: pointer;
+  position: relative;
+  z-index: 1;
   padding: 0;
   z-index: 600;
   position: relative;
