@@ -297,10 +297,14 @@
     const book    = document.getElementById('loaderBook');
     const lA = document.getElementById('leftA'),  lB = document.getElementById('leftB');
     const rA = document.getElementById('rightA'), rB = document.getElementById('rightB');
-    const navLogo = document.querySelector('.nav-logo');
+    const navLogo  = document.querySelector('.nav-logo');
+    const navLinks = document.querySelector('.nav-links');
+    const hamburger = document.querySelector('.hamburger');
 
     navLogo.style.opacity = '0';
     navLogo.style.transition = 'none';
+    if (navLinks)  { navLinks.style.opacity = '0';  navLinks.style.transition = 'none'; }
+    if (hamburger) { hamburger.style.opacity = '0'; hamburger.style.transition = 'none'; }
 
     const leftImgs  = ['images/loader/test_1.jpg','images/loader/test_12.jpg','images/loader/test_25.jpg'];
     const rightImgs = ['images/loader/test_7.jpg','images/loader/test_19.jpg','images/loader/test_33.jpg'];
@@ -332,6 +336,8 @@
       loader.classList.add('done');
       navLogo.style.transition = '';
       navLogo.style.opacity = '1';
+      if (navLinks)  { navLinks.style.transition = '';  navLinks.style.opacity = '1'; }
+      if (hamburger) { hamburger.style.transition = ''; hamburger.style.opacity = '1'; }
     });
   })();
   </script>
