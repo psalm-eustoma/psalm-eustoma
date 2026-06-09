@@ -52,7 +52,7 @@ function initMegaMenu() {
     megaDelayTimer = setTimeout(() => {
       menu.classList.add('is-open');
       dim.classList.add('is-open');
-      lockScroll();
+      document.body.style.overflow = 'hidden';
     }, 300);
   };
   const closeMega = () => {
@@ -60,7 +60,7 @@ function initMegaMenu() {
     closeTimer = setTimeout(() => {
       menu.classList.remove('is-open');
       dim.classList.remove('is-open');
-      unlockScroll();
+      document.body.style.overflow = '';
     }, 250);
   };
   const navLinksEl = document.querySelector('.nav-links');
@@ -76,14 +76,14 @@ function initMegaMenu() {
     }));
   navLinksEl?.addEventListener('mouseleave', closeMega);
   // Keep open while inside mega menu
-  menu.addEventListener('mouseenter', () => { clearTimeout(closeTimer); clearTimeout(megaDelayTimer); menu.classList.add('is-open'); dim.classList.add('is-open'); lockScroll(); });
+  menu.addEventListener('mouseenter', () => { clearTimeout(closeTimer); clearTimeout(megaDelayTimer); menu.classList.add('is-open'); dim.classList.add('is-open'); document.body.style.overflow = 'hidden'; });
   menu.addEventListener('mouseleave', closeMega);
   dim.addEventListener('click', () => {
     clearTimeout(closeTimer);
     clearTimeout(megaDelayTimer);
     menu.classList.remove('is-open');
     dim.classList.remove('is-open');
-    unlockScroll();
+    document.body.style.overflow = '';
   });
 }
 

@@ -101,7 +101,6 @@ nav.fade-down {
 }
 .nav-links a:hover::after { transform: scaleX(1); }
 
-/* Nav — white variant (scroll-triggered only, reveals top→bottom) */
 /* Nav — white variant (scroll-triggered) */
 nav.nav-light {
   background: white;
