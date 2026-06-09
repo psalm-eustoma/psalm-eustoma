@@ -993,7 +993,7 @@ footer {
 /* ── ABOUT PAGE ── */
 .about-hero {
   display: flex;
-  height: 100vh;
+  height: calc(100vh + 68px);
   min-height: 600px;
 }
 .about-hero-left {
