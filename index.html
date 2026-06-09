@@ -331,13 +331,21 @@
     t(1400, () => swap(1));
     t(1400 + si,     () => swap(2));
     t(1400 + si * 2, () => book.classList.add('out'));
-    t(1400 + si * 2 + 200, () => { navRow.classList.add('to-nav'); loader.classList.add('exit'); });
-    t(1400 + si * 2 + 1200, () => {
-      loader.classList.add('done');
-      navLogo.style.transition = '';
+    t(1400 + si * 2 + 200, () => {
+      navRow.classList.add('to-nav');   // loader nav 滑到頂部（0.9s）
+      loader.classList.add('exit');     // 背景 fade
+    });
+    // loader nav 到位後：loader nav 淡出、real nav 淡入（crossfade）
+    t(1400 + si * 2 + 200 + 900, () => {
+      navRow.style.transition = 'opacity 0.35s ease';
+      navRow.style.opacity = '0';
+      navLogo.style.transition  = 'opacity 0.35s ease';
       navLogo.style.opacity = '1';
-      if (navLinks)  { navLinks.style.transition = '';  navLinks.style.opacity = '1'; }
-      if (hamburger) { hamburger.style.transition = ''; hamburger.style.opacity = '1'; }
+      if (navLinks)  { navLinks.style.transition  = 'opacity 0.35s ease'; navLinks.style.opacity  = '1'; }
+      if (hamburger) { hamburger.style.transition = 'opacity 0.35s ease'; hamburger.style.opacity = '1'; }
+    });
+    t(1400 + si * 2 + 200 + 900 + 400, () => {
+      loader.classList.add('done');
     });
   })();
   </script>
