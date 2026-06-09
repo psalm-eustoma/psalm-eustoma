@@ -21,3 +21,5 @@ test-*.png
 
 # Vercel local
 .vercel/
+binding.svg
+loader-test.html
