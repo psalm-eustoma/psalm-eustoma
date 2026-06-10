@@ -1337,8 +1337,9 @@ footer {
 @media (max-width: 690px) {
   nav { padding: 0 20px; }
   .nav-logo { width: 175px; height: 20px; }
-  .mobile-menu-logo { top: 28px; left: 20px; width: 175px; height: 20px; }
-  .mobile-menu-close { right: 20px; }
+  /* 對齊 nav：logo 與 nav-logo 同位（top 24 / left 20），關閉鈕與漢堡同位（top 17 / right 20 / 50×35） */
+  .mobile-menu-logo { top: 24px; left: 20px; width: 175px; height: 20px; }
+  .mobile-menu-close { top: 17px; right: 20px; width: 50px; height: 35px; }
   .lang-title { font-size: 16px; }
 
   #banner { flex-direction: column; height: auto; margin-top: calc(0px - env(safe-area-inset-top)); }

@@ -285,6 +285,25 @@
   <script src="js/main.js"></script>
 
   <script>
+  // 手機 hero 影片高度綁定實際可視高度，繞過 in-app 瀏覽器不可靠的 lvh，
+  // 確保影片滿版、loader 退場時上下不會露出灰底。
+  (function () {
+    const heroLeft = document.querySelector('.hero-left');
+    if (!heroLeft) return;
+    const fit = () => {
+      if (window.matchMedia('(max-width: 690px)').matches) {
+        heroLeft.style.height = Math.ceil(window.innerHeight * 1.1) + 'px';
+      } else {
+        heroLeft.style.height = '';
+      }
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', fit);
+  })();
+  </script>
+
+  <script>
   (function () {
     if (sessionStorage.getItem('loaderShown')) {
       document.getElementById('loader').classList.add('done');
