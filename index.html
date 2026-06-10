@@ -340,21 +340,30 @@
     // 收尾揭露 real nav：
     // - 桌機（>690px）：loader nav 跟 real nav 已像素對齊 → 瞬間互換，不做 crossfade
     //   （兩層白字重疊淡入淡出時，中點合成不透明度只有 ~75%，會閃一下）
-    // - 手機（≤690px）：loader 沒有 nav row，real nav 會憑空彈出很生硬 → 改成淡入
+    // - 手機（≤690px）：loader 沒有 nav row → 用全站招牌的 fade-down（往下滑入 + 淡入）揭露
     t(1400 + si * 2 + 200 + 900, () => {
       navRow.style.transition = 'none';
       navRow.style.opacity = '0';
-      const reveal = window.matchMedia('(max-width: 690px)').matches ? 'opacity 0.5s ease' : 'none';
-      navLogo.style.transition = reveal;
-      if (navLinks)  navLinks.style.transition  = reveal;
-      if (hamburger) hamburger.style.transition = reveal;
-      void navLogo.offsetWidth; // 強制 reflow，確保上面的 transition 先生效，opacity 才會真的淡入
-      navLogo.style.opacity = '1';
-      if (navLinks)  navLinks.style.opacity  = '1';
-      if (hamburger) hamburger.style.opacity = '1';
+      const items = [navLogo, navLinks, hamburger].filter(Boolean);
+      if (window.matchMedia('(max-width: 690px)').matches) {
+        // 起點：往上 48px + 透明，與 nav.fade-down 的進場一致（0.8s, --ease）
+        items.forEach(el => { el.style.transition = 'none'; el.style.opacity = '0'; el.style.transform = 'translateY(-48px)'; });
+        void navLogo.offsetWidth; // 強制 reflow，讓起點先生效，下面才會真的有滑入動畫
+        items.forEach(el => {
+          el.style.transition = 'opacity 0.8s cubic-bezier(0.4,0.4,0,1), transform 0.8s cubic-bezier(0.4,0.4,0,1)';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      } else {
+        items.forEach(el => { el.style.transition = 'none'; el.style.opacity = '1'; });
+      }
     });
     t(1400 + si * 2 + 200 + 900 + 400, () => {
       loader.classList.add('done');
+    });
+    // 滑入結束後清掉 inline transition/transform，讓 nav 恢復正常的 hover / 捲動變色過渡
+    t(1400 + si * 2 + 200 + 900 + 900, () => {
+      [navLogo, navLinks, hamburger].filter(Boolean).forEach(el => { el.style.transition = ''; el.style.transform = ''; });
     });
   })();
   </script>
