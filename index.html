@@ -337,15 +337,21 @@
       navRow.classList.add('to-nav');   // loader nav 滑到頂部（0.9s）
       loader.classList.add('exit');     // 背景 fade
     });
-    // loader nav 跟 real nav 已像素對齊 → 瞬間互換，不做 crossfade
-    // （兩層白字重疊淡入淡出時，中點合成不透明度只有 ~75%，會閃一下）
+    // 收尾揭露 real nav：
+    // - 桌機（>690px）：loader nav 跟 real nav 已像素對齊 → 瞬間互換，不做 crossfade
+    //   （兩層白字重疊淡入淡出時，中點合成不透明度只有 ~75%，會閃一下）
+    // - 手機（≤690px）：loader 沒有 nav row，real nav 會憑空彈出很生硬 → 改成淡入
     t(1400 + si * 2 + 200 + 900, () => {
       navRow.style.transition = 'none';
       navRow.style.opacity = '0';
-      navLogo.style.transition  = 'none';
+      const reveal = window.matchMedia('(max-width: 690px)').matches ? 'opacity 0.5s ease' : 'none';
+      navLogo.style.transition = reveal;
+      if (navLinks)  navLinks.style.transition  = reveal;
+      if (hamburger) hamburger.style.transition = reveal;
+      void navLogo.offsetWidth; // 強制 reflow，確保上面的 transition 先生效，opacity 才會真的淡入
       navLogo.style.opacity = '1';
-      if (navLinks)  { navLinks.style.transition  = 'none'; navLinks.style.opacity  = '1'; }
-      if (hamburger) { hamburger.style.transition = 'none'; hamburger.style.opacity = '1'; }
+      if (navLinks)  navLinks.style.opacity  = '1';
+      if (hamburger) hamburger.style.opacity = '1';
     });
     t(1400 + si * 2 + 200 + 900 + 400, () => {
       loader.classList.add('done');
