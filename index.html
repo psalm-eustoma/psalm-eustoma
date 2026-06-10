@@ -337,14 +337,15 @@
       navRow.classList.add('to-nav');   // loader nav 滑到頂部（0.9s）
       loader.classList.add('exit');     // 背景 fade
     });
-    // loader nav 到位後：loader nav 淡出、real nav 淡入（crossfade）
+    // loader nav 跟 real nav 已像素對齊 → 瞬間互換，不做 crossfade
+    // （兩層白字重疊淡入淡出時，中點合成不透明度只有 ~75%，會閃一下）
     t(1400 + si * 2 + 200 + 900, () => {
-      navRow.style.transition = 'opacity 0.35s ease';
+      navRow.style.transition = 'none';
       navRow.style.opacity = '0';
-      navLogo.style.transition  = 'opacity 0.35s ease';
+      navLogo.style.transition  = 'none';
       navLogo.style.opacity = '1';
-      if (navLinks)  { navLinks.style.transition  = 'opacity 0.35s ease'; navLinks.style.opacity  = '1'; }
-      if (hamburger) { hamburger.style.transition = 'opacity 0.35s ease'; hamburger.style.opacity = '1'; }
+      if (navLinks)  { navLinks.style.transition  = 'none'; navLinks.style.opacity  = '1'; }
+      if (hamburger) { hamburger.style.transition = 'none'; hamburger.style.opacity = '1'; }
     });
     t(1400 + si * 2 + 200 + 900 + 400, () => {
       loader.classList.add('done');
