@@ -23,3 +23,6 @@ test-*.png
 .vercel/
 binding.svg
 loader-test.html
+
+# Internal project notes (keep local, not in repo)
+PROJECT_DOC.md
