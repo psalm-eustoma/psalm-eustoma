@@ -53,6 +53,19 @@ body::after {
   pointer-events: none;
   transition: background-color 0.2s ease;
 }
+/* 頂部安全區（狀態列那塊）墊片：顏色由 JS 依 header 狀態給
+   （白底 nav→白；hero/選單→黑）。z-index 壓在 nav 下面，不蓋 logo。
+   iOS 限定（env=0 的裝置高度 0），Safari 一樣可能被 body 底色蓋過。 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: env(safe-area-inset-top);
+  background: var(--safe-top-color, var(--black));
+  z-index: 1;
+  pointer-events: none;
+  transition: background-color 0.2s ease;
+}
 .mobile-menu-logo, .mobile-menu-close { top: calc(8px + env(safe-area-inset-top)); }
 .mobile-menu { padding-top: calc(36px + env(safe-area-inset-top)); padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
 a { text-decoration: none; color: inherit; transition: color 0.3s var(--ease), opacity 0.3s var(--ease), background-color 0.3s var(--ease), border-color 0.3s var(--ease); }

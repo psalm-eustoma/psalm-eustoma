@@ -104,6 +104,7 @@ function openMenu() {
   mobileMenu.classList.add('is-open');
   lockScroll();
   window.__refreshSafeBottom && window.__refreshSafeBottom();
+  window.__refreshSafeTop && window.__refreshSafeTop();
 }
 
 function closeMenu(skipUnlock = false) {
@@ -111,6 +112,7 @@ function closeMenu(skipUnlock = false) {
   mobileMenu.classList.remove('is-open');
   if (!skipUnlock) unlockScroll();
   window.__refreshSafeBottom && window.__refreshSafeBottom();
+  window.__refreshSafeTop && window.__refreshSafeTop();
 }
 
 hamburger.addEventListener('click', () => {
@@ -248,4 +250,23 @@ document.addEventListener('dragstart', (e) => {
   window.addEventListener('load', onScroll);
   if (window.dataReady && typeof window.dataReady.then === 'function') window.dataReady.then(onScroll);
   pick();
+})();
+
+// Top safe-area filler colour: white only in the light-nav state with the
+// menu closed; black otherwise (hero / menu) — so the status bar matches
+// the header. See body::before. (iOS only; env=0 elsewhere → no effect.)
+(function () {
+  const nav = document.querySelector('nav');
+  const menu = document.getElementById('mobileMenu');
+  const update = () => {
+    const navLight = nav && nav.classList.contains('nav-light');
+    const menuOpen = menu && menu.classList.contains('is-open');
+    document.body.style.setProperty('--safe-top-color', (navLight && !menuOpen) ? '#ffffff' : '#000000');
+  };
+  window.__refreshSafeTop = update;
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  window.addEventListener('load', update);
+  if (window.dataReady && typeof window.dataReady.then === 'function') window.dataReady.then(update);
+  update();
 })();
