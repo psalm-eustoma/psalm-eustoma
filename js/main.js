@@ -103,12 +103,14 @@ function openMenu() {
   hamburger.classList.add('is-open');
   mobileMenu.classList.add('is-open');
   lockScroll();
+  window.__refreshSafeBottom && window.__refreshSafeBottom();
 }
 
 function closeMenu(skipUnlock = false) {
   hamburger.classList.remove('is-open');
   mobileMenu.classList.remove('is-open');
   if (!skipUnlock) unlockScroll();
+  window.__refreshSafeBottom && window.__refreshSafeBottom();
 }
 
 hamburger.addEventListener('click', () => {
@@ -217,4 +219,33 @@ document.addEventListener('dragstart', (e) => {
     window.addEventListener('scroll', update, { passive: true });
     update();
   }
+})();
+
+// Bottom safe-area filler colour: follow whatever content sits at the very
+// bottom edge of the screen, so the home-indicator strip matches it
+// (black at the footer / menu, white over white content). See body::after.
+(function () {
+  const root = document.body;
+  let ticking = false;
+  const pick = () => {
+    ticking = false;
+    const x = Math.floor(window.innerWidth / 2);
+    const y = window.innerHeight - 1; // just inside the bottom edge
+    let el = document.elementFromPoint(x, y);
+    let color = '';
+    for (let hops = 0; el && hops < 8; hops++, el = el.parentElement) {
+      const bg = getComputedStyle(el).backgroundColor;
+      if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') { color = bg; break; }
+    }
+    if (!color) color = getComputedStyle(root).backgroundColor;
+    root.style.setProperty('--safe-bottom-color', color);
+  };
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(pick); } };
+  window.__refreshSafeBottom = onScroll; // called on menu open/close
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  // re-pick after late/async layout (cms render, menu open/close)
+  window.addEventListener('load', onScroll);
+  if (window.dataReady && typeof window.dataReady.then === 'function') window.dataReady.then(onScroll);
+  pick();
 })();
