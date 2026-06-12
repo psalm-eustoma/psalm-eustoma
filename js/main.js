@@ -258,10 +258,14 @@ document.addEventListener('dragstart', (e) => {
 (function () {
   const nav = document.querySelector('nav');
   const menu = document.getElementById('mobileMenu');
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
   const update = () => {
     const navLight = nav && nav.classList.contains('nav-light');
     const menuOpen = menu && menu.classList.contains('is-open');
-    document.body.style.setProperty('--safe-top-color', (navLight && !menuOpen) ? '#ffffff' : '#000000');
+    const color = (navLight && !menuOpen) ? '#ffffff' : '#000000';
+    document.body.style.setProperty('--safe-top-color', color);
+    // iOS Safari tints the status bar from theme-color — keep it in sync with the header
+    if (themeMeta) themeMeta.setAttribute('content', color);
   };
   window.__refreshSafeTop = update;
   window.addEventListener('scroll', update, { passive: true });
