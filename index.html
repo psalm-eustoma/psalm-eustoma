@@ -310,6 +310,8 @@
       return;
     }
     sessionStorage.setItem('loaderShown', '1');
+    // 載入動畫期間先隱藏安全區墊片，避免它們在 loader 灰底淡出時露出黑條（造成上下兩條、兩階段退場）
+    document.documentElement.classList.add('intro-loading');
 
     const loader  = document.getElementById('loader');
     const navRow  = document.getElementById('loaderNavRow');
@@ -379,6 +381,8 @@
     });
     t(1400 + si * 2 + 200 + 900 + 400, () => {
       loader.classList.add('done');
+      // loader 完全退場後才讓安全區墊片淡入（見 CSS body::before/::after 與 .intro-loading）
+      document.documentElement.classList.remove('intro-loading');
     });
     // 滑入結束後清掉 inline transition/transform，讓 nav 恢復正常的 hover / 捲動變色過渡
     t(1400 + si * 2 + 200 + 900 + 900, () => {
