@@ -353,8 +353,13 @@ function saveSettings(settings){ const d = getData(); d.settings = settings; sav
 
 // ── Unsaved changes guard ─────────────────────────────────
 let _dirty = false;
-function markDirty() { _dirty = true; }
-function markClean() { _dirty = false; }
+// 儲存按鈕狀態：有未存變更 → 加 .is-dirty（醒目綠）；無 → 灰底
+function _updateSaveBtn() {
+  const btn = document.getElementById('saveBtn');
+  if (btn) btn.classList.toggle('is-dirty', _dirty);
+}
+function markDirty() { _dirty = true; _updateSaveBtn(); }
+function markClean() { _dirty = false; _updateSaveBtn(); }
 function initDirtyGuard() {
   // Browser close / refresh — keep native dialog (truly leaving the site)
   window.addEventListener('beforeunload', e => {
@@ -381,6 +386,7 @@ function initDirtyGuard() {
 
 // ── Save toast ────────────────────────────────────────────
 function showSaveToast(msg) {
+  markClean(); // 存檔成功 → 按鈕轉灰（涵蓋 home/about/categories/settings）
   let toast = document.getElementById('_saveToast');
   if (!toast) {
     toast = document.createElement('div');
@@ -393,6 +399,18 @@ function showSaveToast(msg) {
   clearTimeout(toast._t);
   toast._t = setTimeout(() => toast.classList.remove('show'), 2500);
 }
+
+// 儲存按鈕初始為灰；主內容區任何輸入/變更 → 標記 dirty（讓按鈕轉醒目色）。
+// 通用寫法，涵蓋未個別接線 markDirty 的頁面（settings / categories）。
+document.addEventListener('DOMContentLoaded', () => {
+  if (!document.getElementById('saveBtn')) return;
+  _updateSaveBtn();
+  const main = document.querySelector('main.main');
+  if (main) {
+    main.addEventListener('input', markDirty);
+    main.addEventListener('change', markDirty);
+  }
+});
 
 // ── Cloudinary upload ─────────────────────────────────────
 const CLOUDINARY_CLOUD  = 'dlaqvwooi';

@@ -154,6 +154,12 @@ body {
 .btn svg { width: 14px; height: 14px; stroke: currentColor; flex-shrink: 0; }
 .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
 .btn-primary:hover { background: #333; border-color: #333; }
+
+/* 儲存按鈕狀態：無變更=灰底、有變更=醒目綠（id 壓過 .btn-primary） */
+#saveBtn { background: #e7e7e3; color: #a3a39d; border-color: #e7e7e3; }
+#saveBtn:hover { background: #dededa; color: #93938d; border-color: #dededa; }
+#saveBtn.is-dirty { background: #2f9e44; color: #fff; border-color: #2f9e44; }
+#saveBtn.is-dirty:hover { background: #2b8d3d; border-color: #2b8d3d; }
 .btn-ghost { background: var(--white); color: var(--text); border-color: var(--border); }
 .btn-ghost:hover { background: #f5f5f3; }
 .btn-danger-soft { background: none; border: none; color: var(--danger); padding: 6px 8px; font-size: 12px; }
