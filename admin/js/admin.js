@@ -492,21 +492,20 @@ function triggerImgUpload(inputEl, btnEl, accept) {
   _uploadFileInput.click();
 }
 
-// ── 上傳須知：自動插到有上傳功能的頁面頂部（一處維護、全後台生效）──
+// ── 上傳須知：自動插到側欄底部（登出之上，一處維護、全後台生效）──
 document.addEventListener('DOMContentLoaded', () => {
-  if (!document.querySelector('.btn-upload-img')) return;
-  const header = document.querySelector('main.main .page-header');
-  if (!header || document.querySelector('.upload-notice')) return;
+  const footer = document.querySelector('.sidebar-footer');
+  if (!footer || document.querySelector('.upload-notice')) return;
   const notice = document.createElement('div');
   notice.className = 'upload-notice';
   notice.innerHTML =
     '<strong>上傳須知</strong>' +
     '<ul>' +
-      `<li><b>圖片</b>：jpg / png / webp，單張 ≤ ${MAX_IMAGE_MB} MB（iPhone 的 HEIC 請先轉成 jpg）</li>` +
-      `<li><b>影片</b>：mp4 / webm / mov，≤ ${MAX_VIDEO_MB} MB 且 ≤ ${MAX_VIDEO_SECONDS} 秒</li>` +
-      '<li>圖片<b>不用自己轉 webp</b>，系統會自動最佳化交付給訪客（你上傳 jpg / png 就好）</li>' +
+      `<li>圖片：jpg / png / webp，≤ ${MAX_IMAGE_MB} MB</li>` +
+      `<li>影片：mp4 / webm / mov，≤ ${MAX_VIDEO_MB} MB、≤ ${MAX_VIDEO_SECONDS} 秒</li>` +
+      '<li>iPhone HEIC 請先轉 jpg</li>' +
     '</ul>';
-  header.insertAdjacentElement('afterend', notice);
+  footer.insertAdjacentElement('beforebegin', notice);
 });
 
 // ── Video helpers ─────────────────────────────────────────
