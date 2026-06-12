@@ -485,7 +485,7 @@ const _uploadFileInput = (() => {
   el.addEventListener('change', async () => {
     const file = el.files[0];
     if (!file || !_uploadTarget) return;
-    const { inputEl, btnEl, accept } = _uploadTarget;
+    const { inputEl, btnEl } = _uploadTarget;
     btnEl.disabled = true;
     btnEl.textContent = '…';
     try {
@@ -505,7 +505,7 @@ const _uploadFileInput = (() => {
 })();
 
 function triggerImgUpload(inputEl, btnEl, accept) {
-  _uploadTarget = { inputEl, btnEl, accept: accept || 'image/*' };
+  _uploadTarget = { inputEl, btnEl };
   _uploadFileInput.accept = accept || 'image/*';
   _uploadFileInput.click();
 }
