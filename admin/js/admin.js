@@ -398,15 +398,53 @@ function showSaveToast(msg) {
 const CLOUDINARY_CLOUD  = 'dlaqvwooi';
 const CLOUDINARY_PRESET = 'psalm-upload';
 
-const MAX_IMAGE_MB = 10;
-const MAX_VIDEO_MB = 100;
+const MAX_IMAGE_MB     = 8;
+const MAX_VIDEO_MB     = 50;
+const MAX_VIDEO_SECONDS = 15;
+const IMAGE_EXT  = ['jpg', 'jpeg', 'png', 'webp'];
+const VIDEO_EXT  = ['mp4', 'webm', 'mov'];
+const IMAGE_MIME = ['image/jpeg', 'image/png', 'image/webp'];
+const VIDEO_MIME = ['video/mp4', 'video/webm', 'video/quicktime'];
+
+// 讀影片長度（上傳前先擋，不浪費流量）
+function getVideoDuration(file) {
+  return new Promise((resolve, reject) => {
+    const v = document.createElement('video');
+    v.preload = 'metadata';
+    v.onloadedmetadata = () => { URL.revokeObjectURL(v.src); resolve(v.duration); };
+    v.onerror = () => { URL.revokeObjectURL(v.src); reject(new Error('讀取影片資訊失敗')); };
+    v.src = URL.createObjectURL(file);
+  });
+}
 
 async function uploadToCloudinary(file) {
-  const isVideo = file.type.startsWith('video');
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  const isVideo = file.type.startsWith('video') || VIDEO_EXT.includes(ext);
+
+  // 格式（副檔名或 MIME 任一相符即可，否則擋下給白話提示）
+  const okExt  = (isVideo ? VIDEO_EXT  : IMAGE_EXT ).includes(ext);
+  const okMime = (isVideo ? VIDEO_MIME : IMAGE_MIME).includes(file.type);
+  if (!okExt && !okMime) {
+    throw new Error(isVideo
+      ? '影片格式不支援，請用 mp4 / webm / mov'
+      : '圖片格式不支援，請用 jpg / png / webp（iPhone 的 HEIC 請先轉成 jpg）');
+  }
+
+  // 大小
   const maxMB = isVideo ? MAX_VIDEO_MB : MAX_IMAGE_MB;
   if (file.size > maxMB * 1024 * 1024) {
     throw new Error(`檔案太大，${isVideo ? '影片' : '圖片'}上限為 ${maxMB} MB（目前 ${(file.size / 1024 / 1024).toFixed(1)} MB）`);
   }
+
+  // 影片長度
+  if (isVideo) {
+    let dur = null;
+    try { dur = await getVideoDuration(file); } catch (e) {}
+    if (dur != null && dur > MAX_VIDEO_SECONDS + 0.5) {
+      throw new Error(`影片太長，上限為 ${MAX_VIDEO_SECONDS} 秒（目前 ${dur.toFixed(1)} 秒）`);
+    }
+  }
+
   const fd = new FormData();
   fd.append('file', file);
   fd.append('upload_preset', CLOUDINARY_PRESET);
@@ -453,6 +491,23 @@ function triggerImgUpload(inputEl, btnEl, accept) {
   _uploadFileInput.accept = accept || 'image/*';
   _uploadFileInput.click();
 }
+
+// ── 上傳須知：自動插到有上傳功能的頁面頂部（一處維護、全後台生效）──
+document.addEventListener('DOMContentLoaded', () => {
+  if (!document.querySelector('.btn-upload-img')) return;
+  const header = document.querySelector('main.main .page-header');
+  if (!header || document.querySelector('.upload-notice')) return;
+  const notice = document.createElement('div');
+  notice.className = 'upload-notice';
+  notice.innerHTML =
+    '<strong>上傳須知</strong>' +
+    '<ul>' +
+      `<li><b>圖片</b>：jpg / png / webp，單張 ≤ ${MAX_IMAGE_MB} MB（iPhone 的 HEIC 請先轉成 jpg）</li>` +
+      `<li><b>影片</b>：mp4 / webm / mov，≤ ${MAX_VIDEO_MB} MB 且 ≤ ${MAX_VIDEO_SECONDS} 秒</li>` +
+      '<li>圖片<b>不用自己轉 webp</b>，系統會自動最佳化交付給訪客（你上傳 jpg / png 就好）</li>' +
+    '</ul>';
+  header.insertAdjacentElement('afterend', notice);
+});
 
 // ── Video helpers ─────────────────────────────────────────
 function isVideoUrl(url) {

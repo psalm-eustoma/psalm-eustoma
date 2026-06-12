@@ -255,6 +255,23 @@ tbody tr:hover td { background: #fafaf8; }
 .form-textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
 .form-hint { font-size: 11px; color: var(--text-mid); margin-top: 5px; }
 
+/* 上傳須知（由 admin.js 自動插入有上傳功能的頁面） */
+.upload-notice {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+.upload-notice strong { display: block; color: var(--text); font-weight: 500; font-size: 13px; margin-bottom: 6px; }
+.upload-notice ul { margin: 0; padding-left: 18px; }
+.upload-notice li { margin: 3px 0; }
+.upload-notice b { color: var(--text); font-weight: 500; }
+
 .form-actions {
   display: flex;
   gap: 10px;
