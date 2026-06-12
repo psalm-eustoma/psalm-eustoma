@@ -257,9 +257,10 @@ tbody tr:hover td { background: #fafaf8; }
 
 /* 上傳須知（admin.js 插到側欄底部、登出之上） */
 .upload-notice {
-  margin: 12px 12px 0;
-  padding: 14px 12px 6px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  margin: 12px 12px 14px;
+  padding: 13px 14px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
   font-size: 11px;
   line-height: 1.5;
   color: rgba(255,255,255,0.4);
