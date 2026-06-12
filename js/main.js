@@ -99,21 +99,17 @@ if (window.dataReady && typeof window.dataReady.then === 'function') {
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 
-let _menuBgTimer;
 function openMenu() {
+  // iOS Safari samples the status-bar colour from body background-color, and only
+  // re-samples on scroll / layout change — not on a later style tweak. So set body
+  // black *before* lockScroll, so the open's layout change samples black. This makes
+  // the menu's status bar go black even when opened from a scrolled (white) position.
+  document.body.style.backgroundColor = '#000000';
   hamburger.classList.add('is-open');
   mobileMenu.classList.add('is-open');
   lockScroll();
   window.__refreshSafeBottom && window.__refreshSafeBottom();
   window.__refreshSafeTop && window.__refreshSafeTop();
-  // iOS Safari reads the status bar colour from body background-color.
-  // Once the (opaque) menu has fully covered the screen, switch body to black
-  // so the status-bar strip turns black too — done after the 0.7s open fade so
-  // the content behind doesn't flash.
-  clearTimeout(_menuBgTimer);
-  _menuBgTimer = setTimeout(() => {
-    if (mobileMenu.classList.contains('is-open')) document.body.style.backgroundColor = '#000000';
-  }, 700);
 }
 
 function closeMenu(skipUnlock = false) {
@@ -122,8 +118,7 @@ function closeMenu(skipUnlock = false) {
   if (!skipUnlock) unlockScroll();
   window.__refreshSafeBottom && window.__refreshSafeBottom();
   window.__refreshSafeTop && window.__refreshSafeTop();
-  clearTimeout(_menuBgTimer);
-  document.body.style.backgroundColor = ''; // revert to CSS white before the menu fades out
+  document.body.style.backgroundColor = ''; // revert to CSS white
 }
 
 hamburger.addEventListener('click', () => {
