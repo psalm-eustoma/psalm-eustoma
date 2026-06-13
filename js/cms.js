@@ -212,12 +212,10 @@ function startTaglineTypewriter(el, text) {
   }
   el.textContent = '';
   const run = () => {
-    el.classList.add('is-typing');
     let i = 0;
     (function tick() {
       el.textContent = text.slice(0, ++i);
       if (i < text.length) setTimeout(tick, 40);
-      else el.classList.remove('is-typing');
     })();
   };
   const root = document.documentElement;

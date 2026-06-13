@@ -195,18 +195,6 @@ nav.nav-light .hamburger span { background: var(--black); }
   text-align: center;
   line-height: 1.5;
 }
-/* 打字機游標：只在逐字打字時顯示 */
-.hero-tagline.is-typing::after {
-  content: '';
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  margin-left: 3px;
-  background: currentColor;
-  vertical-align: -0.12em;
-  animation: heroCaretBlink 0.7s steps(1) infinite;
-}
-@keyframes heroCaretBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
 /* ── QUOTE ── */
 #quote {
