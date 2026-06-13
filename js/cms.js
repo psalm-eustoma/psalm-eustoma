@@ -201,34 +201,6 @@ function getCmsAbout() {
   return d.about || CMS_DEFAULT.about;
 }
 
-// ── Hero tagline typewriter ───────────────────────────────
-// Types the tagline out character-by-character. Waits for the intro loader
-// to finish (html.intro-loading) so it plays when the hero is actually shown.
-// Honours prefers-reduced-motion by setting the text instantly.
-function startTaglineTypewriter(el, text) {
-  if (!text || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
-    el.textContent = text || '';
-    return;
-  }
-  el.textContent = '';
-  const run = () => {
-    let i = 0;
-    (function tick() {
-      el.textContent = text.slice(0, ++i);
-      if (i < text.length) setTimeout(tick, 40);
-    })();
-  };
-  const root = document.documentElement;
-  if (root.classList.contains('intro-loading')) {
-    const obs = new MutationObserver(() => {
-      if (!root.classList.contains('intro-loading')) { obs.disconnect(); setTimeout(run, 350); }
-    });
-    obs.observe(root, { attributes: true, attributeFilter: ['class'] });
-  } else {
-    setTimeout(run, 450);
-  }
-}
-
 // ── Init: runs once cloud data is loaded ──
 function initCms() {
   const d    = getCmsData();
@@ -246,9 +218,9 @@ function initCms() {
   if (heroImg && h.banner.heroImageUrl) {
     heroImg.style.setProperty('--hero-img', `url('${cmsImgFit(h.banner.heroImageUrl, 1200)}')`);
   }
-  // Banner — tagline (typewriter)
+  // Banner — tagline
   const tagline = document.querySelector('.hero-tagline');
-  if (tagline) startTaglineTypewriter(tagline, getL10n(h.banner.tagline));
+  if (tagline) tagline.textContent = getL10n(h.banner.tagline);
 
   // Quote
   const setTxt = (sel, val) => { const el = document.querySelector(sel); if (el) el.textContent = val; };
@@ -365,10 +337,6 @@ function applySettings() {
 // ── Boot ──────────────────────────────────────────────────
 // Pages may have inline scripts that read CMS data; they all `await window.dataReady`.
 (async () => {
-  // Clear the hero tagline early so the typewriter starts from empty
-  // (avoids a flash of the static fallback text before data loads).
-  const _tl = document.querySelector('.hero-tagline');
-  if (_tl) _tl.textContent = '';
   await _loadCmsFromCloud();
   initCms();
   initMobileMenuCats();
