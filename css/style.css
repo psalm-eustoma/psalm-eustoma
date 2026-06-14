@@ -1331,7 +1331,7 @@ footer {
     gap: 16px;
     overflow-x: auto;
     overflow-y: hidden;
-    touch-action: pan-x;
+    touch-action: pan-x pan-y; /* 橫滑→滑圖片；直滑→捲頁面（瀏覽器依方向判斷） */
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
