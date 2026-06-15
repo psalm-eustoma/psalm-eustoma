@@ -211,10 +211,14 @@ document.addEventListener('dragstart', (e) => {
   const indexHero = document.querySelector('.hero-left');
   const innerHero = document.querySelector('.services-hero, .about-hero');
   if (indexHero) {
-    // Index: wait until full hero scrolls off
-    const update = () => nav.classList.toggle('nav-light', indexHero.closest('#banner, section, .hero-wrap, body')?.getBoundingClientRect().bottom <= 0 || indexHero.getBoundingClientRect().bottom <= 0);
-    window.addEventListener('scroll', update, { passive: true });
-    update();
+    // Index: nav turns white once the hero has scrolled off. Use an
+    // IntersectionObserver instead of reading getBoundingClientRect on every
+    // scroll frame (that forced a layout flush per frame = scroll jank).
+    const io = new IntersectionObserver(([e]) => {
+      nav.classList.toggle('nav-light', !e.isIntersecting);
+      if (window.__refreshSafeTop) window.__refreshSafeTop();
+    }, { threshold: 0 });
+    io.observe(indexHero);
   } else if (innerHero) {
     // Services / About: turn white immediately on any scroll
     const update = () => nav.classList.toggle('nav-light', window.scrollY > 10);
