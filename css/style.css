@@ -290,7 +290,7 @@ nav.nav-light .hamburger span { background: var(--black); }
   background-position: center;
   transition: transform 0.6s var(--ease);
 }
-.media-card:hover::before { transform: scale(1.1); }
+@media (hover: hover) { .media-card:hover::before { transform: scale(1.1); } } /* 只在滑鼠裝置 hover；觸控不觸發（避免卡住的縮放 + 捲動重繪） */
 .card-label {
   position: absolute;
   bottom: 0;
@@ -1340,6 +1340,10 @@ footer {
   }
   .media-cards::-webkit-scrollbar { display: none; }
   .media-card { flex: 0 0 309px; height: auto; aspect-ratio: 2 / 3; scroll-snap-align: start; }
+  /* 手機停用毛玻璃：backdrop-filter 在 iOS 捲動時每幀重算、超吃效能（捲動卡頓元兇）。改用較不透明底色維持可讀性 */
+  .card-label { backdrop-filter: none; -webkit-backdrop-filter: none; background: #ffffffcc; }
+  /* 固定浮動鈕同理：固定在畫面上、捲動時毛玻璃不斷重算 */
+  .project-booking-btn { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(106, 106, 106, 0.72); }
 
   #archive { padding: 80px 30px; }
 
