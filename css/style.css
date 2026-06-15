@@ -1333,7 +1333,6 @@ footer {
     overflow-y: hidden;
     touch-action: pan-x pan-y; /* 原生左右滑（有動量手感）+ 直向捲頁，瀏覽器自行依方向判斷 */
     scroll-snap-type: x proximity; /* 輕對齊：橫滑放手時靠近哪張就對齊，不硬拉、不卡直向捲動 */
-    -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     scrollbar-width: none;
     padding-bottom: 4px;
