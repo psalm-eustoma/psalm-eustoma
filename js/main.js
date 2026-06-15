@@ -311,3 +311,23 @@ document.addEventListener('dragstart', (e) => {
     strip.addEventListener('touchcancel', release, { passive: true });
   });
 })();
+
+// Pause autoplay carousel videos while the page is scrolling — iOS stutters
+// when it has to re-composite a playing <video> every frame during a scroll.
+// Resume shortly after scrolling stops. (You don't notice the pause while
+// scrolling past it; the stutter goes away.)
+(function () {
+  const getVids = () => document.querySelectorAll('.media-cards video');
+  let t, scrolling = false;
+  window.addEventListener('scroll', () => {
+    if (!scrolling) {
+      scrolling = true;
+      getVids().forEach(v => { if (!v.paused) { v.dataset.wasPlaying = '1'; v.pause(); } });
+    }
+    clearTimeout(t);
+    t = setTimeout(() => {
+      scrolling = false;
+      getVids().forEach(v => { if (v.dataset.wasPlaying) { delete v.dataset.wasPlaying; v.play().catch(() => {}); } });
+    }, 250);
+  }, { passive: true });
+})();
