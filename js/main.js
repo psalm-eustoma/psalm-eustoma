@@ -292,7 +292,8 @@ document.addEventListener('dragstart', (e) => {
       const t = e.touches[0];
       const dx = t.clientX - sx, dy = t.clientY - sy;
       if (axis === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
-        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        // 偏向直向：要橫向明顯大於直向（1.5x）才當橫滑捲圖片，否則交給頁面直向捲動
+        axis = Math.abs(dx) > Math.abs(dy) * 1.5 ? 'x' : 'y';
       }
       if (axis === 'x') strip.scrollLeft = sScroll - dx; // horizontal → JS-driven; vertical → leave to the page
     }, { passive: true });

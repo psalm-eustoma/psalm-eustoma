@@ -331,6 +331,8 @@
 
     const leftImgs  = ['images/loader/test_1.jpg','images/loader/test_12.jpg','images/loader/test_25.jpg'];
     const rightImgs = ['images/loader/test_7.jpg','images/loader/test_19.jpg','images/loader/test_33.jpg'];
+    // 預先載入所有翻書圖，避免翻頁時圖還沒下載好出現空白頁
+    [...leftImgs, ...rightImgs].forEach(s => { const im = new Image(); im.src = s; });
     let useA = true;
 
     const swap = (i) => {
