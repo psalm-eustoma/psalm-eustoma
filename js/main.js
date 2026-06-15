@@ -270,3 +270,43 @@ document.addEventListener('dragstart', (e) => {
   if (window.dataReady && typeof window.dataReady.then === 'function') window.dataReady.then(update);
   update();
 })();
+
+// Mobile media strips (PHOTOGRAPHY / VIDEO·SOCIAL): axis-lock touch so a
+// vertical swipe scrolls the page (the strip never drifts horizontally and
+// there's no nested-scroller hand-off stutter) and a horizontal swipe scrolls
+// the strip via scrollLeft. CSS sets these strips to touch-action: pan-y.
+// Snaps to the nearest card when a horizontal drag ends.
+(function () {
+  if (!('ontouchstart' in window) && !(navigator.maxTouchPoints > 0)) return;
+  const strips = document.querySelectorAll('.media-cards');
+  if (!strips.length) return;
+  strips.forEach(strip => {
+    let sx = 0, sy = 0, sScroll = 0, axis = null, active = false;
+    strip.addEventListener('touchstart', e => {
+      if (strip.scrollWidth <= strip.clientWidth + 2) { active = false; return; } // not a scroller (desktop grid)
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; sScroll = strip.scrollLeft; axis = null; active = true;
+    }, { passive: true });
+    strip.addEventListener('touchmove', e => {
+      if (!active) return;
+      const t = e.touches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (axis === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      }
+      if (axis === 'x') strip.scrollLeft = sScroll - dx; // horizontal → JS-driven; vertical → leave to the page
+    }, { passive: true });
+    const release = () => {
+      if (axis === 'x') {
+        const card = strip.querySelector('.media-card');
+        if (card) {
+          const step = card.getBoundingClientRect().width + 16; // card width + gap
+          strip.scrollTo({ left: Math.round(strip.scrollLeft / step) * step, behavior: 'smooth' });
+        }
+      }
+      active = false; axis = null;
+    };
+    strip.addEventListener('touchend', release, { passive: true });
+    strip.addEventListener('touchcancel', release, { passive: true });
+  });
+})();
