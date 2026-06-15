@@ -1332,7 +1332,7 @@ footer {
     overflow-x: auto;
     overflow-y: hidden;
     touch-action: pan-x pan-y; /* 橫滑→滑圖片；直滑→捲頁面（瀏覽器依方向判斷） */
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity; /* proximity 而非 mandatory：直向捲動經過時不會被硬拉對齊（避免位移頓點） */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     scrollbar-width: none;
