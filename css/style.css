@@ -1331,8 +1331,8 @@ footer {
     gap: 16px;
     overflow-x: auto;
     overflow-y: hidden;
-    touch-action: pan-y; /* 直向交給瀏覽器（乾淨、無巢狀捲動交接頓點）；橫向由 JS 軸鎖驅動（main.js） */
-    scroll-snap-type: none; /* 改由 JS 在橫滑放手時對齊到最近一張 */
+    touch-action: pan-x pan-y; /* 原生左右滑（有動量手感）+ 直向捲頁，瀏覽器自行依方向判斷 */
+    scroll-snap-type: x proximity; /* 輕對齊：橫滑放手時靠近哪張就對齊，不硬拉、不卡直向捲動 */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     scrollbar-width: none;
