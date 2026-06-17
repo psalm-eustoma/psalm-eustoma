@@ -285,6 +285,7 @@ nav.nav-light .hamburger span { background: var(--black); }
   background: #ccc;
   cursor: pointer;
 }
+a.media-card { display: block; text-decoration: none; color: inherit; }
 .media-card::before {
   content: '';
   position: absolute;

@@ -158,11 +158,31 @@ function getCmsData() {
 }
 
 // ── Render helpers ────────────────────────────────────────
+// A home card can link to a project, a category, or any custom URL (set in the
+// admin). Returns the href, or '' when the card isn't linked.
+function cmsCardHref(card) {
+  const t = card && card.linkType, v = card && card.linkValue;
+  if (!t || t === 'none' || !v) return '';
+  if (t === 'project')  return `project.html?id=${encodeURIComponent(v)}`;
+  if (t === 'category') return `services.html?cat=${encodeURIComponent(v)}`;
+  if (t === 'url')      return v;
+  return '';
+}
+// Opening tag for a card: an <a> when linked (custom URLs open in a new tab),
+// otherwise a plain <div>. `extra` is any extra attributes (e.g. inline style).
+function _cardOpen(card, extra) {
+  const href = cmsCardHref(card);
+  if (!href) return { open: `<div class="media-card"${extra}>`, close: '</div>' };
+  const ext = card.linkType === 'url' ? ' target="_blank" rel="noopener"' : '';
+  return { open: `<a class="media-card"${extra} href="${href}"${ext}>`, close: '</a>' };
+}
+
 function renderImgCards(cards) {
   return cards.map(card => {
     const url = cmsImgFit(card.mediaUrl, 800);
     const bg = url ? ` style="--card-bg:url('${url}')"` : '';
-    return `<div class="media-card"${bg}><span class="card-label">${getL10n(card.label) || ''}</span></div>`;
+    const { open, close } = _cardOpen(card, bg);
+    return `${open}<span class="card-label">${getL10n(card.label) || ''}</span>${close}`;
   }).join('');
 }
 
@@ -171,16 +191,18 @@ function renderMixedCards(cards) {
     if (card.isVideo && card.mediaUrl) {
       const src = cmsVideoSrc(card.mediaUrl);
       const type = /\.webm(\?|$)/i.test(src) ? 'video/webm' : 'video/mp4';
-      return `<div class="media-card" style="background:#111;">
+      const { open, close } = _cardOpen(card, ' style="background:#111;"');
+      return `${open}
         <video autoplay muted loop playsinline>
           <source src="${src}" type="${type}">
         </video>
         <span class="card-label">${getL10n(card.label) || ''}</span>
-      </div>`;
+      ${close}`;
     }
     const url = cmsImgFit(card.mediaUrl, 800);
     const bg = url ? ` style="--card-bg:url('${url}')"` : '';
-    return `<div class="media-card"${bg}><span class="card-label">${getL10n(card.label) || ''}</span></div>`;
+    const { open, close } = _cardOpen(card, bg);
+    return `${open}<span class="card-label">${getL10n(card.label) || ''}</span>${close}`;
   }).join('');
 }
 
