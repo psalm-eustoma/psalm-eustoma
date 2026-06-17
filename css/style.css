@@ -87,6 +87,10 @@ nav {
   justify-content: space-between;
   align-items: center;
   z-index: 600;
+  /* Keep the bottom border present but transparent in the see-through state so
+     the scroll → white transition only fades the border's opacity (grey),
+     never its width or a black currentColor edge flashing first. */
+  border-bottom: 1px solid rgba(224, 224, 224, 0);
 }
 /* Higher specificity than .fade-down so background-color transition isn't clobbered */
 nav,
@@ -135,7 +139,7 @@ nav.fade-down {
 /* Nav — white variant (scroll-triggered) */
 nav.nav-light {
   background: white;
-  border-bottom: 1px solid #E0E0E0;
+  border-bottom-color: #E0E0E0;
 }
 nav.nav-light .nav-logo { color: var(--black); }
 nav.nav-light .nav-links a { color: var(--black); }
