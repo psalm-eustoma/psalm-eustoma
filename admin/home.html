@@ -287,16 +287,16 @@
         </div>
         <div class="form-group" style="margin-bottom:0;">
           <label class="form-label">點擊卡片前往</label>
-          <select class="form-input" id="${prefix}LinkType${i}" onchange="updateCardLink('${prefix}',${i})">
+          <select class="form-select" id="${prefix}LinkType${i}" onchange="updateCardLink('${prefix}',${i})">
             <option value="none"${sel('none')}>不連結</option>
             <option value="project"${sel('project')}>作品內頁</option>
             <option value="category"${sel('category')}>分類頁</option>
             <option value="url"${sel('url')}>自訂網址</option>
           </select>
-          <select class="form-input" id="${prefix}LinkProject${i}" style="margin-top:6px;${show('project')}">
+          <select class="form-select" id="${prefix}LinkProject${i}" style="margin-top:6px;${show('project')}">
             ${projects.length ? optList(projects, p => getL10n(p.title) || '(未命名作品)', lt === 'project' ? lv : '') : '<option value="">（尚無作品）</option>'}
           </select>
-          <select class="form-input" id="${prefix}LinkCategory${i}" style="margin-top:6px;${show('category')}">
+          <select class="form-select" id="${prefix}LinkCategory${i}" style="margin-top:6px;${show('category')}">
             ${categories.length ? optList(categories, c => getL10n(c.name) || '(未命名分類)', lt === 'category' ? lv : '') : '<option value="">（尚無分類）</option>'}
           </select>
           <input class="form-input" type="url" id="${prefix}LinkUrl${i}" value="${lt === 'url' ? lv : ''}" placeholder="https://..." style="margin-top:6px;${show('url')}">

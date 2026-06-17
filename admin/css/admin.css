@@ -258,6 +258,16 @@ tbody tr:hover td { background: #fafaf8; }
   transition: border-color 0.15s;
 }
 .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: #aaa; }
+/* Custom dropdown chevron so it sits comfortably inside the field, not jammed
+   against the right border like the native arrow. */
+.form-select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%23666' stroke-width='1.5'><path d='M1 1.5l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
 .form-textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
 .form-hint { font-size: 11px; color: var(--text-mid); margin-top: 5px; }
 
