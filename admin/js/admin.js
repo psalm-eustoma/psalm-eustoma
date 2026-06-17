@@ -435,9 +435,15 @@ function getVideoDuration(file) {
   });
 }
 
-async function uploadToCloudinary(file) {
+async function uploadToCloudinary(file, opts = {}) {
   const ext = (file.name.split('.').pop() || '').toLowerCase();
   const isVideo = file.type.startsWith('video') || VIDEO_EXT.includes(ext);
+
+  // 首頁 hero 影片只收 mp4：webm 在 iPhone 只能用軟體解碼，會卡頓。
+  if (opts.mp4Only && isVideo) {
+    const isMp4 = ext === 'mp4' || file.type === 'video/mp4';
+    if (!isMp4) throw new Error('首頁 Banner 影片請用 mp4 格式（確保 iPhone 播放順暢）');
+  }
 
   // 格式（副檔名或 MIME 任一相符即可，否則擋下給白話提示）
   const okExt  = (isVideo ? VIDEO_EXT  : IMAGE_EXT ).includes(ext);
@@ -485,11 +491,11 @@ const _uploadFileInput = (() => {
   el.addEventListener('change', async () => {
     const file = el.files[0];
     if (!file || !_uploadTarget) return;
-    const { inputEl, btnEl } = _uploadTarget;
+    const { inputEl, btnEl, opts } = _uploadTarget;
     btnEl.disabled = true;
     btnEl.textContent = '…';
     try {
-      const url = await uploadToCloudinary(file);
+      const url = await uploadToCloudinary(file, opts || {});
       inputEl.value = url;
       inputEl.dispatchEvent(new Event('input', { bubbles: true }));
     } catch (err) {
@@ -504,8 +510,8 @@ const _uploadFileInput = (() => {
   return el;
 })();
 
-function triggerImgUpload(inputEl, btnEl, accept) {
-  _uploadTarget = { inputEl, btnEl };
+function triggerImgUpload(inputEl, btnEl, accept, opts) {
+  _uploadTarget = { inputEl, btnEl, opts: opts || {} };
   _uploadFileInput.accept = accept || 'image/*';
   _uploadFileInput.click();
 }

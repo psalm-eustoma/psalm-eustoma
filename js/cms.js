@@ -26,7 +26,7 @@ const CMS_DEFAULT = {
     videoSocial: {
       description: { en: 'Honest and unposed, each wedding is seen as it unfolds — gestures, laughter, and emotions preserved with quiet sincerity.', fr: '', zh: '' },
       cards: [
-        { mediaUrl: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-2160x3840_d7ac7592-37dc-4260-b2b4-9471985c7b00.mp4', label: { en: 'WEDDING', fr: '', zh: '' }, isVideo: true },
+        { mediaUrl: 'videos/carousel-1.mp4', label: { en: 'WEDDING', fr: '', zh: '' }, isVideo: true },
         { mediaUrl: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-1440x1800_v-frms_webp_217d8cd1-8269-481c-bf3e-6e547bba37b5_middle.webp', label: { en: 'WEDDING', fr: '', zh: '' }, isVideo: false },
         { mediaUrl: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-4480x6720_575b2663-e34f-419c-a99b-129ed4c86376.webp', label: { en: 'WEDDING', fr: '', zh: '' }, isVideo: false }
       ]
@@ -229,7 +229,7 @@ function initCms() {
     }
     const src = videoEl.querySelector('source');
     if (src) {
-      src.src = videoUrl;
+      src.src = cmsVidFit(videoUrl);
       src.type = /\.webm(\?|$)/i.test(videoUrl) ? 'video/webm' : 'video/mp4';
       videoEl.load();
     }

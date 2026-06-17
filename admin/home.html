@@ -95,10 +95,10 @@
               <div class="form-group">
                 <label class="form-label">影片連結（左側自動播放，共用）</label>
                 <div class="img-row">
-                  <input class="form-input" type="url" id="bannerVideo" placeholder="https://... .mp4 / .webm">
-                  <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('bannerVideo'),this,'video/*')">↑ 上傳</button>
+                  <input class="form-input" type="url" id="bannerVideo" placeholder="https://... .mp4">
+                  <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('bannerVideo'),this,'video/mp4',{mp4Only:true})">↑ 上傳</button>
                 </div>
-                <p class="form-hint">建議 1080 × 1920 px（直式 9:16），MP4 或 WebM</p>
+                <p class="form-hint">建議 1080 × 1920 px（直式 9:16），請用 MP4（iPhone 才能順暢播放，會自動壓到 1080p）</p>
               </div>
               <div class="form-group">
                 <label class="form-label">右側背景圖連結（共用）</label>
