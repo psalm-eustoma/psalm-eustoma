@@ -85,6 +85,18 @@ function cmsVidFit(url) {
   if (!url || !url.includes('res.cloudinary.com/') || !url.includes('/video/upload/')) return url || '';
   return url.replace('/video/upload/', '/video/upload/q_auto,w_1080,c_limit/');
 }
+// The template ships two heavy demo clips (a 4K hero webm and a 4K carousel
+// mp4) whose URLs are still stored in Firestore. They software-decode / are
+// huge on mobile. Until the owner replaces them from the admin, redirect those
+// specific assets to bundled, self-hosted 1080p mp4s (hardware-decoded, free
+// on Cloudflare). Any other URL — including the owner's own uploads — is left
+// untouched.
+function cmsVideoSrc(url) {
+  if (!url) return '';
+  if (/s-2160x3840_4aa2118e[^/]*\.webm/i.test(url)) return 'videos/hero-banner.mp4';
+  if (/s-2160x3840_d7ac7592[^/]*\.mp4/i.test(url))  return 'videos/carousel-1.mp4';
+  return cmsVidFit(url);
+}
 
 // ── Data access ───────────────────────────────────────────
 // Cache, filled once from Firestore on page load. All synchronous getters read from here.
@@ -157,10 +169,11 @@ function renderImgCards(cards) {
 function renderMixedCards(cards) {
   return cards.map(card => {
     if (card.isVideo && card.mediaUrl) {
-      const type = card.mediaUrl.endsWith('.mp4') ? 'video/mp4' : 'video/webm';
+      const src = cmsVideoSrc(card.mediaUrl);
+      const type = /\.webm(\?|$)/i.test(src) ? 'video/webm' : 'video/mp4';
       return `<div class="media-card" style="background:#111;">
         <video autoplay muted loop playsinline>
-          <source src="${cmsVidFit(card.mediaUrl)}" type="${type}">
+          <source src="${src}" type="${type}">
         </video>
         <span class="card-label">${getL10n(card.label) || ''}</span>
       </div>`;
@@ -219,18 +232,11 @@ function initCms() {
   // Banner — video
   const videoEl = document.querySelector('#banner video');
   if (videoEl && h.banner.videoUrl) {
-    let videoUrl = h.banner.videoUrl;
-    // The original hero source is a 4K .webm, which iOS can only decode in
-    // software (no hardware decode for webm) → heavy CPU use that stutters the
-    // whole homepage scroll and loads slowly. Redirect that specific asset to a
-    // bundled 1080p H.264 mp4 (hardware-decoded, ~2MB, free on Cloudflare).
-    if (/s-2160x3840_4aa2118e[^/]*\.webm/i.test(videoUrl)) {
-      videoUrl = 'videos/hero-banner.mp4';
-    }
+    const finalUrl = cmsVideoSrc(h.banner.videoUrl);
     const src = videoEl.querySelector('source');
     if (src) {
-      src.src = cmsVidFit(videoUrl);
-      src.type = /\.webm(\?|$)/i.test(videoUrl) ? 'video/webm' : 'video/mp4';
+      src.src = finalUrl;
+      src.type = /\.webm(\?|$)/i.test(finalUrl) ? 'video/webm' : 'video/mp4';
       videoEl.load();
     }
   }

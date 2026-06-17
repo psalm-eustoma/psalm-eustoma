@@ -178,7 +178,7 @@
       const photosHtml = (proj.images || []).map(url => {
         const isVid = url && (url.includes('/video/upload/') || /\.(mp4|webm|mov)(\?|$)/i.test(url));
         const media = isVid
-          ? `<video src="${cmsVidFit(url)}" autoplay muted loop playsinline></video>`
+          ? `<video src="${cmsVideoSrc(url)}" autoplay muted loop playsinline></video>`
           : `<img src="${cmsImgFit(url, 1000)}" srcset="${cmsImgSrcset(url, [400, 600, 800, 1200, 1600])}" sizes="(max-width: 690px) 100vw, 50vw" alt="${getL10n(proj.title)}" loading="lazy">`;
         return `<div class="project-photo">${media}</div>`;
       }).join('');
