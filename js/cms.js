@@ -6,7 +6,7 @@ const CMS_KEY = 'psalm_cms';
 const CMS_DEFAULT = {
   home: {
     banner: {
-      videoUrl: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-2160x3840_4aa2118e-f8f3-4d66-b952-3e4be6a82e9e.webm',
+      videoUrl: 'videos/hero-banner.mp4',
       heroImageUrl: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-4480x6720_575b2663-e34f-419c-a99b-129ed4c86376.webp',
       tagline: { en: 'Where light moves gently, and moments take form with quiet emotion.', fr: '', zh: '' }
     },
@@ -210,8 +210,20 @@ function initCms() {
   // Banner — video
   const videoEl = document.querySelector('#banner video');
   if (videoEl && h.banner.videoUrl) {
+    let videoUrl = h.banner.videoUrl;
+    // The original hero source is a 4K .webm, which iOS can only decode in
+    // software (no hardware decode for webm) → heavy CPU use that stutters the
+    // whole homepage scroll and loads slowly. Redirect that specific asset to a
+    // bundled 1080p H.264 mp4 (hardware-decoded, ~2MB, free on Cloudflare).
+    if (/s-2160x3840_4aa2118e[^/]*\.webm/i.test(videoUrl)) {
+      videoUrl = 'videos/hero-banner.mp4';
+    }
     const src = videoEl.querySelector('source');
-    if (src) { src.src = h.banner.videoUrl; videoEl.load(); }
+    if (src) {
+      src.src = videoUrl;
+      src.type = /\.webm(\?|$)/i.test(videoUrl) ? 'video/webm' : 'video/mp4';
+      videoEl.load();
+    }
   }
   // Banner — hero image
   const heroImg = document.querySelector('.hero-right-image');
