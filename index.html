@@ -303,9 +303,22 @@
         heroLeft.style.height = '';
       }
     };
+    // iOS shows/hides the URL bar on the first scroll, which fires `resize`
+    // with only a HEIGHT change. Re-running fit() then rewrites the hero
+    // height mid-scroll → a forced reflow of the full-screen video section =
+    // the first-scroll stutter. The hero already has a 10% height buffer, so
+    // only re-fit when the WIDTH actually changes (rotation / real resize).
+    let lastW = window.innerWidth;
     fit();
-    window.addEventListener('resize', fit);
-    window.addEventListener('orientationchange', fit);
+    window.addEventListener('resize', () => {
+      if (window.innerWidth === lastW) return;
+      lastW = window.innerWidth;
+      fit();
+    });
+    window.addEventListener('orientationchange', () => {
+      lastW = window.innerWidth;
+      fit();
+    });
   })();
   </script>
 
