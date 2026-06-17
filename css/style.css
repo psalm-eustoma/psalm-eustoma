@@ -800,7 +800,6 @@ footer {
 .mobile-menu-secondary:hover { opacity: 0.55; }
 .mobile-menu-divider { height: 28px; }
 .mobile-menu-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
   padding-top: 20px;
 }
 .mobile-menu-cta-label {
