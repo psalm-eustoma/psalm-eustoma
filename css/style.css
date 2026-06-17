@@ -827,7 +827,7 @@ footer {
 .project-wrap {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 72px 180px 0;
+  padding: 68px 180px 0; /* = nav height, so the first photo sits flush under the nav (no gap) */
   display: flex;
   gap: 80px;
   box-sizing: border-box;
@@ -855,7 +855,7 @@ footer {
 }
 .project-sidebar-inner {
   position: sticky;
-  top: 72px;
+  top: 68px;
   height: 720px;
   display: flex;
   flex-direction: column;
