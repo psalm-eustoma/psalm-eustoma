@@ -76,6 +76,15 @@ function cmsImgSrcset(url, widths) {
   if (!url || !url.includes('res.cloudinary.com/') || !url.includes('/upload/')) return '';
   return widths.map(w => `${cmsImgFit(url, w)} ${w}w`).join(', ');
 }
+// Right-size Cloudinary video delivery: cap width at 1080 (c_limit = shrink
+// only, never upscale) + q_auto. So a 4K upload is delivered at ~1080p, cutting
+// delivery bandwidth ~3–4× without the owner needing to do anything. Keeps the
+// original container (an .mp4 stays h264 → hardware-decoded on iOS, no webm).
+// Non-Cloudinary URLs (e.g. the template demo clips) pass through unchanged.
+function cmsVidFit(url) {
+  if (!url || !url.includes('res.cloudinary.com/') || !url.includes('/video/upload/')) return url || '';
+  return url.replace('/video/upload/', '/video/upload/q_auto,w_1080,c_limit/');
+}
 
 // ── Data access ───────────────────────────────────────────
 // Cache, filled once from Firestore on page load. All synchronous getters read from here.
@@ -151,7 +160,7 @@ function renderMixedCards(cards) {
       const type = card.mediaUrl.endsWith('.mp4') ? 'video/mp4' : 'video/webm';
       return `<div class="media-card" style="background:#111;">
         <video autoplay muted loop playsinline>
-          <source src="${card.mediaUrl}" type="${type}">
+          <source src="${cmsVidFit(card.mediaUrl)}" type="${type}">
         </video>
         <span class="card-label">${getL10n(card.label) || ''}</span>
       </div>`;
