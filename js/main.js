@@ -276,23 +276,7 @@ document.addEventListener('dragstart', (e) => {
 })();
 
 // (Mobile media strips use native horizontal scroll — see .media-cards CSS.)
-
-// Pause ALL autoplay videos while scrolling. The hero video is a 4K webm,
-// which iOS decodes in software (no hardware decode for webm) — decoding it
-// every frame during a scroll is the main cause of the homepage scroll
-// stutter. Pausing during scroll frees the CPU; resume shortly after it stops.
-(function () {
-  let t, scrolling = false;
-  const vids = () => document.querySelectorAll('video');
-  window.addEventListener('scroll', () => {
-    if (!scrolling) {
-      scrolling = true;
-      vids().forEach(v => { if (!v.paused) { v.dataset.wasPlaying = '1'; v.pause(); } });
-    }
-    clearTimeout(t);
-    t = setTimeout(() => {
-      scrolling = false;
-      vids().forEach(v => { if (v.dataset.wasPlaying) { delete v.dataset.wasPlaying; v.play().catch(() => {}); } });
-    }, 200);
-  }, { passive: true });
-})();
+// The hero is now a 1080p H.264 mp4 (hardware-decoded), so it plays smoothly
+// during scroll on its own — no need to pause videos while scrolling. The old
+// scroll-pause caused a visible hitch (resume re-decoded a keyframe each time),
+// so it was removed.
