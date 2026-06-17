@@ -878,9 +878,13 @@ footer {
   align-items: center;
   justify-content: center;
   color: var(--text);
-  transition: background-color 0.3s var(--ease);
+  transition: background-color 0.4s var(--ease), border-color 0.4s var(--ease), color 0.4s var(--ease);
 }
-.project-nav-arrow:hover { background-color: #f0f0f0; }
+.project-nav-arrow:hover {
+  background-color: var(--black);
+  border-color: var(--black);
+  color: #fff;
+}
 .project-nav-arrow svg { width: 16px; height: 16px; }
 .project-info-block {
   display: flex;
