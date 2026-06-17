@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script>
+    // Reload 後讓使用者手動捲動立刻生效：關掉瀏覽器的捲動還原，
+    // 否則 iOS Safari 會在重資源（影片／大圖）載入完成時，把畫面拉回
+    // 它記住的位置（通常是最上面），蓋掉使用者往下滑的動作。
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  </script>
   <title>Psalm Eustoma – Paris-based Travel Photographer</title>
   <meta name="description" content="Paris-based studio for cinematic portraits, weddings, and elopements.">
   <meta property="og:title" content="Psalm Eustoma – Paris-based Travel Photographer">
