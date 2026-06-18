@@ -217,7 +217,7 @@ function renderArchive(cats) {
         <span class="archive-letter">${letter}</span>
         <span class="archive-name">${getL10n(cat.name)}</span>
       </div>
-      <div class="archive-more"><span>More</span><span>*</span></div>
+      <div class="archive-more"><span>more</span><span>*</span></div>
       <div class="archive-preview"${preview}></div>
     </a>`;
   }).join('');
