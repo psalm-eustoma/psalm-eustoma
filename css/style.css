@@ -337,7 +337,6 @@ a.media-card { display: block; text-decoration: none; color: inherit; }
   width: 100%;
   border-bottom: 1px solid rgb(191, 191, 191);
   cursor: pointer;
-  transition: border-color 0.3s var(--ease);
 }
 .archive-item:first-child { border-top: 1px solid rgb(191, 191, 191); }
 .archive-left {
