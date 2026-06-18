@@ -21,6 +21,10 @@
     .pv-inv-label { font-family:'Helvetica Neue',Arial,sans-serif; font-size:7px; font-weight:300; letter-spacing:0.08em; color:#686868; margin-bottom:14px; }
     .pv-inv-quote { font-family:'Cormorant Garamond',Georgia,serif; font-style:italic; font-size:11px; font-weight:400; color:#111; line-height:1.6; margin-bottom:10px; max-width:220px; }
     .pv-inv-note { font-family:'Helvetica Neue',Arial,sans-serif; font-size:7.5px; font-weight:300; color:#555; }
+    .pv-cta { position:relative; min-height:120px; padding:24px 16px; background:#333 no-repeat center/cover; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
+    .pv-cta::before { content:''; position:absolute; inset:0; background:rgba(0,0,0,0.35); }
+    .pv-cta-btn { position:relative; border:1px solid rgba(255,255,255,0.6); border-radius:20px; color:#fff; font-family:'Cormorant Garamond',Georgia,serif; font-size:9px; padding:3px 12px; }
+    .pv-cta-sub { position:relative; font-family:'Helvetica Neue',Arial,sans-serif; font-size:7px; font-weight:300; color:#dddddd; }
   </style>
   <link rel="icon" href="../images/Favicon.svg" type="image/svg+xml">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -143,6 +147,10 @@
               <div class="pv-inv-quote pv-placeholder" id="pvInvQuote">引言文字將顯示於此…</div>
               <div class="pv-inv-note pv-placeholder" id="pvInvNote">下方小字</div>
             </div>
+            <div class="pv-cta" id="pvCtaBg">
+              <span class="pv-cta-btn">↗ Book a Session</span>
+              <span class="pv-cta-sub">Sessions available in Paris and beyond.</span>
+            </div>
           </div>
         </div>
         <p class="preview-note">預覽顯示 EN 語言版本</p>
@@ -178,6 +186,7 @@
   function updatePreview() {
     const heroImg   = document.getElementById('heroImage').value.trim();
     const portraitUrl = document.getElementById('portrait').value.trim();
+    const ctaImg    = document.getElementById('ctaImage').value.trim();
     const eyebrow   = getEN('eyebrow');
     const headline  = getEN('headline');
     const invQuote  = getEN('invitationQuote');
@@ -185,6 +194,7 @@
 
     document.getElementById('pvHeroBg').style.backgroundImage = heroImg ? `url('${heroImg}')` : '';
     document.getElementById('pvPortrait').style.backgroundImage = portraitUrl ? `url('${portraitUrl}')` : '';
+    document.getElementById('pvCtaBg').style.backgroundImage = ctaImg ? `url('${ctaImg}')` : '';
 
     const pvEyebrow = document.getElementById('pvEyebrow');
     pvEyebrow.textContent = eyebrow || 'Eyebrow text';
@@ -210,6 +220,7 @@
     });
     document.getElementById('heroImage').addEventListener('input', updatePreview);
     document.getElementById('portrait').addEventListener('input', updatePreview);
+    document.getElementById('ctaImage').addEventListener('input', updatePreview);
   }
 
   // ── Load ──
