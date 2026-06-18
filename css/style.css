@@ -265,10 +265,10 @@ nav.nav-light .hamburger span { background: var(--black); }
   line-height: 1.28;
 }
 .media-title-area p {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 200;
   color: var(--text);
-  line-height: 1.4;
+  line-height: 1.6;
   text-align: center;
 }
 .media-cards {
@@ -506,8 +506,9 @@ footer {
   background: rgba(255, 255, 255, 0.15);
 }
 .footer-copy {
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
   color: var(--text-mid);
   text-align: center;
 }
@@ -892,7 +893,7 @@ footer {
   gap: 8px;
   padding-bottom: 12px;
 }
-.project-breadcrumb a { font-size: 13px; font-weight: 300; }
+.project-breadcrumb a { font-size: 13px; font-weight: 300; letter-spacing: 0.08em; text-transform: uppercase; }
 .project-breadcrumb a:first-child { color: var(--text-light); }
 .project-breadcrumb a:last-child { color: var(--text); }
 .project-breadcrumb-dot {
@@ -916,10 +917,12 @@ footer {
 }
 .project-title { font-size: 32px; font-weight: 200; color: var(--black); }
 .project-tags {
-  font-size: 14px;
-  font-weight: 200;
+  font-size: 13px;
+  font-weight: 300;
   color: var(--text-mid);
-  line-height: 1.6;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-align: right;
   width: 30%;
   overflow-wrap: break-word;
@@ -1098,9 +1101,9 @@ footer {
   max-width: 1152px;
 }
 .about-inv-note {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 200;
-  line-height: 1.4;
+  line-height: 1.6;
   color: var(--text-mid);
 }
 
@@ -1154,8 +1157,9 @@ footer {
   line-height: 1.28;
 }
 .services-hero-sub {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 200;
+  line-height: 1.6;
   color: rgba(255, 255, 255, 0.804);
 }
 
@@ -1243,12 +1247,13 @@ footer {
 
 .services-card-tags {
   font-family: var(--sans);
-  font-style: italic;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-mid);
   text-align: left;
-  line-height: 1.4;
+  line-height: 1.5;
   width: 40%;
   flex-shrink: 0;
   overflow-wrap: break-word;
@@ -1269,8 +1274,10 @@ footer {
 }
 
 .services-sidebar-label {
-  font-size: 14px;
-  font-weight: 200;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-mid);
 }
 
@@ -1396,7 +1403,7 @@ footer {
   .media-title-area h2 { font-size: 32px; }
 
   .media-title-area { gap: 16px; }
-  .media-title-area p { font-size: 13px; }
+  .media-title-area p { font-size: 15px; }
   .media-card { flex: 0 0 315px; height: auto; aspect-ratio: 2 / 3; }
   .card-label { font-size: 15px; }
 
@@ -1424,7 +1431,7 @@ footer {
   .about-inv-inner { padding: 0 30px; }
   .about-inv-label { font-size: 13px; }
   .about-inv-quote { font-size: 28px; letter-spacing: -0.02em; max-width: 312px; padding: 0; }
-  .about-inv-note { font-size: 13px; }
+  .about-inv-note { font-size: 15px; }
   .archive-left { gap: 16px; }
   .archive-name { font-size: 20px; }
   .archive-more { font-size: 14px; }
