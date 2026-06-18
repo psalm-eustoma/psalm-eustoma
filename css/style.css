@@ -1434,6 +1434,7 @@ footer {
   .about-inv-quote { font-size: 28px; letter-spacing: -0.02em; max-width: 312px; padding: 0; }
   .about-inv-note { font-size: 13px; }
   .archive-left { gap: 16px; }
+  .archive-letter { font-size: 12px; }
   .archive-name { font-size: 20px; }
   .archive-more { font-size: 14px; }
   .media-title-area { padding-left: 20px; padding-right: 20px; }
