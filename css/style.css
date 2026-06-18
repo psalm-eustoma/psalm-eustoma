@@ -778,7 +778,7 @@ footer {
 .mobile-menu-close span:nth-child(1) { transform: translateY(3px) rotate(15deg); }
 .mobile-menu-close span:nth-child(2) { transform: translateY(-3px) rotate(-15deg); }
 
-.mobile-menu-body { flex: 1; }
+.mobile-menu-body { flex: 1; padding-top: 48px; }
 .mobile-menu-label {
   display: block;
   font-size: 11px;
