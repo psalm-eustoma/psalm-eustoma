@@ -30,6 +30,9 @@ const CMS_DEFAULT = {
         { mediaUrl: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-1440x1800_v-frms_webp_217d8cd1-8269-481c-bf3e-6e547bba37b5_middle.webp', label: { en: 'WEDDING', fr: '', zh: '' }, isVideo: false },
         { mediaUrl: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-4480x6720_575b2663-e34f-419c-a99b-129ed4c86376.webp', label: { en: 'WEDDING', fr: '', zh: '' }, isVideo: false }
       ]
+    },
+    cta: {
+      image: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-1440x960_c02696d8-2b6b-420f-84f2-b3b8090eb757.webp'
     }
   },
   categories: [
@@ -44,7 +47,8 @@ const CMS_DEFAULT = {
     headline:        { en: 'Psalm Eustoma focuses on guided portraits and poetic documentation — blending design sensibility with sincerity.', fr: '', zh: '' },
     portrait: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-1080x1080_fcb36d04-8e5f-4165-9938-7a59f2c4c5bf.webp',
     invitationQuote: { en: 'Every collaboration begins with quiet trust and mutual curiosity. The stories we create are shaped by light, patience, and sincerity.', fr: '', zh: '' },
-    invitationNote:  { en: 'Every story begins with trust.', fr: '', zh: '' }
+    invitationNote:  { en: 'Every story begins with trust.', fr: '', zh: '' },
+    ctaImage: 'https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-1440x960_c2457df0-009a-402f-86e7-5046e65ff44f.webp'
   }
 };
 
@@ -270,6 +274,12 @@ function initCms() {
   // Banner — tagline
   const tagline = document.querySelector('.hero-tagline');
   if (tagline) tagline.textContent = getL10n(h.banner.tagline);
+
+  // CTA background
+  const ctaSection = document.getElementById('cta');
+  if (ctaSection && h.cta && h.cta.image) {
+    ctaSection.style.setProperty('--cta-img', `url('${cmsImgFit(h.cta.image, 1600)}')`);
+  }
 
   // Quote
   const setTxt = (sel, val) => { const el = document.querySelector(sel); if (el) el.textContent = val; };

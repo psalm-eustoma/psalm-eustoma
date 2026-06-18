@@ -396,7 +396,7 @@ a.media-card { display: block; text-decoration: none; color: inherit; }
 #cta {
   position: relative;
   background-color: var(--black);
-  background-image: url('https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-1440x960_c02696d8-2b6b-420f-84f2-b3b8090eb757.webp');
+  background-image: var(--cta-img, none);
   background-size: cover;
   background-position: center;
   height: 480px;
@@ -1112,7 +1112,7 @@ footer {
 
 .about-cta {
   position: relative;
-  background-image: url('https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-1440x960_c2457df0-009a-402f-86e7-5046e65ff44f.webp');
+  background-image: var(--about-cta-img, none);
   background-size: cover;
   background-position: center;
   height: 600px;

@@ -151,6 +151,8 @@
       if (heroLeft && a.heroImage) heroLeft.style.setProperty('--about-hero-img', `url('${cmsImgFit(a.heroImage, 1200)}')`);
       const portrait = document.querySelector('.about-portrait');
       if (portrait && a.portrait) portrait.style.setProperty('--about-portrait-img', `url('${cmsImgFit(a.portrait, 300)}')`);
+      const aboutCta = document.querySelector('.about-cta');
+      if (aboutCta && a.ctaImage) aboutCta.style.setProperty('--about-cta-img', `url('${cmsImgFit(a.ctaImage, 1600)}')`);
       const setTxt = (sel, val) => { const el = document.querySelector(sel); if (el && val) el.textContent = val; };
       setTxt('.about-eyebrow',   getL10n(a.eyebrow));
       setTxt('.about-headline',  getL10n(a.headline));

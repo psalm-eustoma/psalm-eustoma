@@ -108,9 +108,17 @@
                 </div>
                 <p class="form-hint">建議 1440 × 1800 px（直式 4:5）</p>
               </div>
-              <div class="form-group" style="margin-bottom:0;">
+              <div class="form-group">
                 <label class="form-label">Tagline 文字</label>
                 <div id="bannerTaglineField"></div>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">底部預約區（CTA）背景圖（共用）</label>
+                <div class="img-row">
+                  <input class="form-input" type="url" id="ctaImage" placeholder="https://... .webp / .jpg">
+                  <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('ctaImage'),this)">↑ 上傳</button>
+                </div>
+                <p class="form-hint">首頁底部「Book a Session」區的背景照，建議橫式大圖、偏深色（白字才看得清楚）</p>
               </div>
             </div>
 
@@ -407,6 +415,7 @@
     const h = getHome();
     document.getElementById('bannerVideo').value   = h.banner.videoUrl    || '';
     document.getElementById('bannerHeroImg').value = h.banner.heroImageUrl || '';
+    document.getElementById('ctaImage').value      = (h.cta && h.cta.image) || '';
 
     document.getElementById('bannerTaglineField').innerHTML = mlFieldHTML('bannerTagline', h.banner.tagline, { placeholder: 'Where light moves gently...' });
     document.getElementById('quoteEyebrowField').innerHTML  = mlFieldHTML('quoteEyebrow',  h.quote.eyebrow,  { placeholder: 'Light begins in silence.' });
@@ -503,7 +512,8 @@
           isVideo:  videoCardTypes[i] || false,
           ...collectCardLink('vc', i)
         }))
-      }
+      },
+      cta: { image: document.getElementById('ctaImage').value.trim() }
     });
 
     markClean();
