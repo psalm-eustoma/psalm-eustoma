@@ -132,7 +132,13 @@ function _normalizeCms(stored) {
   if (stored.home && stored.home.banner && !stored.home.banner.heroImageUrl) {
     stored.home.banner.heroImageUrl = CMS_DEFAULT.home.banner.heroImageUrl;
   }
+  if (stored.home && (!stored.home.cta || !stored.home.cta.image)) {
+    stored.home.cta = CMS_DEFAULT.home.cta;
+  }
   if (!stored.about) stored.about = CMS_DEFAULT.about;
+  if (stored.about && !stored.about.ctaImage) {
+    stored.about.ctaImage = CMS_DEFAULT.about.ctaImage;
+  }
   return stored;
 }
 
