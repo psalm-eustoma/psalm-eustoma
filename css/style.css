@@ -1220,15 +1220,15 @@ footer {
 .services-card:hover .services-card-overlay { opacity: 1; }
 
 .services-card-see-more {
-  font-size: 48px;
+  font-size: 28px;
   font-weight: 200;
   color: var(--white);
   letter-spacing: 0.04em;
 }
 
 .services-card-arrow {
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   color: var(--white);
   flex-shrink: 0;
 }
