@@ -1448,7 +1448,7 @@ footer {
   .services-card-photo { height: auto; aspect-ratio: 2 / 3; }
   .services-card-overlay { display: none; }
   .services-card-info { gap: 16px; }
-  .services-card-title { font-size: 19px; }
+  .services-card-title { font-size: 22px; }
   .services-card-tags { font-size: 13px; }
 
   .project-wrap { padding: 80px 20px 0; gap: 24px; }
