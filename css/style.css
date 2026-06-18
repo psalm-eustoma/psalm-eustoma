@@ -1068,7 +1068,7 @@ footer {
 
 .about-invitation {
   height: 900px;
-  background-image: url('https://storage.googleapis.com/studio-design-asset-files/projects/VGOK7AykOn/s-2076x1482_6e387ec5-70aa-4bc0-bf84-154b868b65fe.webp');
+  background-image: url('../images/quote-bg-psalm.jpg');
   background-size: cover;
   background-position: center;
   display: flex;
