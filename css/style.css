@@ -810,7 +810,7 @@ footer {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 25px;
   color: var(--white);
   font-size: 16px;
