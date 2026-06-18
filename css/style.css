@@ -335,11 +335,11 @@ a.media-card { display: block; text-decoration: none; color: inherit; }
   gap: 8px 30px;
   padding: 10px 0;
   width: 100%;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgb(191, 191, 191);
   cursor: pointer;
   transition: border-color 0.3s var(--ease);
 }
-.archive-item:first-child { border-top: 1px solid var(--border); }
+.archive-item:first-child { border-top: 1px solid rgb(191, 191, 191); }
 .archive-item:hover { border-bottom-color: var(--border-dark); }
 .archive-item:first-child:hover { border-top-color: var(--border-dark); }
 .archive-left {
@@ -369,7 +369,7 @@ a.media-card { display: block; text-decoration: none; color: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
   font-size: 16px;
   font-weight: 300;
   color: var(--text-mid);
