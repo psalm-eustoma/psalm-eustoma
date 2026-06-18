@@ -157,6 +157,32 @@ async function _loadCmsFromCloud() {
   }
 }
 
+// Synchronously load CMS data from the localStorage cache (no network).
+// Returns true if a cache existed, false if we fell back to defaults.
+function _loadCmsFromCache() {
+  try {
+    const raw = localStorage.getItem(CMS_KEY);
+    if (raw) { _cmsCache = _normalizeCms(JSON.parse(raw)); return true; }
+  } catch {}
+  _cmsCache = CMS_DEFAULT;
+  return false;
+}
+
+// Fetch the latest from cloud and mirror it to localStorage so the *next*
+// page load renders fresh. Does not re-render the current page (keeps the
+// instant cache render flicker-free); content is at most one navigation stale.
+async function _refreshCmsFromCloud() {
+  try {
+    const cloud = await window.firebaseLoadData();
+    if (cloud) {
+      _cmsCache = _normalizeCms(cloud);
+      try { localStorage.setItem(CMS_KEY, JSON.stringify(_cmsCache)); } catch {}
+    }
+  } catch (e) {
+    console.warn('[cms] cloud refresh failed, keeping cached data', e);
+  }
+}
+
 function getCmsData() {
   return _cmsCache || CMS_DEFAULT;
 }
@@ -395,10 +421,20 @@ function applySettings() {
 
 // ── Boot ──────────────────────────────────────────────────
 // Pages may have inline scripts that read CMS data; they all `await window.dataReady`.
+// Cache-first: if a localStorage cache exists, render instantly (no network wait)
+// and refresh from cloud in the background. Only the very first visit (no cache
+// yet) waits for the cloud so new visitors never see placeholder defaults.
 (async () => {
-  await _loadCmsFromCloud();
+  const hasCache = _loadCmsFromCache();
+
+  if (!hasCache) {
+    await _loadCmsFromCloud();
+  }
+
   initCms();
   initMobileMenuCats();
   applySettings();
   if (window._resolveDataReady) window._resolveDataReady();
+
+  if (hasCache) _refreshCmsFromCloud(); // update cache for the next navigation
 })();
