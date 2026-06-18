@@ -1084,8 +1084,10 @@ footer {
   padding: 0 80px;
 }
 .about-inv-label {
-  font-size: 18px;
+  font-size: 13px;
   font-weight: 200;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
   line-height: 1.4;
   color: var(--text);
 }
@@ -1101,9 +1103,11 @@ footer {
   max-width: 1152px;
 }
 .about-inv-note {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 200;
-  line-height: 1.6;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  line-height: 1.4;
   color: var(--text-mid);
 }
 
@@ -1431,7 +1435,7 @@ footer {
   .about-inv-inner { padding: 0 30px; }
   .about-inv-label { font-size: 13px; }
   .about-inv-quote { font-size: 28px; letter-spacing: -0.02em; max-width: 312px; padding: 0; }
-  .about-inv-note { font-size: 15px; }
+  .about-inv-note { font-size: 13px; }
   .archive-left { gap: 16px; }
   .archive-name { font-size: 20px; }
   .archive-more { font-size: 14px; }
