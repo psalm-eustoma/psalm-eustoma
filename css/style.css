@@ -324,7 +324,7 @@ a.media-card { display: block; text-decoration: none; color: inherit; }
 #category-photography-1 { gap: 30px; }
 
 /* ── ARCHIVE ── */
-#archive { padding: 200px 80px; }
+#archive { padding: 200px 50px; }
 .archive-item {
   position: relative;
   display: flex;
@@ -1330,7 +1330,6 @@ footer {
 
 @media (max-width: 1280px) {
   nav { padding: 0 50px; }
-  #archive { padding-left: 50px; padding-right: 50px; }
 }
 
 @media (max-width: 990px) {
