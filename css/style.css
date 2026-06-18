@@ -308,8 +308,10 @@ a.media-card { display: block; text-decoration: none; color: inherit; }
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   padding: 8px 18px;
+  font-family: var(--serif);
   font-size: 16px;
-  font-weight: 300;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   color: var(--black);
 }
 
