@@ -420,6 +420,28 @@ function initMobileMenuCats() {
   ).join('');
 }
 
+// Calendly's widget (CSS + JS) is only needed when someone actually opens the
+// booking popup. Load it on first click instead of on every page load. Resolves
+// true once Calendly is ready, false if it failed to load (caller then falls
+// back to opening the booking URL in a new tab).
+function ensureCalendly() {
+  if (window.Calendly) return Promise.resolve(true);
+  if (window.__calendlyLoading) return window.__calendlyLoading;
+  window.__calendlyLoading = new Promise((resolve) => {
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://assets.calendly.com/assets/external/widget.css';
+    document.head.appendChild(css);
+    const js = document.createElement('script');
+    js.src = 'https://assets.calendly.com/assets/external/widget.js';
+    js.async = true;
+    js.onload  = () => resolve(true);
+    js.onerror = () => resolve(false);
+    document.head.appendChild(js);
+  });
+  return window.__calendlyLoading;
+}
+
 // ── Apply settings (booking URL, social links) ────────────
 // Runs independently so a CMS data error above can't block it.
 function applySettings() {
@@ -435,9 +457,10 @@ function applySettings() {
       document.querySelectorAll('.project-booking-btn').forEach(el => {
         el.href = 'javascript:void(0)';
         el.removeAttribute('target');
-        el.addEventListener('click', (e) => {
+        el.addEventListener('click', async (e) => {
           e.preventDefault();
-          if (window.Calendly) Calendly.initPopupWidget({ url: s.bookingUrl });
+          const ok = await ensureCalendly();
+          if (ok && window.Calendly) Calendly.initPopupWidget({ url: s.bookingUrl });
           else window.open(s.bookingUrl, '_blank');
         });
       });
