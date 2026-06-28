@@ -470,16 +470,49 @@ async function uploadToCloudinary(file, opts = {}) {
     }
   }
 
+  // Ask our own endpoint for a one-time signature (proves we're signed into the
+  // admin). If it isn't set up yet (secrets not configured), sig is null and we
+  // fall back to the legacy unsigned preset so uploads never break mid-setup.
+  const sig = await getUploadSignature();
+
   const fd = new FormData();
   fd.append('file', file);
-  fd.append('upload_preset', CLOUDINARY_PRESET);
+  if (sig) {
+    fd.append('api_key',       sig.apiKey);
+    fd.append('timestamp',     sig.timestamp);
+    fd.append('signature',     sig.signature);
+    fd.append('upload_preset', sig.uploadPreset);
+  } else {
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+  }
+  const cloud = (sig && sig.cloudName) || CLOUDINARY_CLOUD;
   const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${isVideo ? 'video' : 'image'}/upload`,
+    `https://api.cloudinary.com/v1_1/${cloud}/${isVideo ? 'video' : 'image'}/upload`,
     { method: 'POST', body: fd }
   );
   const json = await res.json();
   if (!res.ok) throw new Error(json.error?.message || 'upload failed');
   return json.secure_url;
+}
+
+// Fetch a short-lived Cloudinary signature from our Cloudflare Function, passing
+// the current admin's Firebase ID token so the server can verify the caller is
+// logged in. Returns null on any problem (not logged in, endpoint missing, not
+// configured) → caller falls back to the unsigned preset.
+async function getUploadSignature() {
+  try {
+    const user = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
+    if (!user) return null;
+    const idToken = await user.getIdToken();
+    const res = await fetch('/api/sign-upload', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + idToken }
+    });
+    if (!res.ok) return null; // 503 = not configured yet, 401 = not authorised
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
 
 // Shared hidden file input — reused by all upload buttons.

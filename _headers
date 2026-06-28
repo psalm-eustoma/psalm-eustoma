@@ -1,0 +1,18 @@
+# Cloudflare Pages response headers.
+# (The project's vercel.json is legacy/unused on Cloudflare — its headers were
+#  never applied. These are.)
+
+# Keep the admin out of search engines (robots.txt blocks crawling; this also
+# tells engines not to index the URL even if they reach it some other way).
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+
+# Long-cache immutable static assets.
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+/*.mp4
+  Cache-Control: public, max-age=31536000, immutable
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
