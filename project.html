@@ -15,7 +15,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://firestore.googleapis.com">
-  <link rel="preconnect" href="https://firestore.googleapis.com">
   <link rel="preconnect" href="https://res.cloudinary.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Noto+Sans+TC:wght@200;300;400;500;700&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
@@ -169,6 +168,22 @@
 
     // <title>
     document.title = `${getL10n(proj.title)} – Psalm Eustoma`;
+
+    // Canonical / og:url — each project is its own URL (?id=...), so point
+    // search engines and share scrapers at this specific project, not a shared
+    // /project base.
+    const projUrl = `${location.origin}/project?id=${encodeURIComponent(proj.id)}`;
+    const setHeadUrl = (sel, attr, mk) => {
+      let el = document.head.querySelector(sel);
+      if (!el) { el = mk(); document.head.appendChild(el); }
+      el.setAttribute(attr, projUrl);
+    };
+    setHeadUrl('link[rel="canonical"]', 'href', () => {
+      const l = document.createElement('link'); l.rel = 'canonical'; return l;
+    });
+    setHeadUrl('meta[property="og:url"]', 'content', () => {
+      const m = document.createElement('meta'); m.setAttribute('property', 'og:url'); return m;
+    });
 
     // Photos + Quote
     const photosEl = document.getElementById('projectPhotos');
