@@ -98,7 +98,15 @@
                   <input class="form-input" type="url" id="bannerVideo" placeholder="https://... .mp4">
                   <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('bannerVideo'),this,'video/mp4',{mp4Only:true})">↑ 上傳</button>
                 </div>
-                <p class="form-hint">建議 1080 × 1920 px（直式 9:16），請用 MP4（iPhone 才能順暢播放，會自動壓到 1080p）</p>
+                <p class="form-hint">建議 1080 × 1920 px（直式 9:16），請用 MP4（iPhone 才能順暢播放，交付最高自動壓到 1440p）</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">影片預覽圖（選填）</label>
+                <div class="img-row">
+                  <input class="form-input" type="url" id="bannerPoster" placeholder="不填會自動抓影片第一幀">
+                  <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('bannerPoster'),this)">↑ 上傳</button>
+                </div>
+                <p class="form-hint">影片載入前先顯示的靜態圖。留空就自動用影片第一幀；想指定別張（例如第一幀太暗）再上傳。</p>
               </div>
               <div class="form-group">
                 <label class="form-label">右側背景圖連結（共用）</label>
@@ -289,6 +297,15 @@
           </div>
           <p class="form-hint">${showVideoToggle && card.isVideo ? '建議 1080 × 1920 px（直式 9:16），MP4 或 WebM' : '建議 1440 × 1800 px（直式 4:5）'}</p>
         </div>
+        ${showVideoToggle ? `
+        <div class="form-group" id="${prefix}PosterGroup${i}" style="margin-bottom:10px;${card.isVideo ? '' : 'display:none;'}">
+          <label class="form-label">影片預覽圖（選填）</label>
+          <div class="img-row">
+            <input class="form-input" type="url" id="${prefix}Poster${i}" value="${card.posterUrl || ''}" placeholder="不填會自動抓影片第一幀">
+            <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('${prefix}Poster${i}'),this)">↑ 上傳</button>
+          </div>
+          <p class="form-hint">影片載入前先顯示的靜態圖。留空就自動用影片第一幀。</p>
+        </div>` : ''}
         <div class="form-group" style="margin-bottom:10px;">
           <label class="form-label">標籤文字</label>
           ${mlFieldHTML(`${prefix}Label${i}`, card.label, { placeholder: 'WEDDING' })}
@@ -318,6 +335,8 @@
     if (prefix === 'vc') videoCardTypes[i] = isVideo;
     const lbl = document.getElementById(`${prefix}UrlLabel${i}`);
     if (lbl) lbl.textContent = (isVideo ? '影片' : '圖片') + '連結（共用）';
+    const posterGroup = document.getElementById(`${prefix}PosterGroup${i}`);
+    if (posterGroup) posterGroup.style.display = isVideo ? '' : 'none';
     updatePreview();
   }
 
@@ -414,6 +433,7 @@
   function load() {
     const h = getHome();
     document.getElementById('bannerVideo').value   = h.banner.videoUrl    || '';
+    document.getElementById('bannerPoster').value  = h.banner.posterUrl   || '';
     document.getElementById('bannerHeroImg').value = h.banner.heroImageUrl || '';
     document.getElementById('ctaImage').value      = (h.cta && h.cta.image) || '';
 
@@ -491,6 +511,7 @@
     saveHome({
       banner: {
         videoUrl:     document.getElementById('bannerVideo').value.trim(),
+        posterUrl:    document.getElementById('bannerPoster').value.trim(),
         heroImageUrl: document.getElementById('bannerHeroImg').value.trim(),
         tagline:      r.bannerTagline
       },
@@ -507,9 +528,10 @@
       videoSocial: {
         description: r.videoDesc,
         cards: Array.from({ length: 3 }, (_, i) => ({
-          mediaUrl: document.getElementById(`vcUrl${i}`)?.value.trim() || '',
-          label:    r[`vcLabel${i}`],
-          isVideo:  videoCardTypes[i] || false,
+          mediaUrl:  document.getElementById(`vcUrl${i}`)?.value.trim() || '',
+          posterUrl: document.getElementById(`vcPoster${i}`)?.value.trim() || '',
+          label:     r[`vcLabel${i}`],
+          isVideo:   videoCardTypes[i] || false,
           ...collectCardLink('vc', i)
         }))
       },

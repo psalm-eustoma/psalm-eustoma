@@ -175,8 +175,11 @@
     if (photosEl) {
       const photosHtml = (proj.images || []).map(url => {
         const isVid = url && (url.includes('/video/upload/') || /\.(mp4|webm|mov)(\?|$)/i.test(url));
+        const vSrc  = isVid ? cmsVideoSrc(url) : '';
+        const vType = /\.webm(\?|$)/i.test(vSrc) ? 'video/webm' : 'video/mp4';
+        const poster = isVid ? cmsVideoPoster(url) : '';
         const media = isVid
-          ? `<video src="${cmsVideoSrc(url)}" autoplay muted loop playsinline></video>`
+          ? `<video class="lazy-video" muted loop playsinline preload="none"${poster ? ` poster="${poster}"` : ''} data-src="${vSrc}" data-type="${vType}"></video>`
           : `<img src="${cmsImgFit(url, 1000)}" srcset="${cmsImgSrcset(url, [400, 600, 800, 1200, 1600])}" sizes="(max-width: 690px) 100vw, 50vw" alt="${getL10n(proj.title)}" loading="lazy">`;
         return `<div class="project-photo">${media}</div>`;
       }).join('');
@@ -192,6 +195,7 @@
           </div>
         </div>` : '';
       photosEl.innerHTML = photosHtml + quoteHtml;
+      if (typeof initLazyVideos === 'function') initLazyVideos(photosEl);
     }
 
     // Breadcrumb

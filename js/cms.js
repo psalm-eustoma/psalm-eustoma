@@ -80,14 +80,16 @@ function cmsImgSrcset(url, widths) {
   if (!url || !url.includes('res.cloudinary.com/') || !url.includes('/upload/')) return '';
   return widths.map(w => `${cmsImgFit(url, w)} ${w}w`).join(', ');
 }
-// Right-size Cloudinary video delivery: cap width at 1080 (c_limit = shrink
-// only, never upscale) + q_auto. So a 4K upload is delivered at ~1080p, cutting
-// delivery bandwidth ~3–4× without the owner needing to do anything. Keeps the
-// original container (an .mp4 stays h264 → hardware-decoded on iOS, no webm).
-// Non-Cloudinary URLs (e.g. the template demo clips) pass through unchanged.
+// Right-size Cloudinary video delivery: cap width at 1440 (c_limit = shrink
+// only, never upscale) + q_auto. So a 4K upload is delivered at ~1440p, cutting
+// delivery bandwidth without the owner needing to do anything; a clip whose
+// source is only 1080p still delivers 1080p (c_limit won't upscale), so short
+// ambient clips don't pay for resolution they don't have. Keeps the original
+// container (an .mp4 stays h264 → hardware-decoded on iOS, no webm).
+// Non-Cloudinary URLs (e.g. the self-hosted demo clips) pass through unchanged.
 function cmsVidFit(url) {
   if (!url || !url.includes('res.cloudinary.com/') || !url.includes('/video/upload/')) return url || '';
-  return url.replace('/video/upload/', '/video/upload/q_auto,w_1080,c_limit/');
+  return url.replace('/video/upload/', '/video/upload/q_auto,w_1440,c_limit/');
 }
 // The template ships two heavy demo clips (a 4K hero webm and a 4K carousel
 // mp4) whose URLs are still stored in Firestore. They software-decode / are
@@ -100,6 +102,69 @@ function cmsVideoSrc(url) {
   if (/s-2160x3840_4aa2118e[^/]*\.webm/i.test(url)) return 'videos/hero-banner.mp4';
   if (/s-2160x3840_d7ac7592[^/]*\.mp4/i.test(url))  return 'videos/carousel-1.mp4';
   return cmsVidFit(url);
+}
+// Poster (preview frame) shown before a video loads. Prefer a poster the owner
+// uploaded in the admin (`explicit`); otherwise derive one for free from the
+// source so the owner never *has* to upload one:
+//   • Cloudinary video → its first frame (so_0), delivered as a right-sized jpg
+//   • the two bundled demo clips → their pre-extracted jpgs
+//   • anything else → '' (browser shows the video's own first frame once loaded)
+function cmsVideoPoster(url, explicit) {
+  if (explicit) return cmsImgFit(explicit, 1080);
+  if (!url) return '';
+  if (/s-2160x3840_4aa2118e[^/]*\.webm/i.test(url)) return 'videos/hero-poster.jpg';
+  if (/s-2160x3840_d7ac7592[^/]*\.mp4/i.test(url))  return 'videos/carousel-poster.jpg';
+  if (url.includes('res.cloudinary.com/') && url.includes('/video/upload/')) {
+    return url
+      .replace('/video/upload/', '/video/upload/so_0,q_auto,w_1080,c_limit/')
+      .replace(/\.(mp4|webm|mov|avi)(\?.*)?$/i, '.jpg');
+  }
+  return '';
+}
+// Lazy video playback: a rendered <video class="lazy-video"> carries its real
+// source in data-src and shows only its poster until it scrolls near the
+// viewport. Then we inject the <source>, load, and play; once it leaves the
+// screen we pause it. This stops every below-the-fold clip from downloading on
+// page load (the main bandwidth win) while keeping the autoplay "feel". The
+// observer is shared and elements stay observed so scroll-in/out keeps toggling
+// play/pause.
+let _lazyVideoObserver = null;
+function initLazyVideos(root) {
+  const vids = (root || document).querySelectorAll('video.lazy-video');
+  if (!vids.length) return;
+  if (!('IntersectionObserver' in window)) {
+    // No observer support → just load everything (old behaviour).
+    vids.forEach(_loadLazyVideo);
+    return;
+  }
+  if (!_lazyVideoObserver) {
+    _lazyVideoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const v = entry.target;
+        if (entry.isIntersecting) {
+          _loadLazyVideo(v);
+          const p = v.play();
+          if (p && p.catch) p.catch(() => {});
+        } else if (!v.paused) {
+          v.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+  }
+  vids.forEach(v => {
+    if (v.dataset.lazyObserved) return;
+    v.dataset.lazyObserved = '1';
+    _lazyVideoObserver.observe(v);
+  });
+}
+function _loadLazyVideo(v) {
+  if (!v.dataset.src) return; // already loaded
+  const s = document.createElement('source');
+  s.src  = v.dataset.src;
+  s.type = v.dataset.type || 'video/mp4';
+  v.appendChild(s);
+  v.removeAttribute('data-src');
+  v.load();
 }
 
 // ── Data access ───────────────────────────────────────────
@@ -227,11 +292,10 @@ function renderMixedCards(cards) {
     if (card.isVideo && card.mediaUrl) {
       const src = cmsVideoSrc(card.mediaUrl);
       const type = /\.webm(\?|$)/i.test(src) ? 'video/webm' : 'video/mp4';
+      const poster = cmsVideoPoster(card.mediaUrl, card.posterUrl);
       const { open, close } = _cardOpen(card, ' style="background:#111;"');
       return `${open}
-        <video autoplay muted loop playsinline>
-          <source src="${src}" type="${type}">
-        </video>
+        <video class="lazy-video" muted loop playsinline preload="none"${poster ? ` poster="${poster}"` : ''} data-src="${src}" data-type="${type}"></video>
         <span class="card-label">${getL10n(card.label) || ''}</span>
       ${close}`;
     }
@@ -291,6 +355,8 @@ function initCms() {
   const videoEl = document.querySelector('#banner video');
   if (videoEl && h.banner.videoUrl) {
     const finalUrl = cmsVideoSrc(h.banner.videoUrl);
+    const poster = cmsVideoPoster(h.banner.videoUrl, h.banner.posterUrl);
+    if (poster) videoEl.poster = poster;
     const src = videoEl.querySelector('source');
     if (src) {
       src.src = finalUrl;
@@ -335,6 +401,7 @@ function initCms() {
   if (videoCards) {
     videoCards.innerHTML = renderMixedCards(h.videoSocial.cards);
     videoCards.classList.add('fade-up');
+    initLazyVideos(videoCards);
   }
 
   // Archive

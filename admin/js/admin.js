@@ -460,12 +460,13 @@ async function uploadToCloudinary(file, opts = {}) {
     throw new Error(`檔案太大，${isVideo ? '影片' : '圖片'}上限為 ${maxMB} MB（目前 ${(file.size / 1024 / 1024).toFixed(1)} MB）`);
   }
 
-  // 影片長度
+  // 影片長度（預設 15 秒；作品內頁放寬到 20 秒，由呼叫端傳 opts.maxSeconds）
   if (isVideo) {
+    const maxSec = opts.maxSeconds || MAX_VIDEO_SECONDS;
     let dur = null;
     try { dur = await getVideoDuration(file); } catch (e) {}
-    if (dur != null && dur > MAX_VIDEO_SECONDS + 0.5) {
-      throw new Error(`影片太長，上限為 ${MAX_VIDEO_SECONDS} 秒（目前 ${dur.toFixed(1)} 秒）`);
+    if (dur != null && dur > maxSec + 0.5) {
+      throw new Error(`影片太長，上限為 ${maxSec} 秒（目前 ${dur.toFixed(1)} 秒）`);
     }
   }
 
