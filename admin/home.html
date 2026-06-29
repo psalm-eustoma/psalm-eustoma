@@ -320,7 +320,7 @@
       items.map(it => `<option value="${it.id}"${it.id === sel ? ' selected' : ''}>${getName(it)}</option>`).join('');
 
     document.getElementById(containerId).innerHTML = cards.map((card, i) => {
-      const lt = card.linkType || 'none';
+      const lt = card.linkType || '';   // 空＝尚未選，下拉顯示「請選擇」提示
       const lv = card.linkValue || '';
       const sel = (v) => lt === v ? ' selected' : '';
       const show = (v) => lt === v ? '' : 'display:none;';
@@ -365,6 +365,7 @@
           <label class="form-label">點擊卡片前往</label>
           <div style="display:flex; gap:8px;">
             <select class="form-select" id="${prefix}LinkType${i}" style="flex:1;" onchange="updateCardLink('${prefix}',${i})">
+              <option value="" disabled${sel('')}>請選擇…</option>
               <option value="none"${sel('none')}>不連結</option>
               <option value="project"${sel('project')}>作品內頁</option>
               <option value="category"${sel('category')}>分類頁</option>
