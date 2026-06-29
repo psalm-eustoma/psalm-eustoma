@@ -104,7 +104,7 @@
             <div class="tab-panel active sectioned" id="tab-banner">
               <div class="form-section-title">左側影片</div>
               <div class="form-group">
-                <label class="form-label">影片連結（左側自動播放，共用）</label>
+                <label class="form-label">影片連結（左側自動播放）</label>
                 <div class="img-row">
                   <input class="form-input" type="url" id="bannerVideo" placeholder="https://... .mp4">
                   <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('bannerVideo'),this,'video/mp4',{mp4Only:true})">↑ 上傳</button>
@@ -126,7 +126,7 @@
               </div>
               <div class="form-section-title">右側主視覺</div>
               <div class="form-group">
-                <label class="form-label">右側背景圖連結（共用）</label>
+                <label class="form-label">右側背景圖連結</label>
                 <div class="img-row">
                   <input class="form-input" type="url" id="bannerHeroImg" placeholder="https://... .webp / .jpg">
                   <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('bannerHeroImg'),this)">↑ 上傳</button>
@@ -178,7 +178,7 @@
             <!-- ── Tab: CTA（底部預約區）── -->
             <div class="tab-panel" id="tab-cta">
               <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label">背景圖（共用）</label>
+                <label class="form-label">背景圖</label>
                 <div class="img-row">
                   <input class="form-input" type="url" id="ctaImage" placeholder="https://... .webp / .jpg">
                   <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('ctaImage'),this)">↑ 上傳</button>
@@ -335,7 +335,7 @@
             onchange="updateCardType('${prefix}',${i},true)"> 影片</label>
         </div>` : ''}
         <div class="form-group" style="margin-bottom:20px;">
-          <label class="form-label" id="${prefix}UrlLabel${i}">${showVideoToggle && card.isVideo ? '影片' : '圖片'}連結（共用）</label>
+          <label class="form-label" id="${prefix}UrlLabel${i}">${showVideoToggle && card.isVideo ? '影片' : '圖片'}連結</label>
           <div class="img-row">
             <input class="form-input" type="url" id="${prefix}Url${i}" value="${card.mediaUrl || ''}" placeholder="https://...">
             <button type="button" class="btn-upload-img" id="${prefix}UpBtn${i}"
@@ -388,7 +388,7 @@
   function updateCardType(prefix, i, isVideo) {
     if (prefix === 'vc') videoCardTypes[i] = isVideo;
     const lbl = document.getElementById(`${prefix}UrlLabel${i}`);
-    if (lbl) lbl.textContent = (isVideo ? '影片' : '圖片') + '連結（共用）';
+    if (lbl) lbl.textContent = (isVideo ? '影片' : '圖片') + '連結';
     const posterGroup = document.getElementById(`${prefix}PosterGroup${i}`);
     if (posterGroup) posterGroup.style.display = isVideo ? '' : 'none';
     updatePreview();
