@@ -230,10 +230,16 @@ tbody tr:hover td { background: #fafaf8; }
   max-width: 700px;
 }
 
-.form-group { margin-bottom: 22px; padding-left: 16px; }   /* 欄位整組往內縮，掛在區塊小標題底下 */
-.form-row { display: flex; gap: 16px; padding-left: 16px; }
-.form-row .form-group { flex: 1; padding-left: 0; }        /* 並排欄位由 form-row 統一內縮 */
-.card-item .form-group { padding-left: 0; }                 /* 卡片內欄位不額外縮（卡片本身已有 padding）*/
+.form-group { margin-bottom: 22px; }
+.form-row { display: flex; gap: 16px; }
+.form-row .form-group { flex: 1; }
+
+/* 欄位內縮：只在「有區塊小標題」的容器（加 .sectioned）裡才縮，沒標題的不縮。
+   讓欄位掛在小標題底下，純表單頁則維持齊左。 */
+.sectioned .form-group { padding-left: 16px; }
+.sectioned .form-row { padding-left: 16px; }
+.sectioned .form-row .form-group { padding-left: 0; }      /* 並排欄位由 form-row 統一縮 */
+.sectioned .card-item .form-group { padding-left: 0; }     /* 卡片內欄位不額外縮 */
 
 /* Small section heading to group related fields into blocks within a tab. */
 /* 區塊大標題：暖褐金、左側同色短直線、區塊之間以隔線＋間距分開 */
