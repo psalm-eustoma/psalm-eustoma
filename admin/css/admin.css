@@ -429,12 +429,12 @@ tbody tr:hover td { background: #fafaf8; }
 .btn-upload-img:hover { color: var(--text); border-color: #aaa; background: #f5f5f3; }
 .btn-upload-img:disabled { opacity: 0.5; cursor: not-allowed; }
 .img-inline-thumb {
-  display: none;
-  width: 80px;
-  height: 60px;
+  display: none;     /* shown (block) by showImgPreview when there's an image */
+  flex: none;        /* sits to the left of the input inside .img-row */
+  width: 64px;
+  height: 48px;
   object-fit: cover;
   border-radius: 4px;
-  margin-top: 6px;
 }
 
 /* ── Empty state ── */
