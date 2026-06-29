@@ -11,8 +11,9 @@
 
     /* ── Card groups (home-specific) ── */
     .card-group { display:flex; flex-direction:column; gap:16px; }
-    .card-item { background:#fafaf8; border:1px solid var(--border); border-radius:6px; padding:16px; }
-    .card-item-num { font-size:13px; font-weight:600; color:var(--text); letter-spacing:0.02em; margin-bottom:14px; }
+    .card-item { background:#fff; border:1px solid var(--border); border-radius:6px; padding:16px; overflow:hidden; }
+    /* 作品 N：卡片頂部標題列（底色 + 分隔線，像 tab 頭部）。負邊距讓它撐滿卡片寬度 */
+    .card-item-num { margin:-16px -16px 16px; padding:11px 16px; background:#faf7f2; border-bottom:1px solid var(--border); font-size:13px; font-weight:600; color:var(--text); letter-spacing:0.02em; }
     .media-type-row { display:flex; gap:12px; align-items:center; margin-bottom:10px; }
     .media-type-row label { display:flex; align-items:center; gap:5px; font-size:12px; font-weight:300; cursor:pointer; }
 
