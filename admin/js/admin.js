@@ -583,20 +583,22 @@ function showImgPreview(inputEl, url) {
   if (inputEl.closest('.img-item')) return; // project image list uses img-thumb
   const row = inputEl.closest('.img-row');
   if (!row) return;
-  // Sit the preview to the RIGHT of the input (last item in the flex row),
-  // not below it.
-  let thumb = row.querySelector(':scope > .img-inline-thumb');
+  // Preview sits on the RIGHT, spanning the whole field height (label + input
+  // row + hint). The thumb lives at the .form-group level (not inside .img-row)
+  // so a grid can stretch it across all the field's rows. See .has-preview CSS.
+  const group = row.closest('.form-group') || row.parentElement;
+  let thumb = group.querySelector(':scope > .img-inline-thumb');
   if (!thumb) {
     thumb = document.createElement('img');
     thumb.className = 'img-inline-thumb';
-    row.insertAdjacentElement('beforeend', thumb);
+    group.appendChild(thumb);
   }
   if (url && url.startsWith('http')) {
     thumb.src = url;
-    thumb.style.display = 'block';
+    group.classList.add('has-preview');
   } else {
     thumb.src = '';
-    thumb.style.display = 'none';
+    group.classList.remove('has-preview');
   }
 }
 

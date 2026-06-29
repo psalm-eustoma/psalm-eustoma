@@ -428,11 +428,24 @@ tbody tr:hover td { background: #fafaf8; }
 }
 .btn-upload-img:hover { color: var(--text); border-color: #aaa; background: #f5f5f3; }
 .btn-upload-img:disabled { opacity: 0.5; cursor: not-allowed; }
-.img-inline-thumb {
-  display: none;     /* shown (block) by showImgPreview when there's an image */
-  flex: none;        /* sits to the left of the input inside .img-row */
+/* Image field with a preview: lay the field out as [ content | preview ], where
+   the preview (right column) stretches across the whole field height — label,
+   input row and hint. .has-preview is toggled by showImgPreview. */
+.img-inline-thumb { display: none; }
+.form-group.has-preview {
+  display: grid;
+  grid-template-columns: 1fr 64px;
+  column-gap: 12px;
+  align-items: start;
+}
+.form-group.has-preview > :not(.img-inline-thumb) { grid-column: 1; min-width: 0; }
+.form-group.has-preview > .img-inline-thumb {
+  display: block;
+  grid-column: 2;
+  grid-row: 1 / span 99;   /* span every row of the left column */
+  align-self: stretch;
   width: 64px;
-  height: 48px;
+  height: 100%;
   object-fit: cover;
   border-radius: 4px;
 }
