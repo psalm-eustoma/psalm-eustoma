@@ -10,7 +10,8 @@
     /* 欄位名稱：黑色、12px；Banner 區往內縮（掛在小標題底下）。備註維持灰色。
        日後要全後台一致，把這段移到 admin.css。 */
     .form-label { color: var(--text); font-size: 12px; }
-    #tab-banner .form-label { padding-left: 16px; }
+    /* Banner 區整組欄位（名稱＋輸入框＋上傳鈕＋預覽圖＋備註）一起內縮，掛在小標題底下 */
+    #tab-banner .form-group { padding-left: 16px; }
     /* 區塊小標題：暖褐金 + 左側短直線（黑）。直線移到這裡（原本在欄位名稱）。
        想換標題色改 color、想換直線色改 ::before 的 background。 */
     .form-section-title { color: #9a8467; position: relative; padding-left: 12px; }
