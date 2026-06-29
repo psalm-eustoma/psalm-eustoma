@@ -583,13 +583,13 @@ function showImgPreview(inputEl, url) {
   if (inputEl.closest('.img-item')) return; // project image list uses img-thumb
   const row = inputEl.closest('.img-row');
   if (!row) return;
-  // Sit the preview to the LEFT of the input (first item in the flex row),
+  // Sit the preview to the RIGHT of the input (last item in the flex row),
   // not below it.
   let thumb = row.querySelector(':scope > .img-inline-thumb');
   if (!thumb) {
     thumb = document.createElement('img');
     thumb.className = 'img-inline-thumb';
-    row.insertAdjacentElement('afterbegin', thumb);
+    row.insertAdjacentElement('beforeend', thumb);
   }
   if (url && url.startsWith('http')) {
     thumb.src = url;
