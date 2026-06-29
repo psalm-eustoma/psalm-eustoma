@@ -107,6 +107,7 @@
             <button class="tab-btn" data-tab="quote">Quote</button>
             <button class="tab-btn" data-tab="photo">平面</button>
             <button class="tab-btn" data-tab="video">影音</button>
+            <button class="tab-btn" data-tab="cta">底部預約區</button>
           </div>
 
           <div class="tab-body">
@@ -123,12 +124,17 @@
                 <p class="form-hint">建議 1080 × 1920 px（直式 9:16），請用 MP4（iPhone 才能順暢播放，交付最高自動壓到 1440p）</p>
               </div>
               <div class="form-group">
-                <label class="form-label">影片預覽圖（選填）</label>
-                <div class="img-row">
-                  <input class="form-input" type="url" id="bannerPoster" placeholder="不填會自動抓影片第一幀">
-                  <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('bannerPoster'),this)">↑ 上傳</button>
+                <label class="switch-row">
+                  <span class="switch"><input type="checkbox" id="posterToggle"><span class="switch-slider"></span></span>
+                  自訂影片預覽圖
+                </label>
+                <p class="form-hint" style="margin-top:6px;">不填的話，系統會自動用影片第一幀當預覽圖。想指定別張（例如第一幀太暗）再打開。</p>
+                <div id="posterFields" hidden style="margin-top:10px;">
+                  <div class="img-row">
+                    <input class="form-input" type="url" id="bannerPoster" placeholder="上傳或貼上預覽圖網址">
+                    <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('bannerPoster'),this)">↑ 上傳</button>
+                  </div>
                 </div>
-                <p class="form-hint">影片載入前先顯示的靜態圖。留空就自動用影片第一幀；想指定別張（例如第一幀太暗）再上傳。</p>
               </div>
               <div class="form-section-title">右側主視覺</div>
               <div class="form-group">
@@ -139,18 +145,9 @@
                 </div>
                 <p class="form-hint">建議 1440 × 1800 px（直式 4:5）</p>
               </div>
-              <div class="form-group">
+              <div class="form-group" style="margin-bottom:0;">
                 <label class="form-label">Tagline 文字</label>
                 <div id="bannerTaglineField"></div>
-              </div>
-              <div class="form-section-title">底部預約區</div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label">底部預約區（CTA）背景圖（共用）</label>
-                <div class="img-row">
-                  <input class="form-input" type="url" id="ctaImage" placeholder="https://... .webp / .jpg">
-                  <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('ctaImage'),this)">↑ 上傳</button>
-                </div>
-                <p class="form-hint">首頁底部「Book a Session」區的背景照，建議橫式大圖、偏深色（白字才看得清楚）</p>
               </div>
             </div>
 
@@ -188,6 +185,18 @@
               </div>
               <label class="form-label" style="display:block;margin-bottom:12px;">三件作品</label>
               <div class="card-group" id="videoCards"></div>
+            </div>
+
+            <!-- ── Tab: CTA（底部預約區）── -->
+            <div class="tab-panel" id="tab-cta">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">底部預約區（CTA）背景圖（共用）</label>
+                <div class="img-row">
+                  <input class="form-input" type="url" id="ctaImage" placeholder="https://... .webp / .jpg">
+                  <button type="button" class="btn-upload-img" onclick="triggerImgUpload(document.getElementById('ctaImage'),this)">↑ 上傳</button>
+                </div>
+                <p class="form-hint">首頁底部「Book a Session」區的背景照，建議橫式大圖、偏深色（白字才看得清楚）</p>
+              </div>
             </div>
 
           </div><!-- .tab-body -->
@@ -288,6 +297,21 @@
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
+
+  // 影片預覽圖：開關打開才展開上傳框
+  const posterToggle = document.getElementById('posterToggle');
+  const posterFields = document.getElementById('posterFields');
+  function syncPosterToggle() {
+    posterFields.hidden = !posterToggle.checked;
+    if (!posterToggle.checked) {
+      // 收合時清掉預覽格狀版型，避免空框殘留
+      posterToggle.closest('.form-group').classList.remove('has-preview');
+    } else {
+      const inp = document.getElementById('bannerPoster');
+      showImgPreview(inp, inp.value.trim());
+    }
+  }
+  posterToggle.addEventListener('change', syncPosterToggle);
 
   // ── Card rendering ──
   function renderMediaCards(containerId, cards, prefix, showVideoToggle) {
@@ -458,6 +482,8 @@
     const h = getHome();
     document.getElementById('bannerVideo').value   = h.banner.videoUrl    || '';
     document.getElementById('bannerPoster').value  = h.banner.posterUrl   || '';
+    posterToggle.checked = !!h.banner.posterUrl;   // 有自訂預覽圖才預設打開
+    syncPosterToggle();
     document.getElementById('bannerHeroImg').value = h.banner.heroImageUrl || '';
     document.getElementById('ctaImage').value      = (h.cta && h.cta.image) || '';
 
@@ -535,7 +561,7 @@
     saveHome({
       banner: {
         videoUrl:     document.getElementById('bannerVideo').value.trim(),
-        posterUrl:    document.getElementById('bannerPoster').value.trim(),
+        posterUrl:    posterToggle.checked ? document.getElementById('bannerPoster').value.trim() : '',
         heroImageUrl: document.getElementById('bannerHeroImg').value.trim(),
         tagline:      r.bannerTagline
       },

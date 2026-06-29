@@ -450,6 +450,18 @@ tbody tr:hover td { background: #fafaf8; }
   border-radius: 4px;
 }
 
+/* Toggle switch (e.g. 自訂影片預覽圖 開關) */
+.switch-row { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; color: var(--text); }
+.switch { position: relative; display: inline-block; width: 36px; height: 20px; flex: none; }
+.switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.switch-slider { position: absolute; inset: 0; background: #ccc; border-radius: 20px; transition: background 0.2s; }
+.switch-slider::before {
+  content: ""; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px;
+  background: #fff; border-radius: 50%; transition: transform 0.2s;
+}
+.switch input:checked + .switch-slider { background: var(--accent); }
+.switch input:checked + .switch-slider::before { transform: translateX(16px); }
+
 /* ── Empty state ── */
 .empty {
   text-align: center;
