@@ -7,6 +7,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/admin.css">
   <style>
+    /* 欄位名稱改黑色（只先套這頁；備註維持灰色）。日後若要全後台一致，
+       把這條移到 admin.css 的 .form-label 即可。 */
+    .form-label { color: var(--text); }
+
     /* ── Card groups (home-specific) ── */
     .card-group { display:flex; gap:16px; }
     .card-item { flex:1; background:#fafaf8; border:1px solid var(--border); border-radius:6px; padding:16px; }
