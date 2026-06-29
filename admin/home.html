@@ -7,9 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/admin.css">
   <style>
-    /* 欄位名稱改黑色（只先套這頁；備註維持灰色）。日後若要全後台一致，
-       把這條移到 admin.css 的 .form-label 即可。 */
-    .form-label { color: var(--text); }
+    /* 欄位名稱：黑色 + 左側直線標記 + 字級 12px，增加對比與層次（只先套這頁；
+       備註維持灰色）。日後要全後台一致，把這段移到 admin.css 的 .form-label。 */
+    .form-label { color: var(--text); font-size: 12px; position: relative; padding-left: 11px; }
+    .form-label::before {
+      content: ""; position: absolute; left: 0; top: 1px; bottom: 1px;
+      width: 3px; background: var(--text); border-radius: 1px;
+    }
 
     /* ── Card groups (home-specific) ── */
     .card-group { display:flex; gap:16px; }
