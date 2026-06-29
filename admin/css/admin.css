@@ -230,9 +230,10 @@ tbody tr:hover td { background: #fafaf8; }
   max-width: 700px;
 }
 
-.form-group { margin-bottom: 22px; }
-.form-row { display: flex; gap: 16px; }
-.form-row .form-group { flex: 1; }
+.form-group { margin-bottom: 22px; padding-left: 16px; }   /* 欄位整組往內縮，掛在區塊小標題底下 */
+.form-row { display: flex; gap: 16px; padding-left: 16px; }
+.form-row .form-group { flex: 1; padding-left: 0; }        /* 並排欄位由 form-row 統一內縮 */
+.card-item .form-group { padding-left: 0; }                 /* 卡片內欄位不額外縮（卡片本身已有 padding）*/
 
 /* Small section heading to group related fields into blocks within a tab. */
 /* 區塊大標題：暖褐金、左側同色短直線、區塊之間以隔線＋間距分開 */
