@@ -7,26 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/admin.css">
   <style>
-    /* 欄位名稱：黑色、12px；Banner 區往內縮（掛在小標題底下）。備註維持灰色。
-       日後要全後台一致，把這段移到 admin.css。 */
-    .form-label { color: var(--text); font-size: 13px; }   /* 欄位標題 */
-    .form-hint { font-size: 10px; }                          /* 輔助說明 */
-    /* Banner 區整組欄位（名稱＋輸入框＋上傳鈕＋預覽圖＋備註）一起內縮，掛在小標題底下 */
+    /* 欄位名稱黑/13px、備註 10px、區塊小標題樣式已移到 admin.css（全後台一致）。
+       這裡只留首頁特有的：Banner 區整組欄位往內縮，掛在小標題底下。 */
     #tab-banner .form-group { padding-left: 16px; }
-    /* 區塊小標題（大標題）：暖褐金、14px、左側同色短直線；區塊之間以隔線＋間距分開。
-       想換標題色改 color、換直線色改 ::before 的 background（currentColor＝跟著標題）。 */
-    .form-section-title {
-      display: flex; align-items: center; gap: 9px;
-      color: #9a8467; font-size: 14px;
-      margin: 34px 0 16px; padding-top: 26px;
-      border-top: 1px solid var(--border);
-    }
-    .form-section-title::before {
-      content: ""; flex: none; width: 3px; height: 14px;
-      background: currentColor; border-radius: 1px;
-    }
-    /* 第一個區塊上面不要隔線/額外間距 */
-    .form-section-title:first-child { margin-top: 0; padding-top: 0; border-top: none; }
 
     /* ── Card groups (home-specific) ── */
     .card-group { display:flex; flex-direction:column; gap:16px; }
