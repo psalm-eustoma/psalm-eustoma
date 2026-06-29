@@ -14,7 +14,7 @@
     .card-item { background:#fff; border:1px solid var(--border); border-radius:6px; padding:16px; overflow:hidden; }
     /* 作品 N：卡片頂部標題列（底色 + 分隔線，像 tab 頭部）。負邊距讓它撐滿卡片寬度 */
     .card-item-num { margin:-16px -16px 16px; padding:11px 16px; background:#faf7f2; border-bottom:1px solid var(--border); font-size:13px; font-weight:600; color:var(--text); letter-spacing:0.02em; }
-    .media-type-row { display:flex; gap:12px; align-items:center; margin-bottom:10px; }
+    .media-type-row { display:flex; gap:12px; align-items:center; margin-bottom:18px; }
     .media-type-row label { display:flex; align-items:center; gap:5px; font-size:12px; font-weight:300; cursor:pointer; }
 
     /* ── Preview: Banner (mobile = stacked) ── */
@@ -334,7 +334,7 @@
           <label><input type="radio" name="${prefix}Type${i}" value="video" ${card.isVideo ? 'checked' : ''}
             onchange="updateCardType('${prefix}',${i},true)"> 影片</label>
         </div>` : ''}
-        <div class="form-group" style="margin-bottom:10px;">
+        <div class="form-group" style="margin-bottom:20px;">
           <label class="form-label" id="${prefix}UrlLabel${i}">${showVideoToggle && card.isVideo ? '影片' : '圖片'}連結（共用）</label>
           <div class="img-row">
             <input class="form-input" type="url" id="${prefix}Url${i}" value="${card.mediaUrl || ''}" placeholder="https://...">
@@ -344,7 +344,7 @@
           <p class="form-hint">${showVideoToggle && card.isVideo ? '建議 1080 × 1920 px（直式 9:16），MP4 或 WebM' : '建議 1440 × 1800 px（直式 4:5）'}</p>
         </div>
         ${showVideoToggle ? `
-        <div class="form-group" id="${prefix}PosterGroup${i}" style="margin-bottom:10px;${card.isVideo ? '' : 'display:none;'}">
+        <div class="form-group" id="${prefix}PosterGroup${i}" style="margin-bottom:20px;${card.isVideo ? '' : 'display:none;'}">
           <label class="switch-row">
             <span class="switch"><input type="checkbox" id="${prefix}PosterToggle${i}" ${card.posterUrl ? 'checked' : ''} onchange="syncCardPoster('${prefix}',${i})"><span class="switch-slider"></span></span>
             自訂影片預覽圖
@@ -357,25 +357,27 @@
             <p class="form-hint">不填會自動抓影片第一幀。想指定別張再打開。</p>
           </div>
         </div>` : ''}
-        <div class="form-group" style="margin-bottom:10px;">
+        <div class="form-group" style="margin-bottom:20px;">
           <label class="form-label">標籤文字</label>
           ${mlFieldHTML(`${prefix}Label${i}`, card.label, { placeholder: 'WEDDING' })}
         </div>
         <div class="form-group" style="margin-bottom:0;">
           <label class="form-label">點擊卡片前往</label>
-          <select class="form-select" id="${prefix}LinkType${i}" onchange="updateCardLink('${prefix}',${i})">
-            <option value="none"${sel('none')}>不連結</option>
-            <option value="project"${sel('project')}>作品內頁</option>
-            <option value="category"${sel('category')}>分類頁</option>
-            <option value="url"${sel('url')}>自訂網址</option>
-          </select>
-          <select class="form-select" id="${prefix}LinkProject${i}" style="margin-top:6px;${show('project')}">
-            ${projects.length ? optList(projects, p => getL10n(p.title) || '(未命名作品)', lt === 'project' ? lv : '') : '<option value="">（尚無作品）</option>'}
-          </select>
-          <select class="form-select" id="${prefix}LinkCategory${i}" style="margin-top:6px;${show('category')}">
-            ${categories.length ? optList(categories, c => getL10n(c.name) || '(未命名分類)', lt === 'category' ? lv : '') : '<option value="">（尚無分類）</option>'}
-          </select>
-          <input class="form-input" type="url" id="${prefix}LinkUrl${i}" value="${lt === 'url' ? lv : ''}" placeholder="https://..." style="margin-top:6px;${show('url')}">
+          <div style="display:flex; gap:8px;">
+            <select class="form-select" id="${prefix}LinkType${i}" style="flex:1;" onchange="updateCardLink('${prefix}',${i})">
+              <option value="none"${sel('none')}>不連結</option>
+              <option value="project"${sel('project')}>作品內頁</option>
+              <option value="category"${sel('category')}>分類頁</option>
+              <option value="url"${sel('url')}>自訂網址</option>
+            </select>
+            <select class="form-select" id="${prefix}LinkProject${i}" style="flex:1.3;${show('project')}">
+              ${projects.length ? optList(projects, p => getL10n(p.title) || '(未命名作品)', lt === 'project' ? lv : '') : '<option value="">（尚無作品）</option>'}
+            </select>
+            <select class="form-select" id="${prefix}LinkCategory${i}" style="flex:1.3;${show('category')}">
+              ${categories.length ? optList(categories, c => getL10n(c.name) || '(未命名分類)', lt === 'category' ? lv : '') : '<option value="">（尚無分類）</option>'}
+            </select>
+            <input class="form-input" type="url" id="${prefix}LinkUrl${i}" value="${lt === 'url' ? lv : ''}" placeholder="https://..." style="flex:1.3;${show('url')}">
+          </div>
           <p class="form-hint">卡片可不連結，或前往某件作品／某個分類／自訂網址（自訂網址會開新分頁）</p>
         </div>
       </div>`;
