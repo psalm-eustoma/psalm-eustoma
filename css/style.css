@@ -242,7 +242,7 @@ nav.nav-light .hamburger span { background: var(--black); }
   font-weight: 200;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 .quote-eyebrow { color: var(--text); }
 .quote-note { color: var(--text-mid); }
@@ -1068,6 +1068,7 @@ footer {
   font-size: 16px;
   font-weight: 300;
   color: var(--text-light);
+  line-height: 1.6;
 }
 .about-headline {
   font-family: var(--serif);
@@ -1107,7 +1108,7 @@ footer {
   font-weight: 200;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--text);
 }
 .about-inv-quote {
@@ -1126,7 +1127,7 @@ footer {
   font-weight: 200;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--text-mid);
 }
 
