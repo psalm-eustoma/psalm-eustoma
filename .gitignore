@@ -29,3 +29,6 @@ PROJECT_DOC.md
 
 # Local scratch / test pages
 admin/_*.html
+
+# Cloudflare wrangler 本機快取
+.wrangler/
