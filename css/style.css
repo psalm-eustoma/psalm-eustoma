@@ -1065,10 +1065,10 @@ footer {
   max-width: 560px;
 }
 .about-eyebrow {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 300;
   color: var(--text-light);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 .about-headline {
   font-family: var(--serif);
