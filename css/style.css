@@ -1418,7 +1418,7 @@ footer {
   .hero-right { flex: none; width: 100%; height: 800px; justify-content: center; padding-top: 0; }
   .hero-right-inner { max-width: 78%; margin-top: 0; height: 100%; justify-content: center; }
   .hero-right-image { height: calc(64% - 24px); margin: 0 0 24px; max-width: 100%; }
-  .hero-tagline { font-size: 18px; }
+  .hero-tagline { font-size: 15px; line-height: 1.6; }
 
   #quote { height: 800px; }
   .quote-inner { padding: 30px; }
