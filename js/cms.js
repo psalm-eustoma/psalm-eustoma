@@ -442,6 +442,29 @@ function ensureCalendly() {
   return window.__calendlyLoading;
 }
 
+// Open the Calendly popup without the page visibly scrolling when it closes.
+// The site sets `html { scroll-behavior: smooth }`; when Calendly restores the
+// page scroll on close that becomes an animated "scroll down from the top".
+// So we turn smooth off and snap back to the saved position the moment
+// Calendly's overlay is removed, then restore smooth scrolling.
+function openCalendlyPopup(url) {
+  const html = document.documentElement;
+  const prevBehavior = html.style.scrollBehavior;
+  const y = window.scrollY;
+  html.style.scrollBehavior = 'auto';
+  Calendly.initPopupWidget({ url });
+
+  let appeared = false;
+  const obs = new MutationObserver(() => {
+    if (document.querySelector('.calendly-overlay')) { appeared = true; return; }
+    if (!appeared) return;            // overlay not up yet
+    window.scrollTo(0, y);            // snap back instantly (smooth is off)
+    html.style.scrollBehavior = prevBehavior;
+    obs.disconnect();
+  });
+  obs.observe(document.body, { childList: true });
+}
+
 // ── Apply settings (booking URL, social links) ────────────
 // Runs independently so a CMS data error above can't block it.
 function applySettings() {
@@ -460,7 +483,7 @@ function applySettings() {
         el.addEventListener('click', async (e) => {
           e.preventDefault();
           const ok = await ensureCalendly();
-          if (ok && window.Calendly) Calendly.initPopupWidget({ url: s.bookingUrl });
+          if (ok && window.Calendly) openCalendlyPopup(s.bookingUrl);
           else window.open(s.bookingUrl, '_blank');
         });
       });
