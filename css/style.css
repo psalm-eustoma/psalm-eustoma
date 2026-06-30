@@ -1423,8 +1423,7 @@ footer {
   #quote { height: 800px; }
   .quote-inner { padding: 30px; }
   .quote-main { font-size: 28px; letter-spacing: -0.02em; max-width: 312px; padding: 0; }
-  /* 手機版：引言小字改用「區段描述」樣式（句子感，非大寫眉題）*/
-  .quote-eyebrow, .quote-note { font-size: 15px; line-height: 1.6; letter-spacing: normal; text-transform: none; text-align: center; }
+  .quote-eyebrow, .quote-note { font-size: 13px; text-align: center; }
   .media-title-area h2 { font-size: 32px; }
 
   .media-title-area { gap: 16px; }
