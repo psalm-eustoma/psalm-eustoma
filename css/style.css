@@ -24,7 +24,14 @@ html[lang="zh"] {
   --quote: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
 }
 
-html { scroll-behavior: smooth; background-color: var(--black); }
+html {
+  scroll-behavior: smooth;
+  background-color: var(--black);
+  /* Stop iOS Safari from auto-inflating text (e.g. after the Calendly popup
+     opens/closes, which would otherwise bump the homepage font sizes up). */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 body {
   font-family: var(--sans);
   font-weight: 300;
