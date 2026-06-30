@@ -1435,7 +1435,7 @@ footer {
   #quote { height: 800px; }
   .quote-inner { padding: 30px; }
   .quote-main { font-size: 28px; letter-spacing: -0.02em; max-width: 312px; padding: 0; }
-  .quote-eyebrow, .quote-note { font-size: 13px; text-align: center; }
+  .quote-eyebrow, .quote-note { font-size: 13px; text-align: center; line-height: 1.8; }
   .media-title-area h2 { font-size: 32px; }
 
   .media-title-area { gap: 16px; }
