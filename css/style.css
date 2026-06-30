@@ -1167,11 +1167,22 @@ footer {
   align-items: flex-start;
   padding: 0 80px 100px;
   gap: 40px;
+  position: relative;
+}
+/* 由下到上的黑色透明漸層（讓底部標題更清楚、畫面更沉穩）*/
+.services-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 55%);
+  pointer-events: none;
 }
 .services-hero-text {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  position: relative;
+  z-index: 1;
 }
 .services-hero-title {
   font-family: var(--serif);
@@ -1225,15 +1236,6 @@ footer {
 }
 
 .services-card:hover .services-card-photo img { transform: scale(1.05); }
-
-/* 由下到上的黑色透明漸層（疊在圖片上，純裝飾，不擋點擊）*/
-.services-card-photo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 55%);
-  pointer-events: none;
-}
 
 .services-card-overlay {
   position: absolute;
