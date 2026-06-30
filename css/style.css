@@ -1182,7 +1182,7 @@ footer {
   line-height: 1.28;
 }
 .services-hero-sub {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 200;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.804);
@@ -1468,6 +1468,7 @@ footer {
 
   .services-hero { height: 55vh; padding: 0 20px 60px; gap: 20px; }
   .services-hero-title { font-size: 28px; }
+  .services-hero-sub { font-size: 15px; }   /* 手機維持 15px（桌機 20px）*/
   .services-content { padding: 60px 20px; }
   .services-card { width: 100%; }
   .services-card-photo { height: auto; aspect-ratio: 2 / 3; }
