@@ -37,6 +37,19 @@ body {
   min-height: 100dvh;
 }
 
+/* Anti-flash cover for inner pages (which have no loader and a white body):
+   shows black at first paint and fades out once content is ready, so navigating
+   from the dark menu doesn't flash white. Index has its own loader instead. */
+#page-fade {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9998;
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+#page-fade.hide { opacity: 0; pointer-events: none; }
+
 /* iOS safe-area: nav avoids Dynamic Island */
 nav { padding-top: env(safe-area-inset-top); }
 /* 底部安全區（home indicator 那塊）墊片：顏色由 JS 依「螢幕最底緣的內容底色」動態給，

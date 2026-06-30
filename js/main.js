@@ -5,6 +5,18 @@ if (sessionStorage.getItem('skipNavFade')) {
   if (nav) nav.classList.add('visible');
 }
 
+// Inner-page anti-flash cover (#page-fade): fade it out once CMS data is ready
+// (content has rendered), with a safety net if dataReady never resolves.
+(function () {
+  const cover = document.getElementById('page-fade');
+  if (!cover) return;
+  const hide = () => requestAnimationFrame(() => cover.classList.add('hide'));
+  if (window.dataReady && window.dataReady.then) window.dataReady.then(hide);
+  else hide();
+  setTimeout(hide, 2000);
+  cover.addEventListener('transitionend', () => cover.remove());
+})();
+
 // Scroll-triggered entrance animations
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
