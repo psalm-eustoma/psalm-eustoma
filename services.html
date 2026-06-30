@@ -158,7 +158,13 @@
     const grid = document.getElementById('servicesGrid');
     if (grid) {
       if (filtered.length === 0) {
-        grid.innerHTML = '<p style="color:#888;padding:60px 0;grid-column:1/-1;">此分類尚無作品</p>';
+        const emptyMsg = {
+          en: 'No works in this category yet.',
+          fr: 'Aucune œuvre dans cette catégorie pour le moment.',
+          zh: '此分類尚無作品'
+        };
+        const msg = emptyMsg[getActiveLang()] || emptyMsg.en;
+        grid.innerHTML = `<p style="color:#888;padding:60px 0;grid-column:1/-1;">${msg}</p>`;
       } else {
         const delays = ['', ' delay-1', ' delay-2', ' delay-3'];
         grid.innerHTML = filtered.map((p, i) => {
