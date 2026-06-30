@@ -289,6 +289,7 @@ nav.nav-light .hamburger span { background: var(--black); }
   font-weight: 200;
   color: var(--text);
   line-height: 1.6;
+  letter-spacing: 0.02em;
   text-align: center;
 }
 .media-cards {
@@ -947,7 +948,7 @@ footer {
   overflow-wrap: break-word;
   word-break: break-word;
 }
-.project-desc { font-size: 15px; font-weight: 200; color: var(--text); line-height: 1.6; max-width: 480px; overflow-wrap: break-word; word-break: break-word; }
+.project-desc { font-size: 15px; font-weight: 200; color: var(--text); line-height: 1.6; letter-spacing: 0.02em; max-width: 480px; overflow-wrap: break-word; word-break: break-word; }
 
 /* Floating booking button */
 .project-booking-btn {
