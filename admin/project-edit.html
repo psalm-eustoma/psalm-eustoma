@@ -406,15 +406,18 @@
     pvDesc.classList.toggle('pv-desc-placeholder', !desc);
 
     const pvPhotos = document.getElementById('pvPhotos');
-    pvPhotos.innerHTML = imgUrls.length && imgUrls[0]
-      ? `<img class="pv-photo" src="${imgUrls[0]}" alt="" onerror="this.style.display='none'">`
+    pvPhotos.innerHTML = imgUrls.length
+      ? imgUrls.map(url => isVideoUrl(url)
+          ? `<video class="pv-photo" src="${url}" muted playsinline loop autoplay onerror="this.style.display='none'"></video>`
+          : `<img class="pv-photo" src="${url}" alt="" onerror="this.style.display='none'">`
+        ).join('')
       : `<div class="pv-photo-placeholder"><span>圖片預覽</span></div>`;
 
     const pvQuoteSection = document.querySelector('.pv-quote-section');
     const pvQuoteText   = document.getElementById('pvQuoteText');
     const pvQuoteFor    = document.getElementById('pvQuoteFor');
     const pvQuoteAuthor = document.getElementById('pvQuoteAuthor');
-    const quoteOff = projQuoteHiddenEl && projQuoteHiddenEl.checked;
+    const quoteOff = projQuoteHiddenEl && !projQuoteHiddenEl.checked;
     if (pvQuoteSection) pvQuoteSection.style.display = quoteOff ? 'none' : '';
     if (quote) { pvQuoteText.textContent = quote; pvQuoteText.className = 'pv-quote-text'; }
     else       { pvQuoteText.textContent = '客戶評價將顯示於此'; pvQuoteText.className = 'pv-quote-placeholder'; }
